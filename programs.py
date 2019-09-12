@@ -1,47 +1,30 @@
-import cssselect2
+from typing import Generator, Tuple, Any
+
 import lxml.html
 
 from cache import get_page_text_with_cache
+from html import _get_all_link_fields
 
 DATA_PROGRAMS_LIST_PAGE_URL = "https://programs.usask.ca/programs/list-of-programs.php"
 
 
-def get_program_dict():
-    wrapped_etree = _get_all_links_wrapped()
-    unwrapped_etree = _unwrap_etree(wrapped_etree)
-    dict_items = _get_link_fields(unwrapped_etree)
-    program_dict = _filter_link_fields(dict_items)
+def get_program_dict(programs_list_page_url=DATA_PROGRAMS_LIST_PAGE_URL):
+    link_fields = get_programs_links(programs_list_page_url)
+    program_dict = dict(_filter_link_fields_for_program_url(link_fields))
     return program_dict
 
 
-def _get_programs_list_page_tree():
-    page_url = DATA_PROGRAMS_LIST_PAGE_URL
+def get_programs_links(programs_list_page_url):
+    full_etree = _get_programs_list_page_tree(programs_list_page_url)
+    link_fields = _get_all_link_fields(full_etree)
+    return link_fields
+
+
+def _get_programs_list_page_tree(url: str) -> lxml.html.etree.ElementTree:
+    page_url = url
     html = get_page_text_with_cache(page_url)
     return lxml.html.fromstring(html)
 
 
-def _filter_link_fields(dict_items):
-    return {
-        key: value
-        for key, value in dict_items if value[:3] == '../'
-    }
-
-
-def _get_link_fields(unwrapped_etree):
-    return (
-        (item.text.strip(), item.attrib['href'])
-        for item in unwrapped_etree
-    )
-
-
-def _unwrap_etree(wrapped_etree):
-    unwrapped_etree = (item.etree_element for item in wrapped_etree)
-    return unwrapped_etree
-
-
-def _get_all_links_wrapped():
-    return (
-        cssselect2.ElementWrapper.from_html_root(
-            _get_programs_list_page_tree()
-        ).query_all('li>a')
-    )
+def _filter_link_fields_for_program_url(dict_items) -> Generator[Tuple[Any, Any], Any, None]:
+    return ((key, value) for key, value in dict_items if value[:3] == '../')
