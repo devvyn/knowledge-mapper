@@ -25,16 +25,13 @@ from cache import get_page_text_with_cache
 > get list of programs
 """
 
-DATA_PATH = Path('./data/')
-DATA_PROGRAMS_LIST_PATH = Path(DATA_PATH, 'programs.html')
 DATA_PROGRAMS_LIST_PAGE_URL = "https://programs.usask.ca/programs/list-of-programs.php"
 DATA_COURSES_SUBJECT_CODE_LIST_HREF = "https://catalogue.usask.ca"
 
 
 def get_programs_list_page_tree():
     page_url = DATA_PROGRAMS_LIST_PAGE_URL
-    path = DATA_PROGRAMS_LIST_PATH
-    html = get_page_text_with_cache(path, page_url)
+    html = get_page_text_with_cache(page_url, None)
     return lxml.html.fromstring(html)
 
 
