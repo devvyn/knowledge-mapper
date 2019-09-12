@@ -49,7 +49,7 @@ def get_valid_filename(string: str) -> str:
 
 
 def get_cache_path(cache_dir: str, url: str) -> Path:
-    file_name = url_to_filename(url)
+    file_name = f'{url_to_filename(url)}.html'
     path = Path(cache_dir, file_name)
     return path
 

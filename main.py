@@ -10,18 +10,12 @@ fn get list of course details:
 
 # %%
 
-# noinspection PyUnresolvedReferences
-from pathlib import Path
-
-# noinspection PyUnresolvedReferences
-import requests
-
-from programs import get_program_dict
+import programs
 
 """
 > get list of programs
 """
 
-program_dict = get_program_dict()
+program_dict = programs.get_program_dict()
 
 # 212 programs

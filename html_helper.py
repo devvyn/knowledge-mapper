@@ -4,7 +4,7 @@ import cssselect2
 import lxml.html
 
 
-def _get_all_link_fields(full_etree: lxml.html.etree) -> Generator[Tuple[Any, Any], Any, None]:
+def get_all_link_fields(full_etree: lxml.html.etree) -> Generator[Tuple[Any, Any], Any, None]:
     wrapped_links = _get_all_links_wrapped(full_etree)
     unwrapped_links = _unwrap_etree(wrapped_links)
     link_fields = _get_link_fields(unwrapped_links)
