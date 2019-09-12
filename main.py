@@ -41,3 +41,6 @@ def get_programs_list_page_tree():
 tree = get_programs_list_page_tree()
 tree_css = cssselect2.ElementWrapper.from_html_root(tree)
 adict = {item.text.strip():item.attrib['href'] for item in (item.etree_element for item in tree_css.query_all('li>a'))}
+program_dict = {key: value for key, value in adict.items() if value[:3] == '../'}
+
+# 212 programs
