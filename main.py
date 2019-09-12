@@ -31,7 +31,7 @@ DATA_COURSES_SUBJECT_CODE_LIST_HREF = "https://catalogue.usask.ca"
 
 def get_programs_list_page_tree():
     page_url = DATA_PROGRAMS_LIST_PAGE_URL
-    html = get_page_text_with_cache(page_url, None)
+    html = get_page_text_with_cache(page_url)
     return lxml.html.fromstring(html)
 
 

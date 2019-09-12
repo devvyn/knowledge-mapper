@@ -5,44 +5,58 @@ from urllib.parse import urlparse
 import requests
 
 DATA_PATH = Path('./data/')
-DATA_PROGRAMS_LIST_PAGE_URL = "https://programs.usask.ca/programs/list-of-programs.php"
 
 
-def save_text_to_cache(cache_file_path, text):
+def _save_text_to_cache(cache_file_path, text):
     with open(cache_file_path, 'w') as f:
         f.write(text)
 
 
-def get_text_from_cache(cache_file_path):
+def _get_text_from_cache(cache_file_path):
     with open(cache_file_path) as f:
         text = f.read()
     return text
 
 
-def get_page_text_with_cache(page_url: str, cache_file_path: str = DATA_PATH) -> str:
-    """
-    Fetch text from file if it exists, otherwise fetch text from URL and save to file before returning.
-    :param page_url: Full URL to page.
-    :param cache_file_path: Full path to file.
-    :return: Page text.
-    """
-    path = get_cache_path(cache_file_path, url=DATA_PROGRAMS_LIST_PAGE_URL)
-    try:
-        text = get_text_from_cache(path)
-    except FileNotFoundError:
-        text = requests.get(page_url).text
-        save_text_to_cache(path, text)
+def get_page_text_with_cache(page_url: str, cache_dir: str = DATA_PATH) -> str:
+    text = _get_page_text_via_cache(cache_dir, page_url)
     return text
 
 
-def get_valid_filename(s):
-    s = str(s).strip().replace(' ', '_')
-    return re.sub(r'(?u)[^-\w.]', '', s)
+def _get_page_text_via_cache(cache_dir, page_url):
+    """
+    Fetch text from file if it exists, otherwise fetch text from URL and save to file before returning.
+    :param page_url: Full URL to page.
+    :param cache_dir: Full path to file.
+    :return: Page text.
+    """
+    path = get_cache_path(cache_dir, url=page_url)
+    try:
+        text = _get_text_from_cache(path)
+    except FileNotFoundError:
+        text = _get_page_text(page_url)  # @todo refactor: decorate around here
+        _save_text_to_cache(path, text)
+    return text
 
 
-def get_cache_path(cache_file_path, url):
-    parse_result = get_valid_filename(''.join(urlparse(url)._asdict().values()))
-    file_name = Path(parse_result)
-    #
-    path = Path(cache_file_path, file_name)
+def _get_page_text(page_url):  # @todo refactor: decorate this definition with caching wrapper
+    return requests.get(page_url).text
+
+
+def get_valid_filename(string: str) -> str:
+    string = str(string).strip().replace(' ', '_')
+    return re.sub(r'(?u)[^-\w.]', '', string)
+
+
+def get_cache_path(cache_dir: str, url: str) -> Path:
+    file_name = url_to_filename(url)
+    path = Path(cache_dir, file_name)
     return path
+
+
+def url_to_filename(url: str) -> str:
+    parse_results = urlparse(url)
+    # noinspection PyProtectedMember
+    asdict = parse_results._asdict()
+    url_segments_joined = ''.join(asdict.values())
+    return get_valid_filename(url_segments_joined)
