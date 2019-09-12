@@ -1,4 +1,14 @@
 # %%
+"""
+fn get list of course details:
+    get list of programs
+    for program in programs:
+        get list of courses
+        for course in courses:
+            get course details
+"""
+
+# %%
 
 # noinspection PyUnresolvedReferences
 import lxml.html
