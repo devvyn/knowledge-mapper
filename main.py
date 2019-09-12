@@ -13,31 +13,15 @@ fn get list of course details:
 # noinspection PyUnresolvedReferences
 from pathlib import Path
 
-import cssselect2
-import lxml.html
 # noinspection PyUnresolvedReferences
 import requests
 
-from cache import get_page_text_with_cache
-
+from programs import get_program_dict
 
 """
 > get list of programs
 """
 
-DATA_PROGRAMS_LIST_PAGE_URL = "https://programs.usask.ca/programs/list-of-programs.php"
-DATA_COURSES_SUBJECT_CODE_LIST_HREF = "https://catalogue.usask.ca"
-
-
-def get_programs_list_page_tree():
-    page_url = DATA_PROGRAMS_LIST_PAGE_URL
-    html = get_page_text_with_cache(page_url)
-    return lxml.html.fromstring(html)
-
-
-tree = get_programs_list_page_tree()
-tree_css = cssselect2.ElementWrapper.from_html_root(tree)
-adict = {item.text.strip():item.attrib['href'] for item in (item.etree_element for item in tree_css.query_all('li>a'))}
-program_dict = {key: value for key, value in adict.items() if value[:3] == '../'}
+program_dict = get_program_dict()
 
 # 212 programs
