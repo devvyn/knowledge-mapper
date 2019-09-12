@@ -11,55 +11,33 @@ fn get list of course details:
 # %%
 
 # noinspection PyUnresolvedReferences
+from pathlib import Path
+
+import cssselect2
 import lxml.html
 # noinspection PyUnresolvedReferences
 import requests
 
-# %%
+from cache import get_page_text_with_cache
 
-CONTENT = 'content'
-COURSES = 'courses'
-COURSE_DETAILS = 'course_details'
-HREF = 'href'
-LIST = 'list'
-MAPPING = 'mapping'
-PROGRAMS = 'programs'
-SUBJECT_CODE = 'subject_code'
-TEXT = 'text'
-TREE = 'tree'
 
-courses_struct = {
-    SUBJECT_CODE: {
-        HREF: "https://catalogue.usask.ca",
-        LIST: [],
-    },
-    COURSE_DETAILS: {
-        HREF: "",
-        MAPPING: {},
-    }
-}
-programs_struct = {
-    HREF: "https://programs.usask.ca/programs/list-of-programs.php",
-    CONTENT: {
-        TEXT: None,
-        TREE: None,
-    },
-}
-data = {
-    PROGRAMS: programs_struct,
-    COURSES: courses_struct,
-}
+"""
+> get list of programs
+"""
 
-# %%
+DATA_PATH = Path('./data/')
+DATA_PROGRAMS_LIST_PATH = Path(DATA_PATH, 'programs.html')
+DATA_PROGRAMS_LIST_PAGE_URL = "https://programs.usask.ca/programs/list-of-programs.php"
+DATA_COURSES_SUBJECT_CODE_LIST_HREF = "https://catalogue.usask.ca"
 
-cache_file_path = './data/programs.html'
-try:
-    with open(cache_file_path) as f:
-        text = f.read()
-except FileNotFoundError:
-    text = requests.get(data[PROGRAMS][HREF]).text
-    with open(cache_file_path, 'w') as f:
-        f.write(text)
-data[PROGRAMS][CONTENT][TEXT] = text
 
-data[PROGRAMS][CONTENT][TREE] = lxml.html.fromstring(data[PROGRAMS][CONTENT][TEXT])
+def get_programs_list_page_tree():
+    page_url = DATA_PROGRAMS_LIST_PAGE_URL
+    path = DATA_PROGRAMS_LIST_PATH
+    html = get_page_text_with_cache(path, page_url)
+    return lxml.html.fromstring(html)
+
+
+tree = get_programs_list_page_tree()
+tree_css = cssselect2.ElementWrapper.from_html_root(tree)
+adict = {item.text.strip():item.attrib['href'] for item in (item.etree_element for item in tree_css.query_all('li>a'))}
