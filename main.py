@@ -1,11 +1,14 @@
 # %%
 """
 fn get list of course details:
-    get list of programs
-    for program in programs:
-        get list of courses
-        for course in courses:
-            get course details
+    get list of program types urls
+    for program type details page in program type urls:
+        get list of program urls
+        for program details page in program urls:
+            get list of courses urls
+            for course details page in courses urls:
+                get course details data
+                (add to dependency graph)
 """
 
 # %%
