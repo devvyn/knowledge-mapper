@@ -11,20 +11,20 @@ fn get list of course details data:
                 get course details data
 """
 
-import urllib.parse
+# %%
 
 import programs
-
-# %%
 
 """
 > get list of study_levels
 > get list of program_subjects_urls
 """
 
-program_subjects = programs.get_subjects_by_study_level()
+program_subjects = programs.fetch_subjects_by_study_level()
 
 # %%
+
+import urllib.parse
 
 """
 > for program type details page in program type urls:
@@ -32,12 +32,13 @@ program_subjects = programs.get_subjects_by_study_level()
 """
 
 # temporary bypass of loop
-PROGRAM_TYPE_PAGE_PATH_BIOINFORMATICS = '../arts-and-science/bioinformatics/index.php'  # @todo: delete this line ASAP
-program_type_page_path = PROGRAM_TYPE_PAGE_PATH_BIOINFORMATICS
+PROGRAM_SUBJECT_PAGE_PATH_BIOINFORMATICS = '../arts-and-science/bioinformatics/index.php'  # @todo: delete this line ASAP
+program_subject_page_path = PROGRAM_SUBJECT_PAGE_PATH_BIOINFORMATICS
 
 # for program_subject_page_path in program_subjects:
-program_type_page_url = urllib.parse.urljoin(program_subjects_list_page_url, program_type_page_path)
-# @todo: query for relevent links
+# @todo: query for relevant links
+program_subject_page_url = urllib.parse.urljoin(programs.LIST_OF_PROGRAMS, program_subject_page_path)
+programs = programs.fetch_programs_by_subject(program_subject_page_url)
 
 # %%
 
@@ -52,7 +53,7 @@ PROGRAM_PAGE_PATH_BS4Y_BINF = "bsc-4-bioinformatics.php"
 program_page_path = PROGRAM_PAGE_PATH_BS4Y_BINF
 
 # inside for loop:
-program_page_url = urllib.parse.urljoin(program_type_page_url, program_page_path)
+program_page_url = urllib.parse.urljoin(program_subject_page_url, program_page_path)
 # @todo: element query for course codes
 
 # cl = list(courses_links)
