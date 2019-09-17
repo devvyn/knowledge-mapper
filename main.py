@@ -11,31 +11,18 @@ fn get list of course details data:
                 get course details data
 """
 
-# %%
 import urllib.parse
 
-import pandas
-from cssselect2 import ElementWrapper
-
-import html_helper
+import programs
 
 # %%
+
 """
 > get list of study_levels
 > get list of program_subjects_urls
 """
 
-program_subjects_list_page_url = "https://programs.usask.ca/programs/list-of-programs.php"
-program_subjects_list_page_html = html_helper.get_page_html(program_subjects_list_page_url)
-program_subjects_list_page_tree = html_helper.get_page_etree(program_subjects_list_page_html)
-section_query = 'section.uofs-section h1'
-root = ElementWrapper.from_html_root(program_subjects_list_page_tree)
-study_level_sections_selection = root.query_all(section_query)
-program_subjects_by_study_level = {
-    match.etree_element.text.strip(): {
-        sub_match.etree_element.text.strip(): sub_match.etree_element.attrib['href']
-        for sub_match in match.parent.query_all('li>a')}
-    for match in study_level_sections_selection}
+program_subjects = programs.get_subjects_by_study_level()
 
 # %%
 
@@ -45,7 +32,6 @@ program_subjects_by_study_level = {
 """
 
 # temporary bypass of loop
-# https://programs.usask.ca/arts-and-science/bioinformatics/index.php
 PROGRAM_TYPE_PAGE_PATH_BIOINFORMATICS = '../arts-and-science/bioinformatics/index.php'  # @todo: delete this line ASAP
 program_type_page_path = PROGRAM_TYPE_PAGE_PATH_BIOINFORMATICS
 
