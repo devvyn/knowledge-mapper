@@ -3,7 +3,7 @@
 fn get list of course details data:
     get list of study_levels
     get list of program_subjects_urls
-    for program subject page in program_subjects_urls:
+    for program subject details page in program_subjects_urls:
         get list of program urls
         for program details page in program urls:
             get list of course urls
@@ -12,7 +12,6 @@ fn get list of course details data:
 """
 
 # %%
-
 import programs
 
 """
@@ -27,7 +26,7 @@ program_subjects = programs.fetch_subjects_by_study_level()
 import urllib.parse
 
 """
-> for program type details page in program type urls:
+> for program subject details page in program type urls:
 >     get list of program urls
 """
 
@@ -38,7 +37,7 @@ program_subject_page_path = PROGRAM_SUBJECT_PAGE_PATH_BIOINFORMATICS
 # for program_subject_page_path in program_subjects:
 # @todo: query for relevant links
 program_subject_page_url = urllib.parse.urljoin(programs.LIST_OF_PROGRAMS, program_subject_page_path)
-programs = programs.fetch_programs_by_subject(program_subject_page_url)
+programs_by_subject = programs.fetch_programs_by_subject(program_subject_page_url)
 
 # %%
 
@@ -47,17 +46,14 @@ programs = programs.fetch_programs_by_subject(program_subject_page_url)
 >             get list of courses urls
 """
 
+import courses
+
 # temp bypass of loop
-# https://programs.usask.ca/arts-and-science/bioinformatics/bsc-4-bioinformatics.php
-PROGRAM_PAGE_PATH_BS4Y_BINF = "bsc-4-bioinformatics.php"
-program_page_path = PROGRAM_PAGE_PATH_BS4Y_BINF
+PROGRAM_PAGE_URL_BS4Y_BINF = "https://programs.usask.ca/arts-and-science/bioinformatics/bsc-4-bioinformatics.php"
 
-# inside for loop:
-program_page_url = urllib.parse.urljoin(program_subject_page_url, program_page_path)
-# @todo: element query for course codes
-
-# cl = list(courses_links)
-# cldf = pandas.DataFrame(data=cl)
+# for program_page_url in program_page_urls:
+program_page_url = PROGRAM_PAGE_URL_BS4Y_BINF
+courses_by_section = courses.fetch_courses_by_section(program_page_url)
 
 # %%
 
