@@ -61,13 +61,16 @@ courses_by_section = courses.fetch_courses_by_section(program_page_url)
 >             for course details page in courses urls:
 >                 get course details data
 """
-
-from html_helper import fetch_wrapped_root_cssselect2
+import html_helper
 
 COURSE_CODE_BIOL_120 = "BIOL-120"
 course_code = COURSE_CODE_BIOL_120
 
 course_details_page_url = courses.course_details_page_url(course_code)
-course_details_page_wrapped_etree = fetch_wrapped_root_cssselect2(course_details_page_url)
+course_details_page_wrapped_etree = html_helper.fetch_wrapped_root_cssselect2(
+    course_details_page_url)
+course_details = courses.extract_course_details(
+    course_details_page_wrapped_etree.query('div.uofs-page-content#content'))
+# course_details = courses.fetch_course_details_by_course_code(course_code)
 # @todo: query etree
 # @todo: collect fields
