@@ -15,8 +15,6 @@ fn get list of course details data:
 
 import programs
 
-CA_SUBJ_CODE_BIOL = 'https://catalogue.usask.ca/?subj_code=BIOL'
-
 """
 > get list of study_levels
 > get list of program_subjects_urls
@@ -71,6 +69,7 @@ courses_by_section = courses.fetch_courses_by_section(program_page_url)
 import courses
 import html_helper
 
+CA_SUBJ_CODE_BIOL = 'https://catalogue.usask.ca/?subj_code=BIOL'
 COURSE_CODE_BIOL_120 = "BIOL-120"
 course_code = COURSE_CODE_BIOL_120
 
@@ -79,9 +78,9 @@ course_details_page_wrapped_etree = html_helper.fetch_wrapped_root_cssselect2(
     course_details_page_url)
 
 # @todo: query etree
-course_details_node = courses.locate_course_details_node(
+course_details_node = courses.locate_main_content_node(
     course_details_page_wrapped_etree)
-course_details_node2 = courses.locate_course_details_node(
+course_details_node2 = courses.locate_main_results_nodes(
     html_helper.fetch_wrapped_root_cssselect2(CA_SUBJ_CODE_BIOL))
 
 # @todo: collect fields

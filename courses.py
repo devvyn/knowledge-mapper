@@ -26,6 +26,16 @@ def course_details_page_url(course_code):
     return urllib.parse.urljoin(course_page_url_base, course_code.lower())
 
 
+def locate_main_content_node(
+        cssselect2_root: ElementWrapper) -> ElementWrapper:
+    return cssselect2_root.query('[role="main"]')
+
+
+def locate_main_results_nodes(cssselect2_root):
+    results_children = locate_main_content_node(cssselect2_root).query_all(
+        'h3#results ~ div')
+    return results_children
+
 def fetch_course_details_by_course_code(course_code):
     # see data/biol-120.xml for main content node example
     # (all sections, especially
@@ -51,13 +61,3 @@ def extract_course_details_from_etree_node(
     # course_details_dict = {}
     # return course_details_dict
     return details_matches
-
-
-def locate_course_details_node(
-        course_details_page_root: ElementWrapper) -> ElementWrapper:
-    return course_details_page_root.query(
-        '[role="main"]')
-
-
-def locate_course_details_results_node(course_details_page_etree_cssselect2):
-    pass
