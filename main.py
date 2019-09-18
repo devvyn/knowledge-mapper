@@ -35,7 +35,6 @@ PROGRAM_SUBJECT_PAGE_PATH_BIOINFORMATICS = '../arts-and-science/bioinformatics/i
 program_subject_page_path = PROGRAM_SUBJECT_PAGE_PATH_BIOINFORMATICS
 
 # for program_subject_page_path in program_subjects:
-# @todo: query for relevant links
 program_subject_page_url = urllib.parse.urljoin(programs.LIST_OF_PROGRAMS, program_subject_page_path)
 programs_by_subject = programs.fetch_programs_by_subject(program_subject_page_url)
 
