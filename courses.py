@@ -1,5 +1,7 @@
 import urllib.parse
 
+from cssselect2 import ElementWrapper
+
 from html_helper import fetch_wrapped_root_cssselect2
 
 COURSE_DETAILS_PAGE_URL_BASE = "https://catalogue.usask.ca/"
@@ -25,15 +27,19 @@ def course_details_page_url(course_code):
 
 
 def fetch_course_details_by_course_code(course_code):
-    return extract_course_details(fetch_wrapped_root_cssselect2(
-        course_details_page_url(course_code)))
+    # see data/biol-120.xml for main content node example
+    return extract_course_details_from_etree_node(
+        fetch_wrapped_root_cssselect2(
+            course_details_page_url(course_code)))
 
 
 def fetch_course_details_by_subject_code(subject_code):
+    # see data/biol.xml for main content node example
     pass
 
 
-def extract_course_details(course_details_node_etree_cssselect2):
+def extract_course_details_from_etree_node(
+        course_details_node_etree_cssselect2):
     details_matches = [
         [
             sub_match.parent.etree_element.text
@@ -44,3 +50,13 @@ def extract_course_details(course_details_node_etree_cssselect2):
     # course_details_dict = {}
     # return course_details_dict
     return details_matches
+
+
+def locate_course_details_node(
+        course_details_page_root: ElementWrapper) -> ElementWrapper:
+    return course_details_page_root.query(
+        '[role="main"]')
+
+
+def locate_course_details_results_node(course_details_page_etree_cssselect2):
+    pass

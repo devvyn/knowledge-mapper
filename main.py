@@ -32,12 +32,16 @@ import urllib.parse
 """
 
 # temporary bypass of loop
-PROGRAM_SUBJECT_PAGE_PATH_BIOINFORMATICS = '../arts-and-science/bioinformatics/index.php'  # @todo: delete this line ASAP
+PROGRAM_SUBJECT_PAGE_PATH_BIOINFORMATICS = \
+    '../arts-and-science/bioinformatics/index.php'  # @todo: delete this
+# line ASAP
 program_subject_page_path = PROGRAM_SUBJECT_PAGE_PATH_BIOINFORMATICS
 
 # for program_subject_page_path in program_subjects:
-program_subject_page_url = urllib.parse.urljoin(programs.LIST_OF_PROGRAMS, program_subject_page_path)
-programs_by_subject = programs.fetch_programs_by_subject(program_subject_page_url)
+program_subject_page_url = urllib.parse.urljoin(programs.LIST_OF_PROGRAMS,
+                                                program_subject_page_path)
+programs_by_subject = programs.fetch_programs_by_subject(
+    program_subject_page_url)
 
 # %%
 
@@ -49,7 +53,8 @@ programs_by_subject = programs.fetch_programs_by_subject(program_subject_page_ur
 import courses
 
 # temp bypass of loop
-PROGRAM_PAGE_URL_BS4Y_BINF = "https://programs.usask.ca/arts-and-science/bioinformatics/bsc-4-bioinformatics.php"
+PROGRAM_PAGE_URL_BS4Y_BINF = "https://programs.usask.ca/arts-and-science/" \
+                             "bioinformatics/bsc-4-bioinformatics.php"
 
 # for program_page_url in program_page_urls:
 program_page_url = PROGRAM_PAGE_URL_BS4Y_BINF
@@ -61,6 +66,7 @@ courses_by_section = courses.fetch_courses_by_section(program_page_url)
 >             for course details page in courses urls:
 >                 get course details data
 """
+import courses
 import html_helper
 
 COURSE_CODE_BIOL_120 = "BIOL-120"
@@ -69,8 +75,12 @@ course_code = COURSE_CODE_BIOL_120
 course_details_page_url = courses.course_details_page_url(course_code)
 course_details_page_wrapped_etree = html_helper.fetch_wrapped_root_cssselect2(
     course_details_page_url)
-course_details = courses.extract_course_details(
-    course_details_page_wrapped_etree.query('div.uofs-page-content#content'))
+course_details_node = courses.locate_course_details_node(
+    course_details_page_wrapped_etree)
+course_details_node2 = courses.locate_course_details_node(
+    html_helper.fetch_wrapped_root_cssselect2('https://catalogue.usask.ca/?subj_code=BIOL'))
+# course_details = courses.extract_course_details_from_etree_node(
+#     course_details_page_wrapped_etree.query('div.uofs-page-content#content'))
 # course_details = courses.fetch_course_details_by_course_code(course_code)
 # @todo: query etree
 # @todo: collect fields
