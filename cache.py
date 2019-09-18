@@ -7,23 +7,23 @@ import requests
 DATA_PATH = Path('./data/')
 
 
-def _save_text_to_cache(cache_file_path, text):
+def save_text_to_cache(cache_file_path, text):
     with open(cache_file_path, 'w') as f:
         f.write(text)
 
 
-def _get_text_from_cache(cache_file_path):
+def get_text_from_cache(cache_file_path):
     with open(cache_file_path) as f:
         text = f.read()
     return text
 
 
 def get_page_text_with_cache(page_url: str, cache_dir: str = DATA_PATH) -> str:
-    text = _get_page_text_via_cache(cache_dir, page_url)
+    text = get_or_fetch_page_text_via_cache(cache_dir, page_url)
     return text
 
 
-def _get_page_text_via_cache(cache_dir, page_url):
+def get_or_fetch_page_text_via_cache(cache_dir, page_url):
     """
     Fetch text from file if it exists, otherwise fetch text from URL and save to file before returning.
     :param page_url: Full URL to page.
@@ -32,14 +32,15 @@ def _get_page_text_via_cache(cache_dir, page_url):
     """
     path = get_cache_path(cache_dir, url=page_url)
     try:
-        text = _get_text_from_cache(path)
+        text = get_text_from_cache(path)
     except FileNotFoundError:
-        text = _get_page_text(page_url)  # @todo refactor: decorate around here
-        _save_text_to_cache(path, text)
+        text = get_page_text(page_url)  # @todo refactor: decorate around here
+        save_text_to_cache(path, text)
     return text
 
 
-def _get_page_text(page_url):  # @todo refactor: decorate this definition with caching wrapper
+def get_page_text(page_url):  # @todo refactor: decorate this definition with caching wrapper
+    # return requests.get(page_url).content  # @todo: try this instead of .text, research benefits
     return requests.get(page_url).text
 
 
