@@ -12,6 +12,7 @@ fn get list of course details data:
 """
 
 # %%
+
 import programs
 
 """
@@ -61,7 +62,12 @@ courses_by_section = courses.fetch_courses_by_section(program_page_url)
 >                 get course details data
 """
 
-# @todo: course details page url template
-# @todo: get etree
+from html_helper import fetch_wrapped_root_cssselect2
+
+COURSE_CODE_BIOL_120 = "BIOL-120"
+course_code = COURSE_CODE_BIOL_120
+
+course_details_page_url = courses.course_details_page_url(course_code)
+course_details_page_wrapped_etree = fetch_wrapped_root_cssselect2(course_details_page_url)
 # @todo: query etree
 # @todo: collect fields
