@@ -84,4 +84,4 @@ course_details_node2 = courses.locate_main_results_nodes(
     html_helper.fetch_wrapped_root_cssselect2(CA_SUBJ_CODE_BIOL))
 
 # @todo: collect fields
-# course_details = courses.fetch_course_details_by_course_code(course_code)
+course_details = courses.fetch_course_details_by_course_code(course_code)

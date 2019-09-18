@@ -36,6 +36,7 @@ def locate_main_results_nodes(cssselect2_root):
         'h3#results ~ div')
     return results_children
 
+
 def fetch_course_details_by_course_code(course_code):
     # see data/biol-120.xml for main content node example
     # (all sections, especially
@@ -49,15 +50,29 @@ def fetch_course_details_by_subject_code(subject_code):
     pass
 
 
-def extract_course_details_from_etree_node(
-        course_details_node_etree_cssselect2):
-    details_matches = [
-        [
-            sub_match.parent.etree_element.text
-            for sub_match in match.parent.query_all('p>b')
-        ]
-        for match in course_details_node_etree_cssselect2
-    ]
-    # course_details_dict = {}
-    # return course_details_dict
-    return details_matches
+def etree_extract_course_description_fields(
+        description_node: ElementWrapper) -> ElementWrapper:
+    course_description_fields = {
+        """
+        'summary': 'p:nth-child(1)',
+        'table of fields': 'p:nth-child(2)'
+            'prerequisites_list': 'b:text("Prerequisite(s):")'.tail
+                conjunctive expression
+                    <subject_code>(<conjunction><subject_code>)*
+                    <subject_code> = (\w+ \d{2,3})
+                    <conjunction> = ( (?:or|and|,) )
+            'note': 'b:text("Note:")'.tail
+        """
+        # @todo: implement the above, via strict MVP path
+    }
+    return course_description_fields
+
+
+def etree_extract_course_details(cssselect2_root):
+    # for course_code node:
+    description_node = cssselect2_root.query('section#Description'
+                                             '>div#Description-subsection-0')
+    course_code_extraction = etree_extract_course_description_fields(
+        description_node)
+    # for subject_code node:
+    pass
