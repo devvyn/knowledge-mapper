@@ -61,13 +61,7 @@ courses_by_section = courses.fetch_courses_by_section(program_page_url)
 >                 get course details data
 """
 
-# temp bypass
-# COURSE_PAGE_PATH_EXAMPLE = ""  # @todo: fill
-# course_page_path = COURSE_PAGE_PATH_EXAMPLE
-
-# inside for loop:
-# course_page_url = courses_url(course_page_path)
-# get course details data
-# course_details_collection = (courses.get_course_fields(course_details_node) for course_details_node in course_details_nodes)
-
-# cddf = pandas.DataFrame(data=course_details_collection)
+# @todo: course details page url template
+# @todo: get etree
+# @todo: query etree
+# @todo: collect fields
