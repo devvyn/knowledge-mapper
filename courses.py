@@ -28,13 +28,14 @@ def course_details_page_url(course_code):
 
 def fetch_course_details_by_course_code(course_code):
     # see data/biol-120.xml for main content node example
-    return extract_course_details_from_etree_node(
-        fetch_wrapped_root_cssselect2(
-            course_details_page_url(course_code)))
+    # (all sections, especially
+    #   section#Description>div#Description-subsection-0)
+    pass
 
 
 def fetch_course_details_by_subject_code(subject_code):
     # see data/biol.xml for main content node example
+    # (all divs after h3#results, within section.uofs-section>div)
     pass
 
 
