@@ -2,6 +2,7 @@ import urllib.parse
 
 from cssselect2 import ElementWrapper
 
+import html_helper
 from html_helper import fetch_wrapped_root_cssselect2
 
 COURSE_DETAILS_PAGE_URL_BASE = "https://catalogue.usask.ca/"
@@ -41,7 +42,10 @@ def fetch_course_details_by_course_code(course_code):
     # see data/biol-120.xml for main content node example
     # (all sections, especially
     #   section#Description>div#Description-subsection-0)
-    pass
+    cssselect2_root = html_helper.fetch_wrapped_root_cssselect2(
+        course_details_page_url(course_code))
+    course_details_dict = etree_extract_course_details(cssselect2_root)
+    return course_details_dict
 
 
 def fetch_course_details_by_subject_code(subject_code):
@@ -51,28 +55,28 @@ def fetch_course_details_by_subject_code(subject_code):
 
 
 def etree_extract_course_description_fields(
-        description_node: ElementWrapper) -> ElementWrapper:
+        description_node: ElementWrapper) -> dict:
+    # 'summary': 'p:nth-child(1)',
+    # 'table of fields': 'p:nth-child(2)'
+    #     'prerequisites_list': 'b:text("Prerequisite(s):")'.tail
+    #         conjunctive expression
+    #             <subject_code>(<conjunction><subject_code>)*
+    #             <subject_code> = (\w+ \d{2,3})
+    #             <conjunction> = ( (?:or|and|,) )
+    #     'note': 'b:text("Note:")'.tail
     course_description_fields = {
-        """
-        'summary': 'p:nth-child(1)',
-        'table of fields': 'p:nth-child(2)'
-            'prerequisites_list': 'b:text("Prerequisite(s):")'.tail
-                conjunctive expression
-                    <subject_code>(<conjunction><subject_code>)*
-                    <subject_code> = (\w+ \d{2,3})
-                    <conjunction> = ( (?:or|and|,) )
-            'note': 'b:text("Note:")'.tail
-        """
         # @todo: implement the above, via strict MVP path
+        'summary': description_node.query('p:nth-child(1)').etree_element.text
     }
     return course_description_fields
 
 
-def etree_extract_course_details(cssselect2_root):
+def etree_extract_course_details(cssselect2_root: ElementWrapper) -> dict:
     # for course_code node:
     description_node = cssselect2_root.query('section#Description'
                                              '>div#Description-subsection-0')
     course_code_extraction = etree_extract_course_description_fields(
         description_node)
     # for subject_code node:
-    pass
+    # @todo: extract subject_code node
+    return course_code_extraction
