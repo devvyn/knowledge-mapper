@@ -1,9 +1,12 @@
 import urllib.parse
+from xml.etree import ElementTree
 
 from cssselect2 import ElementWrapper
 
 import html_helper
 from html_helper import fetch_wrapped_root_cssselect2
+
+UTF8 = 'utf-8'
 
 COURSE_DETAILS_PAGE_URL_BASE = "https://catalogue.usask.ca/"
 
@@ -38,13 +41,14 @@ def locate_main_results_nodes(cssselect2_root):
     return results_children
 
 
-def fetch_course_details_by_course_code(course_code):
+def fetch_course_details_by_course_code(course_code) -> dict:
     # see data/biol-120.xml for main content node example
     # (all sections, especially
     #   section#Description>div#Description-subsection-0)
     cssselect2_root = html_helper.fetch_wrapped_root_cssselect2(
         course_details_page_url(course_code))
-    course_details_dict = etree_extract_course_details(cssselect2_root)
+    course_details_dict = cssselect2_extract_description_fields(
+        cssselect2_root)
     return course_details_dict
 
 
@@ -54,8 +58,7 @@ def fetch_course_details_by_subject_code(subject_code):
     pass
 
 
-def etree_extract_course_description_fields(
-        description_node: ElementWrapper) -> dict:
+def description_dict(description_node: ElementWrapper) -> dict:
     # 'summary': 'p:nth-child(1)',
     # 'table of fields': 'p:nth-child(2)'
     #     'prerequisites_list': 'b:text("Prerequisite(s):")'.tail
@@ -64,18 +67,35 @@ def etree_extract_course_description_fields(
     #             <subject_code> = (\w+ \d{2,3})
     #             <conjunction> = ( (?:or|and|,) )
     #     'note': 'b:text("Note:")'.tail
+    # @todo: implement the above, via strict MVP path
+    p2 = locate_p2(description_node)
     course_description_fields = {
-        # @todo: implement the above, via strict MVP path
-        'summary': description_node.query('p:nth-child(1)').etree_element.text
+        "it's bloody raw": ElementTree.tostring(p2.etree_element).decode(UTF8),
+        "prerequisites": parse_description_fields(p2),
+        "summary": description_node.query('p:nth-child(1)').etree_element.text,
     }
     return course_description_fields
 
 
-def etree_extract_course_details(cssselect2_root: ElementWrapper) -> dict:
+def locate_p2(description_node):
+    return description_node.query('p:nth-child(2)')
+
+
+def parse_description_fields(description_node):
+    target_tag = 'b'
+    target_text = "Prerequisite(s):"
+    match_collection = [node.etree_element.tail for node in
+                        description_node.query_all(target_tag) if
+                        node.etree_element.text == target_text]
+    return match_collection.pop()
+
+
+def cssselect2_extract_description_fields(
+        cssselect2_root: ElementWrapper) -> dict:
     # for course_code node:
     description_node = cssselect2_root.query('section#Description'
                                              '>div#Description-subsection-0')
-    course_code_extraction = etree_extract_course_description_fields(
+    course_code_extraction = description_dict(
         description_node)
     # for subject_code node:
     # @todo: extract subject_code node
