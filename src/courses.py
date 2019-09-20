@@ -3,8 +3,8 @@ from xml.etree import ElementTree
 
 from cssselect2 import ElementWrapper
 
-import html_helper
-from html_helper import fetch_cssselect2_root
+from src import html_helper
+from src.html_helper import fetch_cssselect2_root
 
 UTF8 = 'utf-8'
 

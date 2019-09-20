@@ -13,7 +13,7 @@ fn get list of course details data:
 
 # %%
 
-import programs
+from src import programs, courses
 
 """
 > get list of study_levels
@@ -49,8 +49,6 @@ programs_by_subject = programs.fetch_programs_by_subject(
 >         for program details page in program urls:
 >             get list of courses urls
 """
-
-import courses
 
 # temp bypass of loop
 PROGRAM_PAGE_URL_BS4Y_BINF = "https://programs.usask.ca/arts-and-science/" \

@@ -1,4 +1,4 @@
-import courses
+from src import courses
 
 URL_SUBJ_CODE_BIOL = 'https://catalogue.usask.ca/?subj_code=BIOL'
 COURSE_CODE_BIOL_120 = 'BIOL-120'
