@@ -4,6 +4,7 @@
       <w>bioinformatics</w>
       <w>cssselect</w>
       <w>lxml</w>
+      <w>pytest</w>
       <w>uofs</w>
     </words>
   </dictionary>
