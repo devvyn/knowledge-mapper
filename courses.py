@@ -4,7 +4,7 @@ from xml.etree import ElementTree
 from cssselect2 import ElementWrapper
 
 import html_helper
-from html_helper import fetch_wrapped_root_cssselect2
+from html_helper import fetch_cssselect2_root
 
 UTF8 = 'utf-8'
 
@@ -12,7 +12,7 @@ COURSE_DETAILS_PAGE_URL_BASE = "https://catalogue.usask.ca/"
 
 
 def fetch_courses_by_section(program_page_url):
-    root = fetch_wrapped_root_cssselect2(program_page_url)
+    root = fetch_cssselect2_root(program_page_url)
     courses_by_section = {
         match.etree_element.text.strip(): {
             course_code: course_details_page_url(course_code)
@@ -45,7 +45,7 @@ def fetch_course_details_by_course_code(course_code) -> dict:
     # see data/biol-120.xml for main content node example
     # (all sections, especially
     #   section#Description>div#Description-subsection-0)
-    cssselect2_root = html_helper.fetch_wrapped_root_cssselect2(
+    cssselect2_root = html_helper.fetch_cssselect2_root(
         course_details_page_url(course_code))
     course_details_dict = cssselect2_extract_description_fields(
         cssselect2_root)

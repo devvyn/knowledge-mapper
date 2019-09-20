@@ -29,6 +29,6 @@ def wrap_etree_cssselect2(page_etree):
     return root
 
 
-def fetch_wrapped_root_cssselect2(url):
+def fetch_cssselect2_root(url):
     root = wrap_etree_cssselect2(fetch_page_etree(url))
     return root
