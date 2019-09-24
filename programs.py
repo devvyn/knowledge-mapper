@@ -9,7 +9,8 @@ def abs_url(url_base, rel_url):
     return urljoin(url_base, rel_url)
 
 
-def fetch_subjects_by_study_level(subjects_list_page_url=LIST_OF_PROGRAMS):
+def fetch_subjects_by_study_level(
+        subjects_list_page_url: str = LIST_OF_PROGRAMS) -> dict:
     root = fetch_cssselect2_root(subjects_list_page_url)
     program_subjects_by_study_level = {
         match.etree_element.text.strip(): {
@@ -20,7 +21,7 @@ def fetch_subjects_by_study_level(subjects_list_page_url=LIST_OF_PROGRAMS):
     return program_subjects_by_study_level
 
 
-def fetch_programs_by_subject(program_subject_page_url):
+def fetch_programs_by_subject(program_subject_page_url: str) -> dict:
     root = fetch_cssselect2_root(program_subject_page_url)
     programs_in_subject = {
         element.etree_element.text:
