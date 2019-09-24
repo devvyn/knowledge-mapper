@@ -26,9 +26,6 @@ def get_page_text_with_cache(page_url: str, cache_dir: str = DATA_PATH) -> str:
 def get_or_fetch_page_text_via_cache(cache_dir, page_url):
     """
     Fetch text from file if it exists, otherwise fetch text from URL and save to file before returning.
-    :param page_url: Full URL to page.
-    :param cache_dir: Full path to file.
-    :return: Page text.
     """
     path = get_cache_path(cache_dir, url=page_url)
     try:
