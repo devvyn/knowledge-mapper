@@ -1,5 +1,4 @@
 import re
-from os import getcwd
 from pathlib import Path
 from urllib.parse import urlparse
 
