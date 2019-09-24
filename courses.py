@@ -3,8 +3,8 @@ from xml.etree import ElementTree
 
 from cssselect2 import ElementWrapper
 
-from src import html_helper
-from src.html_helper import fetch_cssselect2_root
+import html_helper
+from html_helper import fetch_cssselect2_root
 
 UTF8 = 'utf-8'
 
@@ -41,7 +41,7 @@ def locate_main_results_nodes(cssselect2_root):
     return results_children
 
 
-def fetch_course_details_by_course_code(course_code) -> dict:
+def fetch_course_details_by_course_code(course_code: str) -> dict:
     # see data/biol-120.xml for main content node example
     # (all sections, especially
     #   section#Description>div#Description-subsection-0)

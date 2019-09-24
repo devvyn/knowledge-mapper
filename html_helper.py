@@ -3,7 +3,7 @@ import xml
 import cssselect2
 import html5lib
 
-from src import cache
+import cache
 
 
 def wrap_tree_cssselect2(tree):

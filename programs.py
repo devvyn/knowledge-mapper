@@ -1,6 +1,6 @@
 from urllib.parse import urljoin
 
-from src.html_helper import fetch_cssselect2_root
+from html_helper import fetch_cssselect2_root
 
 LIST_OF_PROGRAMS = "https://programs.usask.ca/programs/list-of-programs.php"
 

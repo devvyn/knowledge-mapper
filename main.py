@@ -13,7 +13,8 @@ fn get list of course details data:
 
 # %%
 
-from src import programs, courses
+import programs
+import courses
 
 """
 > get list of study_levels
