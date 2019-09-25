@@ -5,7 +5,7 @@ Feature: subjects within study levels
   For any given STUDY LEVEL (Undergraduate, etc.), all degree program
   SUBJECTS, with links to degree program pages.
 
-  Scenario Outline: degree program subject list
+  Scenario Outline: subjects by study level
     Given the UofS program subject list for <study_level>
     Then <subject> is a <study_level> subject
     And there are at least <min_subject_count> subjects

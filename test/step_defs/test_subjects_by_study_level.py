@@ -3,7 +3,8 @@ from pytest_bdd import scenario, given, then
 from subjects import fetch_subjects_by_study_level
 
 
-@scenario('../features/program_subjects_list.feature', 'get subject list',
+@scenario('../features/subjects_by_study_level.feature',
+          'subjects by study level',
           example_converters={
               'study_level': str,
               'subject_count': int,

@@ -6,7 +6,7 @@ Feature: programs on subjects
   to degree program pages.
 
   Scenario Outline: degree program names and links
-    Given the UofS program list for <study_level> <subject>
+    Given the UofS <study_level> programs for <subject>
     Then there is at least 1 degree program
     And all degree programs have at least 1 link
 
