@@ -44,5 +44,9 @@ def reformat_text(text: str) -> str:
     return re.sub(r'\s+', ' ', text)
 
 
+def get_reformatted_text(match):
+    return reformat_text(match.etree_element.text)
+
+
 def get_href(sub_match: cssselect2.ElementWrapper):
     return sub_match.etree_element.attrib['href']

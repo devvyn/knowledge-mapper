@@ -15,13 +15,14 @@ fn get list of course details data:
 
 import programs
 import courses
+import subjects
 
 """
 > get list of study_levels
 > get list of program_subjects_urls
 """
 
-program_subjects = programs.fetch_subjects_by_study_level()
+program_subjects = subjects.fetch_subjects_by_study_level()
 
 # %%
 
@@ -39,7 +40,7 @@ PROGRAM_SUBJECT_PAGE_PATH_BIOINFORMATICS = \
 program_subject_page_path = PROGRAM_SUBJECT_PAGE_PATH_BIOINFORMATICS
 
 # for program_subject_page_path in program_subjects:
-program_subject_page_url = urllib.parse.urljoin(programs.LIST_OF_PROGRAMS,
+program_subject_page_url = urllib.parse.urljoin(subjects.LIST_OF_PROGRAMS,
                                                 program_subject_page_path)
 programs_by_subject = programs.fetch_programs_by_subject(
     program_subject_page_url)

@@ -1,6 +1,6 @@
 from pytest_bdd import scenario, given, then
 
-from programs import fetch_subjects_by_study_level
+from subjects import fetch_subjects_by_study_level
 
 
 @scenario('../features/program_subjects_list.feature', 'get subject list',
