@@ -8,7 +8,8 @@ from pytest_bdd import (
 import courses
 
 
-@scenario('../features/courses_search_by_subject_code.feature', 'subject code')
+@scenario('../features/courses_search_by_subject_code.feature',
+          'courses under a subject code')
 def test_courses_search_by_subject_code():
     pass
 
