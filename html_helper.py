@@ -1,4 +1,6 @@
-import xml
+import re
+import xml.etree
+from urllib.parse import urljoin
 
 import cssselect2
 import html5lib
@@ -32,3 +34,15 @@ def wrap_etree_cssselect2(page_etree):
 def fetch_cssselect2_root(url):
     root = wrap_etree_cssselect2(fetch_page_etree(url))
     return root
+
+
+def abs_url(url_base, rel_url):
+    return urljoin(url_base, rel_url)
+
+
+def reformat_text(text: str) -> str:
+    return re.sub(r'\s+', ' ', text)
+
+
+def get_href(sub_match: cssselect2.ElementWrapper):
+    return sub_match.etree_element.attrib['href']
