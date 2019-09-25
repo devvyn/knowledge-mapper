@@ -12,9 +12,6 @@ fn get list of course details data:
 """
 
 # %%
-
-import programs
-import courses
 import subjects
 
 """
@@ -27,6 +24,7 @@ program_subjects = subjects.fetch_subjects_by_study_level()
 # %%
 
 import urllib.parse
+import programs
 
 """
 > for program subject details page in program type urls:
@@ -52,10 +50,13 @@ programs_by_subject = programs.fetch_programs_by_subject(
 >             get list of courses urls
 """
 
+import courses.courses_by_course_code
+
 # temp bypass of loop
 PROGRAM_PAGE_URL_BS4Y_BINF = "https://programs.usask.ca/arts-and-science/" \
                              "bioinformatics/bsc-4-bioinformatics.php"
 
 # for program_page_url in program_page_urls:
 program_page_url = PROGRAM_PAGE_URL_BS4Y_BINF
-courses_by_section = courses.fetch_courses_by_section(program_page_url)
+courses_by_section = courses.courses_by_course_code.fetch_courses_by_section(
+    program_page_url)

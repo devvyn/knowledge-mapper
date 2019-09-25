@@ -1,11 +1,13 @@
 import re
+import urllib.parse
 import xml.etree
-from urllib.parse import urljoin
 
 import cssselect2
 import html5lib
 
 import cache
+
+UTF8 = 'utf-8'
 
 
 def wrap_tree_cssselect2(tree):
@@ -37,7 +39,7 @@ def fetch_cssselect2_root(url):
 
 
 def abs_url(url_base, rel_url):
-    return urljoin(url_base, rel_url)
+    return urllib.parse.urljoin(url_base, rel_url)
 
 
 def reformat_text(text: str) -> str:
@@ -50,3 +52,9 @@ def get_reformatted_text(match):
 
 def get_href(sub_match: cssselect2.ElementWrapper):
     return sub_match.etree_element.attrib['href']
+
+
+def locate_main_content_node(
+        cssselect2_root: cssselect2.ElementWrapper) -> \
+        cssselect2.ElementWrapper:
+    return cssselect2_root.query('[role="main"]')

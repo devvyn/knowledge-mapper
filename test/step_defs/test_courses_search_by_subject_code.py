@@ -5,7 +5,7 @@ from pytest_bdd import (
     parsers,
 )
 
-import courses
+from courses import courses_by_subject
 
 
 @scenario('../features/courses_by_subject_code.feature',
@@ -16,7 +16,7 @@ def test_courses_search_by_subject_code():
 
 @given(parsers.parse('a search for subject code "{subject_code}"'))
 def subject_code_search_results(subject_code):
-    return courses.fetch_course_details_by_subject_code(
+    return courses_by_subject.fetch_course_details_by_subject_code(
         subject_code=subject_code)
 
 

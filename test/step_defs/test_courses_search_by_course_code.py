@@ -5,17 +5,19 @@ from pytest_bdd import (
     parsers,
 )
 
-import courses
+import courses.courses_by_course_code
 
 
-@scenario('../features/courses_by_course_code.feature', 'course details by course code')
+@scenario('../features/courses_by_course_code.feature',
+          'course details by course code')
 def test_courses_search_by_course_code():
     pass
 
 
 @given(parsers.parse('a search for course code "{course_code}"'))
 def course_code_search_results(course_code):
-    return courses.fetch_course_details_by_course_code(course_code=course_code)
+    return courses.courses_by_course_code.fetch_course_details_by_course_code(
+        course_code=course_code)
 
 
 @then('"summary" is at least 2 words long')
