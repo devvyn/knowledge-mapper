@@ -43,20 +43,4 @@ program_subject_page_url = urllib.parse.urljoin(subjects.LIST_OF_PROGRAMS,
 programs_by_subject = programs.fetch_programs_by_subject(
     program_subject_page_url)
 
-# %%
 
-"""
->         for program details page in program urls:
->             get list of courses urls
-"""
-
-import courses.courses_by_course_code
-
-# temp bypass of loop
-PROGRAM_PAGE_URL_BS4Y_BINF = "https://programs.usask.ca/arts-and-science/" \
-                             "bioinformatics/bsc-4-bioinformatics.php"
-
-# for program_page_url in program_page_urls:
-program_page_url = PROGRAM_PAGE_URL_BS4Y_BINF
-courses_by_section = courses.courses_by_course_code.fetch_courses_by_section(
-    program_page_url)
