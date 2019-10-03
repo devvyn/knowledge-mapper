@@ -1,3 +1,5 @@
+# @todo: import public methods from here into `courses` root
+# @todo: move fetch_…() up one namespace
 import urllib.parse
 import xml.etree
 
