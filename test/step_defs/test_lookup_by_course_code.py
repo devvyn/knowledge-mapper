@@ -10,16 +10,19 @@ def test_lookup_by_course_code():
     pass
 
 
-@given(parse('course code: "{course_code}"'))
+@given(parse('the lookup for course code "{course_code}"'))
 def lookup_by_course_code(course_code):
     print(course_code)
     return fetch_course_details_by_course_code(
         course_code=course_code)
 
 
-@then('"summary" is at least 2 words long')
-def summary_length(lookup_by_course_code):
-    assert len(lookup_by_course_code['summary'].split()) >= 2
+@then(parse('the "{field_name}" text is at least {quantity:d} words long'))
+def word_count_in_field(lookup_by_course_code, field_name, quantity):
+    text = lookup_by_course_code[field_name]
+    assert isinstance(text, str)
+    word_list = text.split()
+    assert len(word_list) >= quantity
 
 
 @then(parse('"{subject_code}" is in a "{field_name}" field'))

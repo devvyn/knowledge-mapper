@@ -1,4 +1,4 @@
-from pytest_bdd import scenario, given, then
+from pytest_bdd import given, scenario, then
 
 from subjects import fetch_subjects_by_study_level
 
@@ -15,8 +15,10 @@ def test_program_subjects_list():
 
 
 @given("the UofS program subject list for <study_level>")
-def subjects(study_level) -> dict:
+def subjects(study_level: str) -> dict:
+    assert isinstance(study_level, str)
     subjects_dict = fetch_subjects_by_study_level()
+    assert isinstance(subjects_dict, dict)
     return subjects_dict[study_level]
 
 
@@ -26,7 +28,7 @@ def subject_count_min(subject_count, subjects):
     assert len(subjects) >= subject_count
 
 
-@then("<subject> is a <study_level> subject")
-def subject_is_in_study_level(subject: str, study_level: str,
-                              subjects, ):
+@then("<subject> is a subject")
+def subject_is_in_study_level(subject: str, subjects: dict, ):
+    assert isinstance(subject, str)
     assert subject in subjects

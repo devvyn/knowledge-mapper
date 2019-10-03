@@ -6,6 +6,6 @@ Feature: course details are indexed by course code
   The scraped page is found by COURSE CODE.
 
   Scenario: course details by course code
-    Given course code: "BIOL-120"
-    Then "summary" is at least 2 words long
+    Given the lookup for course code "BIOL-120"
+    Then the "summary" text is at least 2 words long
     And "BIOL" is in a "prerequisites" field
