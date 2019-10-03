@@ -28,7 +28,7 @@ def subject_count_min(subject_count, subjects):
     assert len(subjects) >= subject_count
 
 
-@then("<subject> is a subject")
-def subject_is_in_study_level(subject: str, subjects: dict, ):
+@then("<subject> is a <study_level> subject")
+def subject_is_in_study_level(subject, subjects, study_level):
     assert isinstance(subject, str)
     assert subject in subjects
