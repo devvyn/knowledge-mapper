@@ -39,7 +39,7 @@ def get_or_fetch_page_text_via_cache(cache_dir, page_url):
 
 def get_page_text(page_url):
     # @todo refactor: decorate this definition with caching wrapper
-    return requests.get(page_url).content
+    return requests.get(page_url).text
 
 
 def get_valid_filename(string: str) -> str:
