@@ -9,6 +9,10 @@ from scrape.url import get_course_url, get_fields_url, get_programs_url
 
 
 def get_fields() -> dict:
+    """
+    Academic fields, each having one or more academic program which can be
+    retrieved with `get_programs`.
+    """
     url = get_fields_url()
     return parse_fields(get_content(url), url)
 
