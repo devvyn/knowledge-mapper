@@ -4,10 +4,8 @@ import requests
 
 from scrape.file_cache import get, put
 
-URL: Type[str] = str
 
-
-def get_content(url: URL) -> str:
+def get_content(url: str) -> str:
     """
     High level getter for web page content. Uses ``cache`` module.
 
