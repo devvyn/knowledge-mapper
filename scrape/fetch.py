@@ -2,7 +2,7 @@ from typing import Type
 
 import requests
 
-from scrape.file_cache import get, put
+from scrape.file_cache import get, getdefault
 
 
 def get_content(url: str) -> str:
@@ -15,4 +15,4 @@ def get_content(url: str) -> str:
     try:
         return get(url)
     except FileNotFoundError:
-        return put(url, requests.get(url).text)
+        return getdefault(url, requests.get(url).text)

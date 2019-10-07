@@ -16,7 +16,7 @@ def get(key: str):
         return f.read()
 
 
-def put(key: str, text: str) -> str:
+def getdefault(key: str, text: str) -> str:
     with open(get_cache_path(key), MODE_WRITE) as file:
         file.write(text)
     return text
