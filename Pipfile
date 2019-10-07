@@ -4,14 +4,14 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
-pytest = '*'
-pytest-bdd = '*'
+behave = "*"
 coverage = "*"
 
 [packages]
 html5lib = "*"
 cssselect2 = "*"
 requests = "*"
+behave = "*"
 
 [requires]
 python_version = "3.7"
