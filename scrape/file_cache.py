@@ -17,9 +17,6 @@ def get(key: str):
 
 
 def put(key: str, text: str) -> str:
-    """
-    Caching setter implementation.
-    """
     with open(get_cache_path(key), MODE_WRITE) as file:
         file.write(text)
     return text
@@ -31,24 +28,14 @@ def get_valid_filename(filename: str) -> str:
         replace_spaces(filename))
 
 
-def get_cache_path(key: str, cache_dir: PATH = CACHE_PATH) -> PATH:
-    return pathlib.Path(cache_dir, get_cache_filename(key))
-
-
-def get_cache_filename(url: str) -> str:
-    return pathlib.Path(f'{url_to_filename(url)}.html')
+def get_cache_path(url: str, cache_dir: PATH = CACHE_PATH) -> PATH:
+    """ Full path for file. """
+    return pathlib.Path(cache_dir, f'{url_to_filename(url)}.html')
 
 
 def url_to_filename(url: str) -> str:
-    return (
-        strip_invalid_characters(
-            replace_spaces(
-                fill_url(
-                    url
-                )
-            )
-        )
-    )
+    return get_valid_filename(
+        fill_url(url))
 
 
 def strip_invalid_characters(filename: str) -> str:
