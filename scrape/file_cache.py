@@ -2,7 +2,6 @@ import pathlib
 import re
 from typing import Union
 
-from scrape.fetch import URL
 from scrape.url import fill_url
 
 MODE_WRITE = 'w'
@@ -36,7 +35,7 @@ def get_cache_path(key: str, cache_dir: PATH = CACHE_PATH) -> PATH:
     return pathlib.Path(cache_dir, get_cache_filename(key))
 
 
-def get_cache_filename(url: URL) -> str:
+def get_cache_filename(url: str) -> str:
     return pathlib.Path(f'{url_to_filename(url)}.html')
 
 
