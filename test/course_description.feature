@@ -2,7 +2,8 @@
 Feature: course descriptions
   Retrieve course descriptions.
 
-  Scenario: course descriptions have a summary
+  Scenario: CMPT-270 has the expected prerequisites
     Given the description of CMPT-270
-    Then there is a summary
-    And the summary is more than just a few words
+    Then there is a prerequisites field
+    And the prerequisites include CMPT 115
+    And the prerequisites include MATH 110
