@@ -35,3 +35,16 @@ def get_programs_url(college, field):
 
 def get_fields_url():
     return FIELDS_URL
+
+
+def get_requirements_url(field, program):
+    url_map = {
+        'Bioinformatics': {
+            'Bachelor of Science Four-year (B.Sc. Four-year)':
+                ('arts-and-science', 'bioinformatics'),
+        }
+    }
+    base_url = 'https://programs.usask.ca/'
+    index_slug = 'index.php'
+    college_slug, field_slug = url_map[field][program]
+    return f"{base_url}{college_slug}/{field_slug}/{index_slug}"
