@@ -1,5 +1,4 @@
 import re
-import xml
 from typing import AnyStr, List
 
 import cssselect2
@@ -8,11 +7,9 @@ import html5lib
 from scrape.url import abs_url, get_course_url
 
 
-def get_text_clean(node: cssselect2.ElementWrapper) -> str:
+def get_text(node: cssselect2.ElementWrapper) -> str:
     """ Get inner text from parent_node with clean whitespace. """
-    return clean_whitespace(
-        node.etree_element.text
-    )
+    return clean_whitespace(node.etree_element.text)
 
 
 def get_href(node: cssselect2.ElementWrapper) -> str:
@@ -29,11 +26,6 @@ def get_main(root: cssselect2.ElementWrapper) -> cssselect2.ElementWrapper:
     """ Get the main content parent_node from the given root. """
     selector = '[role="main"]'
     return root.query(selector)
-
-
-def parse_html(html: str) -> xml.etree.ElementTree:
-    """ Parse element tree from text. """
-    return html5lib.parse(html)
 
 
 def clean_whitespace(text: str) -> str:
@@ -60,7 +52,7 @@ def description_dict(description_node: cssselect2.ElementWrapper) -> dict:
         "prerequisites":
             get_prerequisites(prerequisites_node),
         "summary":
-            description_node.query(selector_first_p).etree_element.text,
+            get_text(description_node.query(selector_first_p)),
     }
 
 
@@ -73,7 +65,7 @@ def find_tag_with_text(node, tag, text):
         child_node.etree_element.tail
         for child_node
         in node.query_all(tag)
-        if child_node.etree_element.text == text
+        if get_text(child_node) == text
     )
 
 
@@ -97,48 +89,52 @@ def get_prerequisites(
 
 def parse_requirements(content):
     content_root = cssselect2.ElementWrapper.from_html_root(
-        parse_html(content))
-    selector_section_h1 = 'section.uofs-section h1'
-    selector_ul_li = 'ul>li'
+        html5lib.parse(content))
+    selector_section_heading = 'section.uofs-section h1'
+    section_headings = content_root.query_all(selector_section_heading)
     return {
-        heading_node.etree_element.text.strip(): {
-            course_code:
-                get_course_url(course_code)
-            for course_code
-            in (list_item_node.etree_element.text.strip()
-                for list_item_node
-                in heading_node.parent.query_all(selector_ul_li))
-        }
-        for heading_node in content_root.query_all(selector_section_h1)
+        get_text(heading):
+            {
+                code:
+                    get_course_url(code)
+                for code in
+                (
+                    get_text(list_item_node)
+                    for list_item_node in
+                    query_parent(heading, 'ul>li')
+                )
+            }
+        for heading in section_headings
     }
+
+
+def query_parent(node, selectors):
+    return node.parent.query_all(selectors)
 
 
 def parse_fields(content, url):
     root = cssselect2.ElementWrapper.from_html_root(
-        parse_html(
-            content
-        )
-    )
-    section_headers_selector = 'section.uofs-section h1'
-    section_headers = root.query_all(section_headers_selector)
-    subjects_selector = 'li>a'
+        html5lib.parse(content))
+    section_headers = root.query_all('section.uofs-section h1')
     subjects = {
-        get_text_clean(match): {
-            get_text_clean(sub_match):
-                abs_url(url, get_href(sub_match))
-            for sub_match in match.parent.query_all(subjects_selector)}
+        get_text(match): {
+            get_text(sub_match):
+                abs_url(url,
+                        get_href(sub_match))
+            for sub_match in query_parent(match, 'li>a')}
         for match in section_headers}
     return subjects
 
 
 def parse_programs(content, base_href):
     root = cssselect2.ElementWrapper.from_html_root(
-        parse_html(content))
+        html5lib.parse(content))
     links_selector = 'section#Programs ul>li>a'
     links = root.query_all(links_selector)
     programs_in_subject = {
-        get_text_clean(element):
-            abs_url(base_href, get_href(element))
+        get_text(element):
+            abs_url(base_href,
+                    get_href(element))
         for element in links
     }
     return programs_in_subject
@@ -146,7 +142,7 @@ def parse_programs(content, base_href):
 
 def parse_course(content):
     root = cssselect2.ElementWrapper.from_html_root(
-        parse_html(content))
+        html5lib.parse(content))
     description_node = root.query('section#Description'
                                   '>div#Description-subsection-0')
     return description_dict(description_node)
