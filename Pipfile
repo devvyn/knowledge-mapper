@@ -12,6 +12,7 @@ html5lib = "*"
 cssselect2 = "*"
 requests = "*"
 behave = "*"
+pytest = "*"
 
 [requires]
 python_version = "3.7"
