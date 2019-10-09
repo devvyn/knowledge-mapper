@@ -1,5 +1,6 @@
 import re
 import xml
+from typing import AnyStr, List
 
 import cssselect2
 import html5lib
@@ -149,3 +150,13 @@ def parse_course(content):
     description_node = root.query('section#Description'
                                   '>div#Description-subsection-0')
     return description_dict(description_node)
+
+
+def get_words(text: AnyStr) -> List[AnyStr]:
+    """
+    Split text by whitespace.
+
+    :param text: Text to split.
+    :return: List of words.
+    """
+    return re.split(r'\s+', text)
