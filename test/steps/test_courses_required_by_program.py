@@ -6,7 +6,7 @@ use_step_matcher("re")
 
 
 @given("the (?P<program>.+) program in the field of (?P<field>.+)")
-def step_impl(context, field, program):
+def step_impl(context, program, field):
     """
     :type context: behave.runner.Context
     :type field: str
