@@ -2,7 +2,7 @@ from typing import Type
 
 import requests
 
-from scrape.file_cache import get, getdefault
+from scrape.file_cache import get, getdefault, WebCache
 
 
 def get_content(url: str) -> str:
@@ -12,7 +12,8 @@ def get_content(url: str) -> str:
         Fetch content from local cache, if possible;
         fetch from web, if not cached.
     """
+    cache = WebCache()
     try:
-        return get(url)
+        return cache.get(url)
     except FileNotFoundError:
-        return getdefault(url, requests.get(url).text)
+        return cache.getdefault(url, requests.get(url).text)
