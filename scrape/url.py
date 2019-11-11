@@ -1,3 +1,4 @@
+import re
 import urllib.parse
 from typing import Iterable
 
@@ -48,3 +49,18 @@ def get_requirements_url(field, program):
     index_slug = 'index.php'
     college_slug, field_slug = url_map[field][program]
     return f"{base_url}{college_slug}/{field_slug}/{index_slug}"
+
+
+def strip_invalid_characters(filename: str) -> str:
+    return re.sub(r'(?u)[^-\w.]', '', filename)
+
+
+def get_valid_filename(filename: str) -> str:
+    """ Fix invalid filename string by changing or removing characters."""
+    return strip_invalid_characters(
+        filename.strip().replace(' ', '_'))
+
+
+def url_to_filename(url: str) -> str:
+    return get_valid_filename(
+        fill_url(url))

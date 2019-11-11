@@ -1,88 +1,61 @@
 import pathlib
-import re
 import sys
 from os import makedirs
 from os.path import isdir
 from typing import Union
 
-from scrape.url import fill_url
+from scrape.url import url_to_filename
+
+PATH = Union[str, pathlib.Path]
 
 MODE_WRITE = 'w'
 MODE_READ = 'r'
 
 CACHE_PATH: str = './data/'  # relative to working directory
-PATH = Union[pathlib.Path, str]
-
-
-def get(key: str) -> str:
-    with open(get_cache_path(key), MODE_READ) as f:
-        return f.read()
-
-
-def getdefault(key: str, text: str) -> str:
-    with open(get_cache_path(key), MODE_WRITE) as file:
-        file.write(text)
-    return text
-
-
-def get_valid_filename(filename: str) -> str:
-    """ Fix invalid filename string by changing or removing characters."""
-    return strip_invalid_characters(
-        replace_spaces(filename))
-
-
-def get_cache_path(url: str, cache_dir: PATH = CACHE_PATH) -> PATH:
-    """ Full path for file. """
-    return pathlib.Path(cache_dir, f'{url_to_filename(url)}.html')
-
-
-def url_to_filename(url: str) -> str:
-    return get_valid_filename(
-        fill_url(url))
-
-
-def strip_invalid_characters(filename: str) -> str:
-    return re.sub(r'(?u)[^-\w.]', '', filename)
-
-
-def replace_spaces(string: str) -> str:
-    return string.strip().replace(' ', '_')
-
-
-def init_cache(cache_dir: str) -> str:
-    resolved_path = pathlib.Path(cache_dir).resolve()
-    try:
-        makedirs(resolved_path, exist_ok=True)
-    except FileExistsError:
-        # if this causes error, there's a file with the same name already
-        print(f"File exists at {resolved_path}.", file=sys.stderr)
-    if not isdir(resolved_path):
-        raise NotADirectoryError(resolved_path)
-    return resolved_path
 
 
 class WebCache:
-    dir: Union[str, pathlib.Path]
-    def __init__(self, cache_dir: str = CACHE_PATH):
-        self.dir = init_cache(cache_dir)
+    """
+    A cache handler with get and put methods, and configurable path for
+    storage.
+    """
 
-    def get(self, *args, **kwargs):
-        return get(*args, **kwargs)
+    dir: PATH
 
-    def getdefault(self, *args, **kwargs):
-        return getdefault(*args, **kwargs)
+    def __init__(self, cache_dir: PATH = CACHE_PATH) -> None:
+        resolved_path: PATH = pathlib.Path(cache_dir).resolve()
+        try:
+            makedirs(resolved_path, exist_ok=True)
+        except FileExistsError:
+            # if this causes error, there's a file with the same name already
+            print(f"File exists at {resolved_path}.", file=sys.stderr)
+        if not isdir(resolved_path):
+            raise NotADirectoryError(resolved_path)
+        self.dir = resolved_path
 
-    def get_valid_filename(self, *args, **kwargs):
-        return get_valid_filename(*args, **kwargs)
+    def file_path(self, url: str) -> PATH:
+        """ Full path for file.
+        :param url: A URL, URN, or other string to use as the key for
+            storage.
+        :return: Path for a hypothetical file corresponding to the local
+            storage path plus the file name derived from the key.
+        """
+        html_file_name: str = url_to_filename(url) + ".html"
+        return pathlib.Path(self.dir, html_file_name)
 
-    def get_cache_path(self, *args, **kwargs):
-        return get_cache_path(*args, **kwargs)
+    def get(self, key: str) -> str:
+        path = self.file_path(key)
+        with open(path, MODE_READ) as file:
+            return file.read()
 
-    def url_to_filename(self, *args, **kwargs):
-        return url_to_filename(*args, **kwargs)
+    def put(self, key: str, text: str) -> int:
+        """
+        Write the given text to a file on local storage.
 
-    def strip_invalid_characters(self, *args, **kwargs):
-        return strip_invalid_characters(*args, **kwargs)
-
-    def replace_spaces(self, *args, **kwargs):
-        return replace_spaces(*args, **kwargs)
+        :param key: The
+        :param text:
+        :return: The number of bytes written
+        """
+        path = self.file_path(key)
+        with open(path, MODE_WRITE) as file:
+            return file.write(text)

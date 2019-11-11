@@ -1,8 +1,6 @@
-from typing import Type
-
 import requests
 
-from scrape.file_cache import get, getdefault, WebCache
+from scrape.file_cache import WebCache
 
 
 def get_content(url: str) -> str:
@@ -16,4 +14,6 @@ def get_content(url: str) -> str:
     try:
         return cache.get(url)
     except FileNotFoundError:
-        return cache.getdefault(url, requests.get(url).text)
+        text = requests.get(url).text
+        cache.put(url, text)
+        return text
