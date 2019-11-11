@@ -1,3 +1,6 @@
+"""
+File-based cache for text retrieved from URL-based resources.
+"""
 import pathlib
 import sys
 from os import makedirs
@@ -20,18 +23,18 @@ class WebCache:
     storage.
     """
 
-    dir: PATH
+    path: PATH
 
     def __init__(self, cache_dir: PATH = CACHE_PATH) -> None:
-        resolved_path: PATH = pathlib.Path(cache_dir).resolve()
+        path_resolved: PATH = pathlib.Path(cache_dir).resolve()
         try:
-            makedirs(resolved_path, exist_ok=True)
+            makedirs(path_resolved, exist_ok=True)
         except FileExistsError:
             # if this causes error, there's a file with the same name already
-            print(f"File exists at {resolved_path}.", file=sys.stderr)
-        if not isdir(resolved_path):
-            raise NotADirectoryError(resolved_path)
-        self.dir = resolved_path
+            print(f"File exists at {path_resolved}.", file=sys.stderr)
+        if not isdir(path_resolved):
+            raise NotADirectoryError(path_resolved)
+        self.path = path_resolved
 
     def file_path(self, url: str) -> PATH:
         """ Full path for file.
@@ -41,7 +44,7 @@ class WebCache:
             storage path plus the file name derived from the key.
         """
         html_file_name: str = url_to_filename(url) + ".html"
-        return pathlib.Path(self.dir, html_file_name)
+        return pathlib.Path(self.path, html_file_name)
 
     def get(self, key: str) -> str:
         path = self.file_path(key)
@@ -59,3 +62,29 @@ class WebCache:
         path = self.file_path(key)
         with open(path, MODE_WRITE) as file:
             return file.write(text)
+
+
+class CacheWrapper(object):
+
+    def __init__(self, func):
+        self.cache = WebCache()
+        self.func = func
+
+    def __call__(self, url: str) -> str:
+        """
+        High level getter for web page content. Uses ``cache`` module.
+
+            Fetch content from local cache, if possible;
+            fetch from web, if not cached.
+        """
+
+        try:
+            result = self.cache.get(url)
+        except FileNotFoundError:
+            text = self.func(url)
+            self.cache.put(url, text)
+            result = text
+        return result
+
+
+cached = CacheWrapper
