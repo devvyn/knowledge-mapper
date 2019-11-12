@@ -28,9 +28,15 @@ def get_programs(college, field) -> dict:
     return parse_programs(get_content(url), url)
 
 
-def get_requirements(field: str, program: str) -> dict:
+def program_page_url(field, program):
     program_page_url = f"https://.../{field}/{program}"  # FIXME
-    return parse_requirements(get_content(program_page_url))
+    return program_page_url
+
+
+def get_program_data(field: str, program: str) -> dict:
+    url = program_page_url(field, program)
+    content = get_content(url)
+    return parse_requirements(content)
 
 
 def get_course(course_code: str) -> dict:

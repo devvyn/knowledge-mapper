@@ -1,6 +1,6 @@
 from behave import *
 
-from scrape.model import get_requirements
+from scrape.model import get_program_data
 
 use_step_matcher("re")
 
@@ -12,7 +12,7 @@ def step_impl(context, program, field):
     :type field: str
     :type program: str
     """
-    context.lookup = get_requirements(field, program)
+    context.lookup = get_program_data(field, program)
 
 
 @then("(?P<code>.+) is listed as a requirement")
