@@ -7,9 +7,16 @@ import html5lib
 from scrape.url import abs_url, get_course_url
 
 
+def get_clean_text(node: cssselect2.ElementWrapper) -> str:
+    """ Get inner text from parent_node with clean whitespace. """
+    text = get_text(node)
+    return clean_whitespace(text)
+
+
 def get_text(node: cssselect2.ElementWrapper) -> str:
     """ Get inner text from parent_node with clean whitespace. """
-    return clean_whitespace(node.etree_element.text)
+    text = node.etree_element.text
+    return text
 
 
 def get_href(node: cssselect2.ElementWrapper) -> str:
@@ -52,7 +59,7 @@ def description_dict(description_node: cssselect2.ElementWrapper) -> dict:
         "prerequisites":
             get_prerequisites(prerequisites_node),
         "summary":
-            get_text(description_node.query(selector_first_p)),
+            get_clean_text(description_node.query(selector_first_p)),
     }
 
 
@@ -65,7 +72,7 @@ def find_tag_with_text(node, tag, text):
         child_node.etree_element.tail
         for child_node
         in node.query_all(tag)
-        if get_text(child_node) == text
+        if get_clean_text(child_node) == text
     )
 
 
@@ -93,13 +100,13 @@ def parse_requirements(content):
     selector_section_heading = 'section.uofs-section h1'
     section_headings = content_root.query_all(selector_section_heading)
     return {
-        get_text(heading):
+        get_clean_text(heading):
             {
                 code:
                     get_course_url(code)
                 for code in
                 (
-                    get_text(list_item_node)
+                    get_clean_text(list_item_node)
                     for list_item_node in
                     query_parent(heading, 'ul>li')
                 )
@@ -112,17 +119,21 @@ def query_parent(node, selectors):
     return node.parent.query_all(selectors)
 
 
-def parse_fields(content, url):
+def parse_fields(content=None, base_href=''):
     root = cssselect2.ElementWrapper.from_html_root(
         html5lib.parse(content))
     section_headers = root.query_all('section.uofs-section h1')
     subjects = {
-        get_text(match): {
-            get_text(sub_match):
-                abs_url(url,
+        get_clean_text(match): {
+            get_clean_text(sub_match):
+                abs_url(base_href,
                         get_href(sub_match))
-            for sub_match in query_parent(match, 'li>a')}
-        for match in section_headers}
+            for sub_match
+            in query_parent(match, 'li>a')
+            if get_text(sub_match)
+        }
+        for match in section_headers
+    }
     return subjects
 
 
@@ -132,7 +143,7 @@ def parse_programs(content, base_href):
     links_selector = 'section#Programs ul>li>a'
     links = root.query_all(links_selector)
     programs_in_subject = {
-        get_text(element):
+        get_clean_text(element):
             abs_url(base_href,
                     get_href(element))
         for element in links
