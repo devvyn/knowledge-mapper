@@ -30,10 +30,6 @@ def get_course_url(course_code):
     return urllib.parse.urljoin(COURSE_URL, course_code.lower())
 
 
-def get_programs_url(college, field):
-    return f'https://programs.usask.ca/{college}/{field}/index.php'
-
-
 def get_fields_url():
     return FIELDS_URL
 

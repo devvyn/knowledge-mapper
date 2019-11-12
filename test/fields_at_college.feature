@@ -3,8 +3,8 @@ Feature: all fields of study
   Get names and URLs of program fields
 
   Scenario Outline:
-    Given the web page for the list of programs
-    Given the list of programs
+    Given the web page for the list of all programs
+    Given the list of all programs
     Then the field of <field> is listed under <level>
 
     Examples:

@@ -2,7 +2,8 @@
 Feature: list of courses required by any given program
 
   Scenario Outline: an expected course code is associated with the program
-    Given the <program> program in the field of <field>
+    Given the page for <program> in the field of <field>
+    And the list of requirements for the program
     Then <code> is listed as a requirement
 
     Examples:

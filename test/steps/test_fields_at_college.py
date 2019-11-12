@@ -1,11 +1,13 @@
 from behave import *
 
-from scrape.model import get_all_fields, get_list_of_program_page
+from scrape.fetch import get_content
+from scrape.model import get_all_fields
+from scrape.url import get_fields_url
 
 use_step_matcher("re")
 
 
-@given("the list of programs")
+@given("the list of all programs")
 def step_impl(context):
     """
     :type context: behave.runner.Context
@@ -23,9 +25,11 @@ def step_impl(context, field, level):
     assert field in context.lookup[level], context.lookup.keys()
 
 
-@given("the web page for the list of programs")
+@given("the web page for the list of all programs")
 def step_impl(context):
     """
     :type context: behave.runner.Context
     """
-    assert get_list_of_program_page()
+    base_href = get_fields_url()
+    content = get_content(base_href)
+    assert locals()

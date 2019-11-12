@@ -94,7 +94,7 @@ def get_prerequisites(
     return next(find_tag_with_text(description_node, tag, text))
 
 
-def parse_requirements(content):
+def parse_program(content):
     content_root = cssselect2.ElementWrapper.from_html_root(
         html5lib.parse(content))
     selector_section_heading = 'section.uofs-section h1'
