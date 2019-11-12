@@ -21,4 +21,4 @@ def step_impl(context, program):
     :type context: behave.runner.Context
     :type program: str
     """
-    assert program in context.lookup
+    assert program in context.lookup, f"{context.lookup}"
