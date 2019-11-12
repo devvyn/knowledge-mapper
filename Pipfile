@@ -6,13 +6,12 @@ verify_ssl = true
 [dev-packages]
 behave = "*"
 coverage = "*"
+pytest = "*"
 
 [packages]
 html5lib = "*"
 cssselect2 = "*"
 requests = "*"
-behave = "*"
-pytest = "*"
 
 [requires]
-python_version = "3.7"
+python_version = "3.6"
