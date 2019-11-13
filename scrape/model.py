@@ -39,7 +39,15 @@ def get_program_data(content: str) -> dict:
     return parse_program(content)
 
 
-def get_program_page(field, program):
+def get_program_page(field: str, program: str) -> str:
+    """
+    For given program, return the content of the program's page in the
+    course catalogue.
+
+    :param field: Field of study to which the program belongs
+    :param program: Program name
+    :return:
+    """
     url = program_page_url(field, program)
     content = get_content(url)
     return content
