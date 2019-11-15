@@ -11,7 +11,6 @@ def step_impl(context, level, field):
     :type field: str
     :type context: behave.runner.Context
     :type level: str
-    :type college: str
     """
     context.page = get_programs_page(level, field)
 
@@ -20,7 +19,6 @@ def step_impl(context, level, field):
 def step_impl(context):
     """
     :type context: behave.runner.Context
-    :type field: str
     """
     content, base_href = context.page
     context.programs = get_programs(content, base_href)

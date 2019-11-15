@@ -9,7 +9,6 @@ use_step_matcher("re")
 def step_impl(context, program, field):
     """
     :type context: behave.runner.Context
-    :type field: str
     :type program: str
     """
     context.page = get_program_page(field, program)
