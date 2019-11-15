@@ -1,11 +1,12 @@
 """
 Course data getter. Fetch and parse course descriptions from usask website.
 """
-from itertools import chain
+import itertools
+from typing import Iterable
 
 from scrape.fetch import get_content
-from scrape.parse import (parse_course, parse_fields, parse_programs,
-                          parse_program)
+from scrape.parse import (parse_course, parse_program, parse_programs,
+                          parse_fields)
 from scrape.url import get_course_url, get_fields_url
 
 
@@ -29,26 +30,32 @@ def get_programs_page(level, field):
     return content, url
 
 
-def program_page_url(field, program):
-    # FIXME: lookup from scraped data instead of faking it
-    program_page_url = f"https://.../{field}/{program}"
-    return program_page_url
+def program_page_url(program):
+    all_fields: dict = get_all_fields()
+    sections_children: Iterable[dict] = itertools.chain.from_iterable(
+        all_fields.values())
+    fields_list = (
+        value
+        for program_pages in sections_children
+        for key, value in program_pages.items()
+        if key == program
+    )
+    return next(fields_list)
 
 
 def get_program_data(content: str) -> dict:
     return parse_program(content)
 
 
-def get_program_page(field: str, program: str) -> str:
+def get_program_page(program: str) -> str:
     """
     For given program, return the content of the program's page in the
     course catalogue.
 
-    :param field: Field of study to which the program belongs
     :param program: Program name
     :return:
     """
-    url = program_page_url(field, program)
+    url = program_page_url(program)
     content = get_content(url)
     return content
 

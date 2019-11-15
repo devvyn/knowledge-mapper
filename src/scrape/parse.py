@@ -1,5 +1,5 @@
 import re
-from typing import AnyStr, List
+from typing import AnyStr, List, Dict, Type, Text, Any
 
 import cssselect2
 import html5lib
@@ -100,39 +100,45 @@ def parse_program(content):
     selector_section_heading = 'section.uofs-section h1'
     section_headings = content_root.query_all(selector_section_heading)
     return {
-        get_clean_text(heading):
-            {
-                code:
-                    get_course_url(code)
-                for code in
-                (
-                    get_clean_text(list_item_node)
-                    for list_item_node in
-                    query_parent(heading, 'ul>li')
-                )
-            }
+        get_clean_text(heading): course_dict(heading)
         for heading in section_headings
     }
 
 
-def query_parent(node, selectors):
-    return node.parent.query_all(selectors)
+def course_dict(heading: cssselect2.ElementWrapper) -> dict:
+    return {
+        code: get_course_url(code)
+        for code in (
+            get_clean_text(list_item_node)
+            for list_item_node in heading.parent.query_all('ul>li')
+        )
+    }
 
 
-def parse_fields(content=None, base_href=''):
+GROUPED_URL_DICT: Type = Dict[str, Dict[str, str]]
+
+
+def parse_fields(content: str = None, base_href: str = '') -> GROUPED_URL_DICT:
+    """
+    Given HTML and base_href, return a nested mapping of course page URLs.
+
+    :param content: HTML of page
+    :param base_href: URL of page source
+    :return:
+    """
     root = cssselect2.ElementWrapper.from_html_root(
         html5lib.parse(content))
-    section_headers = root.query_all('section.uofs-section h1')
+    section_heading_selector = 'section.uofs-section h1'
     subjects = {
         get_clean_text(match): {
             get_clean_text(sub_match):
                 abs_url(base_href,
                         get_href(sub_match))
             for sub_match
-            in query_parent(match, 'li>a')
+            in match.parent.query_all('li>a')
             if get_text(sub_match)
         }
-        for match in section_headers
+        for match in root.query_all(section_heading_selector)
     }
     return subjects
 
@@ -144,14 +150,13 @@ def parse_programs(content, base_href):
     links = root.query_all(links_selector)
     programs_in_subject = {
         get_clean_text(element):
-            abs_url(base_href,
-                    get_href(element))
+            abs_url(base_href, get_href(element))
         for element in links
     }
     return programs_in_subject
 
 
-def parse_course(content):
+def parse_course(content: Text) -> Dict[Text, Any]:
     root = cssselect2.ElementWrapper.from_html_root(
         html5lib.parse(content))
     description_node = root.query('section#Description'
@@ -159,7 +164,7 @@ def parse_course(content):
     return description_dict(description_node)
 
 
-def get_words(text: AnyStr) -> List[AnyStr]:
+def get_words(text: Text) -> List[Text]:
     """
     Split text by whitespace.
 
