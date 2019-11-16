@@ -10,7 +10,8 @@ from scrape.url import abs_url, get_course_url
 def get_clean_text(node: cssselect2.ElementWrapper) -> str:
     """ Get inner text from parent_node with clean whitespace. """
     text = get_text(node)
-    return clean_whitespace(text)
+    clean_text = clean_whitespace(text)
+    return clean_text
 
 
 def get_text(node: cssselect2.ElementWrapper) -> str:
