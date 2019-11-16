@@ -1,7 +1,5 @@
 from behave import *
 
-from scrape.model import get_program_data, get_program_page
-
 use_step_matcher("re")
 
 
@@ -11,22 +9,17 @@ def step_impl(context, program, field):
     :type context: behave.runner.Context
     :type program: str
     """
-    context.page = get_program_page(field, program)
+    from scrape.model.page.courses_in_program import get_program_page
+    context.page = get_program_page(program, field)
 
 
 @then("(?P<code>.+) is listed as a requirement")
 def step_impl(context, code):
-    """
-    :type context: behave.runner.Context
-    :type code: str
-    """
     assert code in context.lookup
 
 
 @step("the list of requirements for the program")
 def step_impl(context):
-    """
-    :type context: behave.runner.Context
-    """
     content = context.page
-    context.program_data = get_program_data(context)
+    from scrape.parse import get_program_data
+    context.program_data = get_program_data(content)

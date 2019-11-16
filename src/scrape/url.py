@@ -4,8 +4,6 @@ from typing import Iterable
 
 COURSE_URL = "https://catalogue.usask.ca/"
 
-FIELDS_URL: str = "https://programs.usask.ca/programs/list-of-programs.php"
-
 
 def abs_url(base: str, relative: str) -> str:
     return urllib.parse.urljoin(base, relative)
@@ -28,10 +26,6 @@ def parse_url(url):
 def get_course_url(course_code):
     """ Course catalogue page URL for given usask course code. """
     return urllib.parse.urljoin(COURSE_URL, course_code.lower())
-
-
-def get_fields_url():
-    return FIELDS_URL
 
 
 def get_requirements_url(field, program):

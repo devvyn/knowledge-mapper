@@ -1,5 +1,5 @@
 import re
-from typing import AnyStr, List, Dict, Type, Text, Any
+from typing import Any, Dict, List, Text, Type
 
 import cssselect2
 import html5lib
@@ -172,3 +172,7 @@ def get_words(text: Text) -> List[Text]:
     :return: List of words.
     """
     return re.split(r'\s+', text)
+
+
+def get_program_data(content: str) -> dict:
+    return parse_program(content)
