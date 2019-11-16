@@ -2,11 +2,11 @@
 Feature: list of courses required by any given program
 
   Scenario Outline: an expected course code is associated with the program
-    Given the page for <program> in the field of <field>
+    Given the page for <program> in the field of <field> at the level of <level>
     And the list of requirements for the program
     Then <code> is listed as a requirement
 
     Examples:
-      | field          | program                                         | code     |
-      | Bioinformatics | Bachelor of Science Four-year (B.Sc. Four-year) | BIOL 120 |
-      | Bioinformatics | Bachelor of Science Honours (B.Sc. Honours)     | BIOL 120 |
+      | level         | field          | program                                         | code     |
+      | Undergraduate | Bioinformatics | Bachelor of Science Four-year (B.Sc. Four-year) | BIOL 120 |
+      | Undergraduate | Bioinformatics | Bachelor of Science Honours (B.Sc. Honours)     | BIOL 120 |

@@ -3,14 +3,19 @@ from behave import *
 use_step_matcher("re")
 
 
-@given("the page for (?P<program>.+) in the field of (?P<field>.+)")
-def step_impl(context, program, field):
+@given(
+    "the page for (?P<program>.+) in the field of (?P<field>.+) at the level "
+    "of (?P<level>.+)")
+def step_impl(context, program, field, level):
     """
+    :param field:
+    :type level: str
     :type context: behave.runner.Context
     :type program: str
     """
     from scrape.model.page.courses_in_program import get_program_page
-    context.page = get_program_page(program, field)
+    content = get_program_page(program, field, level)
+    context.content = content
 
 
 @then("(?P<code>.+) is listed as a requirement")
