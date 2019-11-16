@@ -68,8 +68,8 @@ def cached(function: Callable) -> Callable:
     """
     Wrap the decorated function in a cache handler.
 
-    :param function:
-    :return:
+    :param function: The URL fetch function to wrap
+    :return: Wrapped function
     """
 
     cache = WebCache()
