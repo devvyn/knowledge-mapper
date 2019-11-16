@@ -5,7 +5,7 @@ import pathlib
 import sys
 from os import makedirs
 from os.path import isdir
-from typing import Union
+from typing import Callable, Union
 
 from scrape.url import url_to_filename
 
@@ -64,27 +64,31 @@ class WebCache:
             return file.write(text)
 
 
-class CacheWrapper(object):
+def cached(function: Callable) -> Callable:
+    """
+    Wrap the decorated function in a cache handler.
 
-    def __init__(self, func):
-        self.cache = WebCache()
-        self.func = func
+    :param function:
+    :return:
+    """
 
-    def __call__(self, url: str) -> str:
+    cache = WebCache()
+
+    def wrapper(url: str) -> str:
         """
-        High level getter for web page content. Uses ``cache`` module.
+        Attempt cache retrieval before calling the wrapped function to fetch
+        the content.
 
-            Fetch content from local cache, if possible;
-            fetch from web, if not cached.
+        :param url: URL specifying the document location, which also
+            identifies the page in the cache
+        :return: Page content
         """
-
         try:
-            result = self.cache.get(url)
+            result = cache.get(url)
         except FileNotFoundError:
-            text = self.func(url)
-            self.cache.put(url, text)
+            text = function(url)
+            cache.put(url, text)
             result = text
         return result
 
-
-cached = CacheWrapper
+    return wrapper
