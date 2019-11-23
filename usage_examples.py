@@ -9,18 +9,13 @@ list(catalogue)
 
 # %%
 
-catalogue['Undergraduate']
+undergrad = catalogue['Undergraduate']
+undergrad
 
 # %%
 
-catalogue
-# %%
-
-tuple(
-    (parent, child)
-    for (parent, children) in catalogue.items()
-    for child in children
-)
+undergrad_binf = undergrad['Bioinformatics']
+undergrad_binf
 
 # %%
 
@@ -39,6 +34,7 @@ data
 from scrape.fetch import get_content
 from scrape.parse import get_program_data
 
-url = catalogue['Undergraduate']['Bioinformatics']
+# FIXME get fails, not implemented
+url = undergrad_binf['Bachelor of Science Four-year (B.Sc. Four-year)']
 content = get_content(url)
 data = get_program_data(content)
