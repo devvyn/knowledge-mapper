@@ -1,5 +1,5 @@
 from scrape.fetch import get_content
-from scrape.model.core import get_all_fields
+from scrape.page.fields_at_levels import get_all_fields
 from scrape.parse import parse_programs
 
 

@@ -6,35 +6,67 @@ Fetches and parses pages to build a dict-like data object.
 import collections
 from typing import (Any, Iterator, KeysView, ValuesView)
 
-from scrape.model.page.fields_at_levels import get_all_fields
 
+class SourceMapping(collections.MappingView):
+    """ Immutable dictionary view of data structure with a source URL for
+    the root. """
+    data: dict = {}
+    src: str = None
 
-class CourseAndProgramCatalogue(collections.Mapping):
-    """
-    Represent scraped data, with the root at the list of study levels and
-    the leaf nodes as courses
-    """
-    _map: dict
-
-    def __init__(self) -> None:
-        self._map = get_all_fields()
+    def __init__(self: object, src: str = None, ):
+        if src is None:
+            raise TypeError(src)
+        self.src = str(src)
 
     def keys(self) -> KeysView:
-        return self._map.keys()
+        """
+        Keys from data.
+
+        :return: KeysView
+        """
+        return self.data.keys()
 
     def values(self) -> ValuesView:
-        return self._map.values()
+        """
+        Values from data.
+
+        :return: ValuesView
+        """
+        return self.data.values()
 
     def get(self, *args, **kwargs) -> Any:
-        return self._map.get(*args, **kwargs)
+        """
+        Get data value by key.
+
+        :param k: Key to look for.
+        :param default: Value to return if key is not found.
+        :return: Value.
+        :raises KeyError: if `k` is not found and no `default` value is
+            provided.
+        """
+        return self.data.get(*args, **kwargs)
 
     def __len__(self) -> int:
-        return len(self.keys())
+        return len(self.data)
 
     def __iter__(self) -> Iterator[collections.Hashable]:
         return iter(self.keys())
 
     def __getitem__(self, k: collections.Hashable) -> Any:
         if not isinstance(k, collections.Hashable):
-            raise TypeError(f'"{k:str}" is not hashable')
+            raise TypeError(f'"{k:repr}" is not hashable')
         return self.get(k)
+
+    def __repr__(self) -> str:
+        return repr(self.data)
+
+
+class NamedSource(SourceMapping):
+    """ Generic web-based data source, with a name for the root. """
+    name: str = None
+
+    def __init__(self: object, name: str = None, src: str = None) -> None:
+        super().__init__(src)
+        if name is None:
+            raise TypeError(name)
+        self.name = str(name)
