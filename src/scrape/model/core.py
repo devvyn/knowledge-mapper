@@ -4,7 +4,7 @@ Unified data model.
 Fetches and parses pages to build a dict-like data object.
 """
 import collections
-from typing import (Any, Iterator, KeysView, ValuesView)
+from typing import (Any, Iterator, KeysView, ValuesView, ItemsView)
 
 
 class SourceMapping(collections.MappingView):
@@ -33,6 +33,14 @@ class SourceMapping(collections.MappingView):
         :return: ValuesView
         """
         return self.data.values()
+
+    def items(self) -> ItemsView:
+        """
+        Get key, value tuples from data.
+
+        :return: ItemsView
+        """
+        return self.data.items()
 
     def get(self, *args, **kwargs) -> Any:
         """
