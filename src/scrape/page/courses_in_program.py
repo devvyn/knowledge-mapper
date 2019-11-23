@@ -2,8 +2,8 @@ import itertools
 from typing import Iterable, Optional
 
 from scrape.fetch import get_content
-from scrape.model.page.fields_at_levels import get_all_fields
-from scrape.model.page.programs_in_field_at_level import get_programs_url
+from scrape.page.fields_at_levels import get_all_fields
+from scrape.page.programs_in_field_at_level import get_programs_url
 from scrape.parse import parse_programs
 
 

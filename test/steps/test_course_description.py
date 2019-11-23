@@ -1,6 +1,6 @@
 from behave import *
 
-from scrape.model.page.course import get_course
+from scrape.page.course import get_course
 
 use_step_matcher("re")
 

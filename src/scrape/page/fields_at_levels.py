@@ -2,18 +2,19 @@ from scrape.fetch import get_content
 from scrape.parse import parse_fields
 
 
-def get_all_fields() -> dict:
+def get_all_fields(src: str = None) -> dict:
     """
     Academic fields grouped by program level, each having one or more
     academic program which can be retrieved with `get_programs`.
     """
-    base_href = get_fields_url()
+    if src is None:
+        base_href = get_fields_url()
+    else:
+        base_href = str(src)
     content = get_content(base_href)
     return parse_fields(content, base_href)
 
 
-FIELDS_URL: str = "https://programs.usask.ca/programs/list-of-programs.php"
-
-
 def get_fields_url():
-    return FIELDS_URL
+    fields_url: str = "https://programs.usask.ca/programs/list-of-programs.php"
+    return fields_url

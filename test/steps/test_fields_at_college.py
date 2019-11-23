@@ -8,7 +8,7 @@ def step_impl(context):
     """
     :type context: behave.runner.Context
     """
-    from scrape.model.page.fields_at_levels import get_all_fields
+    from scrape.page.fields_at_levels import get_all_fields
     context.lookup = get_all_fields()
 
 
@@ -27,7 +27,7 @@ def step_impl(context):
     """
     :type context: behave.runner.Context
     """
-    from scrape.model.page.fields_at_levels import get_fields_url
+    from scrape.page.fields_at_levels import get_fields_url
     base_href = get_fields_url()
     from scrape.fetch import get_content
     content = get_content(base_href)

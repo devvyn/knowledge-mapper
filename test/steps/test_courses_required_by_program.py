@@ -15,7 +15,7 @@ def step_impl(context, program, field, level):
     :type context: behave.runner.Context
     :type program: str
     """
-    from scrape.model.page.courses_in_program import get_program_page
+    from scrape.page.courses_in_program import get_program_page
     content = get_program_page(program, field, level)
     context.content = content
 
