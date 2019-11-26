@@ -1,3 +1,4 @@
+""" Parse strings. """
 import re
 from typing import Any, Dict, List, Text, Type
 
@@ -85,7 +86,7 @@ def get_prerequisites(
         description_node: cssselect2.ElementWrapper) -> str:
     """ Text after <b>Prerequisite(s):</b>" in the given parent_node. """
     # @todo:
-    #     implement semantic parsing
+    #     implement better parsing
     #     conjunctive expression
     #     <subject_code>(<conjunction><subject_code>)*
     #     <subject_code> = (\w+ \d{2,3})
@@ -127,19 +128,17 @@ def parse_fields(content: str = None, base_href: str = '') -> GROUPED_URL_DICT:
     :param base_href: URL of page source
     :return:
     """
-    root = cssselect2.ElementWrapper.from_html_root(
-        html5lib.parse(content))
+    html_root = html5lib.parse(content)
+    css_root = cssselect2.ElementWrapper.from_html_root(html_root)
     section_heading_selector = 'section.uofs-section h1'
+    sections = css_root.query_all(section_heading_selector)
+    link_selector = 'li>a'
     subjects = {
-        get_clean_text(match): {
-            get_clean_text(sub_match):
-                abs_url(base_href,
-                        get_href(sub_match))
-            for sub_match
-            in match.parent.query_all('li>a')
-            if get_text(sub_match)
-        }
-        for match in root.query_all(section_heading_selector)
+        get_clean_text(section): {
+            get_clean_text(sub_match): abs_url(base_href, get_href(sub_match))
+            for sub_match in section.parent.query_all(link_selector)
+            if get_text(sub_match)}
+        for section in sections
     }
     return subjects
 
