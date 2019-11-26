@@ -5,12 +5,16 @@ from scrape.page.programs_in_field_at_level import (get_programs,
                                                     get_programs_url)
 
 
+# @todo: implement tests
+
 class ProgramCatalogue(SourceMapping):
     """
     Represent scraped data, with the list of study levels at the root and
     courses as the leaf nodes
     """
 
+    # @todo: make lazy
+    # @todo: make separate dataclass and logic class
     def __init__(self, src: str = None) -> None:
         if src is not None:
             url_ = str(src)
@@ -31,6 +35,8 @@ class ProgramCatalogue(SourceMapping):
 class Field(NamedSource):
     """ Field of study. """
 
+    # @todo: make lazy
+    # @todo: make separate dataclass and logic class
     def __init__(self, level: str, name: str, src: str) -> None:
         super().__init__(name, src)
         if level is None:
@@ -43,4 +49,6 @@ class Field(NamedSource):
 
 class Program(NamedSource):
     """ Program in a field of study. """
+    # @todo: make lazy
+    # @todo: make separate dataclass and logic class
     pass
