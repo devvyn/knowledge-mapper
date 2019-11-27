@@ -176,3 +176,18 @@ def get_words(text: Text) -> List[Text]:
 
 def get_program_data(content: str) -> dict:
     return parse_program(content)
+
+
+def parse_program_string(program: str) -> dict:
+    # @todo: implement tests
+    # @todo: make resilience against non-matching strings
+    long = r'(?P<name_long>.+)'
+    short = r'(?: ?\(|, )?' \
+            r'(?P<name_short>[^)]+)' \
+            r'(?:\))?'
+    field = r'(?: - (?P<field_long>.+))?'
+    print(f'{program=}')
+    return re.match(
+        pattern=f'{long}{short}{field}',
+        string=program,
+    ).groupdict()
