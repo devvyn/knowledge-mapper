@@ -29,15 +29,15 @@ class WebCache:
         pass
 
     def __init__(self, cache_dir: PATH = CACHE_PATH) -> None:
-        path_resolved: PATH = pathlib.Path(cache_dir).resolve()
+        path: PATH = pathlib.Path(cache_dir).resolve()
         try:
-            os.makedirs(path_resolved, exist_ok=True)
+            os.makedirs(path, exist_ok=True)
         except FileExistsError:
             # if this causes error, there's a file with the same name already
-            print(f"File exists at {path_resolved}.", file=sys.stderr)
-        if not os.path.isdir(path_resolved):
-            raise NotADirectoryError(path_resolved)
-        self.path = path_resolved
+            print(f"File exists at {path}.", file=sys.stderr)
+        if not os.path.isdir(path):
+            raise NotADirectoryError(path)
+        self.path = path
 
     def file_path(self, url: str) -> PATH:
         """ Full path for file.
