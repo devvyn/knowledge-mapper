@@ -1,4 +1,4 @@
-from scrape.model.core import NamedSource
+from devvyn.scrape.model.core import NamedSource
 
 
 class Course(NamedSource):

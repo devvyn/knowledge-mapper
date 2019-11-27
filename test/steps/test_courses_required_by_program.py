@@ -15,7 +15,7 @@ def step_impl(context, program, field, level):
     :type context: behave.runner.Context
     :type program: str
     """
-    from scrape.page.courses_in_program import get_program_page
+    from devvyn.scrape.page.courses_in_program import get_program_page
     content = get_program_page(program, field, level)
     context.content = content
 
@@ -32,7 +32,7 @@ def step_impl(context, code):
 @step("the list of requirements for the program")
 def step_impl(context):
     content = context.content
-    from scrape.parse import get_program_data
+    from devvyn.scrape.parse import get_program_data
     data = get_program_data(content)
     assert len(data)
     context.program_data = data

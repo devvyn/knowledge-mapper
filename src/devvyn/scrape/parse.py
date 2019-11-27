@@ -5,7 +5,7 @@ from typing import Any, Dict, List, Text, Type
 import cssselect2
 import html5lib
 
-from scrape.url import abs_url, get_course_url
+from devvyn.scrape.url import abs_url, get_course_url
 
 
 def get_clean_text(node: cssselect2.ElementWrapper) -> str:

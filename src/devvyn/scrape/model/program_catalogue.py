@@ -1,9 +1,7 @@
 """ Data object for usask academic program catalogue. """
 
-import scrape.fetch
-import scrape.model.core
-import scrape.page.fields_at_levels
-import scrape.page.programs_in_field_at_level
+import devvyn.scrape.model.core
+import devvyn.scrape.page.fields_at_levels
 
 
 # @todo: implement tests

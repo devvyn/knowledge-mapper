@@ -1,5 +1,5 @@
-from scrape.fetch import get_content
-from scrape.parse import parse_fields
+from devvyn.scrape.fetch import get_content
+from devvyn.scrape.parse import parse_fields
 
 
 def get_all_fields(src: str = None) -> dict:

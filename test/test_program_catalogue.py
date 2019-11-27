@@ -10,5 +10,5 @@ class TestProgramCatalogue:
 
     @pytest.fixture
     def catalogue(self):
-        from scrape.model.program_catalogue import ProgramCatalogue
+        from devvyn.scrape.model.program_catalogue import ProgramCatalogue
         return ProgramCatalogue()

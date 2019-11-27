@@ -1,7 +1,7 @@
 """ Over-the-wire retrieval of data. """
 import requests
 
-from scrape.cache import cached
+from devvyn.cache import cached
 
 
 @cached

@@ -1,6 +1,6 @@
-import scrape.fetch
-import scrape.page.programs_in_field_at_level
-import scrape.parse
+import devvyn.scrape.fetch
+import devvyn.scrape.page.programs_in_field_at_level
+import devvyn.scrape.parse
 
 
 def get_program_page(program: str, field: str, level: str) -> str:
@@ -14,9 +14,9 @@ def get_program_page(program: str, field: str, level: str) -> str:
     :param level: Level of study (Undergraduate, Graduate, Non-degree)
     :return: HTML content from first found page
     """
-    url = scrape.page.programs_in_field_at_level.get_programs_url(level, field)
-    content = scrape.fetch.get_content(url)
-    data = scrape.parse.parse_programs(content, url)
+    url = devvyn.scrape.page.programs_in_field_at_level.get_programs_url(level, field)
+    content = devvyn.scrape.fetch.get_content(url)
+    data = devvyn.scrape.parse.parse_programs(content, url)
     program_page_url = next(
         (
             url
@@ -25,5 +25,5 @@ def get_program_page(program: str, field: str, level: str) -> str:
             if program in title
         )
     )
-    content = scrape.fetch.get_content(program_page_url)
+    content = devvyn.scrape.fetch.get_content(program_page_url)
     return content

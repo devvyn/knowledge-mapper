@@ -6,7 +6,7 @@ import pathlib
 import sys
 import typing
 
-from scrape.url import url_to_filename
+import devvyn.scrape.url
 
 PATH = typing.Union[str, pathlib.Path]
 
@@ -46,7 +46,7 @@ class WebCache:
         :return: Path for a hypothetical file corresponding to the local
             storage path plus the file name derived from the key.
         """
-        html_file_name: str = url_to_filename(url) + ".html"
+        html_file_name: str = devvyn.scrape.url.url_to_filename(url) + ".html"
         return pathlib.Path(self.path, html_file_name)
 
     def get_stored(self, key: str) -> str:

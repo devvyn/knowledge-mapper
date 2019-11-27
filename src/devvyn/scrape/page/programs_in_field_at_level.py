@@ -1,6 +1,6 @@
-from scrape.fetch import get_content
-from scrape.page.fields_at_levels import get_all_fields
-from scrape.parse import parse_programs
+from devvyn.scrape.fetch import get_content
+from devvyn.scrape.page.fields_at_levels import get_all_fields
+from devvyn.scrape.parse import parse_programs
 
 
 def get_programs(content, base_href) -> dict:
