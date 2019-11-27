@@ -9,9 +9,9 @@ from typing import (Any, Iterator, KeysView, ValuesView, ItemsView)
 
 class SourceMapping(collections.MappingView):
     """ Immutable dictionary view of data structure with a source URL for
-    the root. """
+    the root. The `src` parameter is required because `data` may be generated
+    after initialization."""
     data: dict = {}
-    src: str = None
 
     def __init__(self: object, src: str = None, ):
         if src is None:
@@ -73,7 +73,7 @@ class NamedSource(SourceMapping):
     """ Generic web-based data source, with a name for the root. """
     name: str = None
 
-    def __init__(self: object, name: str = None, src: str = None) -> None:
+    def __init__(self: object, name: str, src: str) -> None:
         super().__init__(src)
         if name is None:
             raise TypeError(name)
