@@ -1,6 +1,6 @@
-from scrape.fetch import get_content
-from scrape.page.programs_in_field_at_level import get_programs_url
-from scrape.parse import parse_programs
+import scrape.fetch
+import scrape.page.programs_in_field_at_level
+import scrape.parse
 
 
 def get_program_page(program: str, field: str, level: str) -> str:
@@ -14,17 +14,16 @@ def get_program_page(program: str, field: str, level: str) -> str:
     :param level: Level of study (Undergraduate, Graduate, Non-degree)
     :return: HTML content from first found page
     """
-    field_at_level_url = get_programs_url(level, field)
-    programs_in_field_at_level_content = get_content(field_at_level_url)
-    programs_in_field_at_level_data = parse_programs(
-        programs_in_field_at_level_content, field_at_level_url)
+    url = scrape.page.programs_in_field_at_level.get_programs_url(level, field)
+    content = scrape.fetch.get_content(url)
+    data = scrape.parse.parse_programs(content, url)
     program_page_url = next(
         (
             url
             for title, url
-            in programs_in_field_at_level_data.items()
+            in data.items()
             if program in title
         )
     )
-    content = get_content(program_page_url)
+    content = scrape.fetch.get_content(program_page_url)
     return content
