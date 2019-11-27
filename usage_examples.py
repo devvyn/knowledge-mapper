@@ -1,17 +1,16 @@
 # %%
 
-from scrape.model.program_catalogue import ProgramCatalogue
-from scrape.page.courses_in_program import get_program_page
-from scrape.parse import (clean_whitespace, parse_program)
+import scrape.model.program_catalogue
+import scrape.page.fields_at_levels
+import scrape.parse
 
 # %%
 
-from scrape.page import fields_at_levels
+all_fields = scrape.page.fields_at_levels.get_all_fields()
 
-all_fields = fields_at_levels.get_all_fields()
 # %%
 
-catalogue = ProgramCatalogue()
+catalogue = scrape.model.program_catalogue.ProgramCatalogue()
 
 # %%
 
