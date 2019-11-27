@@ -1,87 +1,47 @@
 # %%
 
 from scrape.model.program_catalogue import ProgramCatalogue
+from scrape.page.courses_in_program import get_program_page
+from scrape.parse import (clean_whitespace, parse_program)
+
+# %%
+
+from scrape.page import fields_at_levels
+
+all_fields = fields_at_levels.get_all_fields()
+# %%
 
 catalogue = ProgramCatalogue()
 
 # %%
 
-list(catalogue)
-
-# %%
-
-undergrad = catalogue['Undergraduate']
-undergrad
-
-# %%
-
-undergrad_binf = undergrad['Bioinformatics']
-undergrad_binf
-
-# %%
-import re
-from typing import Tuple
-from logging import debug
-
-keys = list(
-    (level, field, program,)
-    for level in catalogue
-    for field in catalogue[level]
-    for program in catalogue[level][field]
-)
-
-
-def program_explode(program: str) -> Tuple[str, str]:
-    # @todo: data object
-    program, field = program.split(' - ')
-    debug(program, field)
-    program_long, program_short = re.match(
-        r'(?P<long>.+)(?: \((?P<short>.+)\))',
-        program,
-    ).group('long', 'short', )
-    debug(program_long, program_short)
-    return field, program_long, program_short
-
-
-flattened_catalogue = {
-    (level, field, program_short):
-        [
-            program_long,
-            catalogue[level][field][program],
-        ]
-    for (level, field, (program_long, program_short,), program,)
-    in (
-        (level, field, program_explode(program), program,)
-        for (level, field, program)
-        in keys
-    )
+empty_study_fields = {
+    study_level: tuple((
+        field_name for field_name, programs in fields.items()
+        if not programs
+    ))
+    for study_level, fields in catalogue.items()
 }
 
-# %%
 
-import pandas
+# @todo: implement the above as a test case
+# @todo: improve testing for parser
+# @todo: improve parsing until this list is empty
 
-src = pandas.DataFrame.from_dict(
-    data=flattened_catalogue,
-    orient='index',
-    columns=['program', 'URL']
-)
+#%%
+
 
 # %%
 
-level = 'Undergraduate'
-field = 'Bioinformatics'
-program = 'Bachelor of Science Four-year (B.Sc. Four-year)'
-program_page = get_program_page(program, field, level)
-content = clean_whitespace(program_page)
-data = parse_program(content)
-data
+def example_program_requirements():
+    global level, field, program
+    level = 'Undergraduate'
+    field = 'Bioinformatics'
+    program = 'Bachelor of Science Four-year (B.Sc. Four-year)'
+    program_page = get_program_page(program, field, level)
+    content = clean_whitespace(program_page)
+    data = parse_program(content)
+    return data
 
-# %%
 
-from scrape.parse import get_program_data
-
-# FIXME get fails, not implemented
-url = undergrad_binf['Bachelor of Science Four-year (B.Sc. Four-year)']
-content = get_content(url)
-data = get_program_data(content)
+prog_reqs = example_program_requirements()
