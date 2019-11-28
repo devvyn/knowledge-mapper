@@ -13,6 +13,8 @@ The model must be able to:
   - list of course codes mentioned
   - remaining content fragments that could not be parsed
 """
+import pytest
+
 from devvyn.scrape.model.course_catalogue import Course
 
 
