@@ -191,3 +191,14 @@ def parse_program_string(program: str) -> dict:
         pattern=f'{long}{short}{field}',
         string=program,
     ).groupdict()
+
+
+def parse_course_code(code):
+    subject_pattern = r'(?P<subject>\w+)'
+    credit_pattern = r'(?P<credit>\d)'
+    number_pattern = r'(?P<number>\d{2,3})'
+    code_pattern = fr'{subject_pattern}[- ]?{number_pattern}' \
+                   fr'(?:[.]){credit_pattern}'
+    r = re.compile(code_pattern)
+    code_ = re.match(r, code)
+    return code_
