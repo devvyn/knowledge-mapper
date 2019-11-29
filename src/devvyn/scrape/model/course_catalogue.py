@@ -28,6 +28,10 @@ class Code:
         groups = course_code.groups()
         self.subject, self.number, self.credit = groups
 
+    def __repr__(self):
+        credit = f'.{self.credit}' if self.credit else ''
+        return f'{self.subject}-{self.number}{credit}'
+
 
 class Course:
     """ Course. """
