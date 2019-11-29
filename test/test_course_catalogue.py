@@ -26,21 +26,21 @@ class TestCourseCode:
 
     def test_course_parse_code_full_hyphen(self):
         course = Course(code='PSY-120.3')
-        assert course.code == 'PSY-120.3'
-        assert course.code.subject == 'PSY'
-        assert course.code.number == 120
-        assert course.code.credit == 3
+        assert str(course.code) == 'PSY-120.3'
+        assert str(course.code.subject) == 'PSY'
+        assert int(course.code.number) == 120
+        assert int(course.code.credit) == 3
 
     def test_course_parse_code_full_space(self):
         course = Course(code='PSY 120.3')
-        assert course.code == 'PSY 120.3'
-        assert course.code.subject == 'PSY'
-        assert course.code.number == 120
-        assert course.code.credit == 3
+        assert str(course.code) == 'PSY-120.3'
+        assert str(course.code.subject) == 'PSY'
+        assert int(course.code.number) == 120
+        assert int(course.code.credit) == 3
 
     def test_course_parse_code_partial(self):
         course = Course(code='PSY-120')
-        assert course.code == 'PSY-120'
-        assert course.code.subject == 'PSY'
-        assert course.code.number == 120
+        assert str(course.code) == 'PSY-120'
+        assert str(course.code.subject) == 'PSY'
+        assert int(course.code.number) == 120
         assert course.code.credit is None
