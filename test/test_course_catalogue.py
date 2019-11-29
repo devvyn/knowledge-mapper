@@ -13,34 +13,35 @@ The model must be able to:
   - list of course codes mentioned
   - remaining content fragments that could not be parsed
 """
+
 import pytest
 
-from devvyn.scrape.model.course_catalogue import Course
+from devvyn.scrape.model.course_catalogue import Code
 
 
 class TestCourseCode:
 
     def test_course_parse_code_invalid(self):
         with pytest.raises(ValueError):
-            assert Course(code='PSY').code != 'PSY'
+            assert str(Code(code='PSY')) != 'PSY'
 
     def test_course_parse_code_full_hyphen(self):
-        course = Course(code='PSY-120.3')
-        assert str(course.code) == 'PSY-120.3'
-        assert str(course.code.subject) == 'PSY'
-        assert int(course.code.number) == 120
-        assert int(course.code.credit) == 3
+        code = Code(code='PSY-120.3')
+        assert str(code) == 'PSY-120.3'
+        assert str(code.subject) == 'PSY'
+        assert int(code.number) == 120
+        assert int(code.credit) == 3
 
     def test_course_parse_code_full_space(self):
-        course = Course(code='PSY 120.3')
-        assert str(course.code) == 'PSY-120.3'
-        assert str(course.code.subject) == 'PSY'
-        assert int(course.code.number) == 120
-        assert int(course.code.credit) == 3
+        code = Code(code='PSY 120.3')
+        assert str(code) == 'PSY-120.3'
+        assert str(code.subject) == 'PSY'
+        assert int(code.number) == 120
+        assert int(code.credit) == 3
 
     def test_course_parse_code_partial(self):
-        course = Course(code='PSY-120')
-        assert str(course.code) == 'PSY-120'
-        assert str(course.code.subject) == 'PSY'
-        assert int(course.code.number) == 120
-        assert course.code.credit is None
+        code = Code(code='PSY-120')
+        assert str(code) == 'PSY-120'
+        assert str(code.subject) == 'PSY'
+        assert int(code.number) == 120
+        assert code.credit is None
