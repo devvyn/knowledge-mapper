@@ -21,23 +21,28 @@ class ProgramCatalogue(devvyn.scrape.model.core.SourceMapping):
         super().__init__(url_)
         study_fields = devvyn.scrape.page.fields_at_levels.get_all_fields(self.src)
         self.data = {
-            level: StudyLevel(name=level, data=field_map,
-                              src=self.src)
+            level: AcademicLevel(name=level, data=field_map,
+                                 src=self.src)
             for level, field_map in study_fields.items()
         }
 
 
-class StudyLevel(devvyn.scrape.model.core.NamedSource):
+class AcademicLevel(devvyn.scrape.model.core.NamedSource):
+    """
+    Represents an academic level, which has a parent institution and child fields.
+
+    """
+
     def __init__(self, name: str, data: dict, src: str):
-        super(StudyLevel, self).__init__(name=name, src=src)
+        super(AcademicLevel, self).__init__(name=name, src=src)
         level = name
         self.data = {
-            field: Field(level, field, src, ) for field, src in data.items()
+            field: AcademicField(level, field, src, ) for field, src in data.items()
         }
 
 
-class Field(devvyn.scrape.model.core.NamedSource):
-    """ Field of study. """
+class AcademicField(devvyn.scrape.model.core.NamedSource):
+    """ Represents an academic field of study, with a parent level and child programs. """
 
     # @todo: make separate dataclass and logic class
     def __init__(self, level: str, name: str, src: str) -> None:
@@ -54,7 +59,7 @@ class Field(devvyn.scrape.model.core.NamedSource):
         self.data = {}
 
 
-class Program(devvyn.scrape.model.core.NamedSource):
+class AcademicProgram(devvyn.scrape.model.core.NamedSource):
     """ Program in a field of study. """
     # @todo: make lazy
     # @todo: make separate dataclass and logic class
@@ -67,3 +72,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+
