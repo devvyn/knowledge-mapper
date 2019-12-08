@@ -12,6 +12,7 @@ class SourceMapping(collections.MappingView):
     the root. The `src` parameter is required because `data` may be generated
     after initialization."""
     data: dict = {}
+    src: str
 
     def __init__(self: object, src: str = None, ):
         if src is None:
