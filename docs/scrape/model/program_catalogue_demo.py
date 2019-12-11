@@ -1,6 +1,6 @@
 # %%
 
-import devvyn.scrape.model.program_catalogue
+import devvyn.model.program_catalogue
 
-catalogue = devvyn.scrape.model.program_catalogue.ProgramCatalogue()
+catalogue = devvyn.model.program_catalogue.ProgramCatalogue()
 

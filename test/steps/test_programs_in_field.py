@@ -10,8 +10,8 @@ def step_impl(context, level, field):
     :type context: behave.runner.Context
     :type level: str
     """
-    from devvyn.scrape.page.programs_in_field_at_level import get_programs_page
-    context.page = get_programs_page(level, field)
+    from devvyn.scrape.page.usask.field import field_page
+    context.page = field_page(level, field)
 
 
 @given("the list of programs")
@@ -20,7 +20,7 @@ def step_impl(context):
     :type context: behave.runner.Context
     """
     content, base_href = context.page
-    from devvyn.scrape.page.programs_in_field_at_level import get_programs
+    from devvyn.model.program_catalogue import get_programs
     context.programs = get_programs(content, base_href)
 
 

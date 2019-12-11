@@ -4,20 +4,18 @@ Unified data model.
 Fetches and parses pages to build a dict-like data object.
 """
 import collections
-from typing import (Any, Iterator, KeysView, ValuesView, ItemsView)
+from dataclasses import dataclass
+from typing import (Any, Iterator, KeysView, ValuesView, ItemsView, ClassVar)
 
 
+@dataclass
 class SourceMapping(collections.MappingView):
     """ Immutable dictionary view of data structure with a source URL for
     the root. The `src` parameter is required because `data` may be generated
     after initialization."""
-    data: dict = {}
-    src: str
 
-    def __init__(self: object, src: str = None, ):
-        if src is None:
-            raise TypeError(src)
-        self.src = str(src)
+    src: str
+    data: ClassVar[dict] = {}
 
     def keys(self) -> KeysView:
         """
@@ -50,7 +48,7 @@ class SourceMapping(collections.MappingView):
         :param k: Key to look for.
         :param default: Value to return if key is not found.
         :return: Value.
-        :raises KeyError: if `k` is not found and no `default` value is
+        :raises KeyError: if `key` is not found and no `default` value is
             provided.
         """
         return self.data.get(*args, **kwargs)
@@ -70,12 +68,7 @@ class SourceMapping(collections.MappingView):
         return repr(self.data)
 
 
+@dataclass
 class NamedSource(SourceMapping):
     """ Generic web-based data source, with a name for the root. """
-    name: str = None
-
-    def __init__(self: object, name: str, src: str) -> None:
-        super().__init__(src)
-        if name is None:
-            raise TypeError(name)
-        self.name = str(name)
+    name: str

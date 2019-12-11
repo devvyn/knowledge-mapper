@@ -13,7 +13,10 @@ The model must be able to:
   - list of course codes mentioned
   - remaining content fragments that could not be parsed
 """
-from devvyn.scrape.parse import parse_course_code
+import re
+
+from devvyn.fetch import get_content
+from devvyn.scrape.page.usask.course import get_course_url, parse_course
 
 
 class Code:
@@ -38,3 +41,20 @@ class Course:
 
     def __init__(self, code: str):
         self.code = Code(code)
+
+
+def parse_course_code(code):
+    subject_pattern = r'(?P<subject>\w+)'
+    credit_pattern = r'(?P<credit>\d)'
+    number_pattern = r'(?P<number>\d{2,3})'
+    code_pattern = (
+        fr'{subject_pattern}[- ]?{number_pattern}'
+        fr'(?:(?:[.]){credit_pattern})?')
+    r = re.compile(code_pattern)
+    return re.match(r, code)
+
+
+def get_course(course_code: str) -> dict:
+    url = get_course_url(course_code)
+    content = get_content(url)
+    return parse_course(content)
