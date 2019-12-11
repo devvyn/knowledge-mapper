@@ -1,6 +1,6 @@
 from behave import *
 
-from devvyn.scrape.page.course import get_course
+from devvyn.model.course_catalogue import get_course
 
 use_step_matcher("re")
 

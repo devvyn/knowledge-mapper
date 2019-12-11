@@ -1,5 +1,5 @@
 # %%
 
-import devvyn.scrape.page.fields_at_levels
+import devvyn.scrape.page.usask.program_catalogue
 
-all_fields = devvyn.scrape.page.fields_at_levels.get_all_fields()
+all_fields = devvyn.scrape.page.usask.program_catalogue.program_catalogue_data()

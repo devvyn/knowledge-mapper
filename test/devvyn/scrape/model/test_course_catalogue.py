@@ -1,5 +1,5 @@
 """
-Tests for course catalogue model.
+Tests for course dictionary model.
 
 The model must be able to:
 
@@ -16,7 +16,7 @@ The model must be able to:
 
 import pytest
 
-from devvyn.scrape.model.course_catalogue import Code
+from devvyn.model.course_catalogue import Code
 
 
 class TestCourseCode:
