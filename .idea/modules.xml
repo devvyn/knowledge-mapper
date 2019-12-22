@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/usask_course_catalogue.iml" filepath="$PROJECT_DIR$/.idea/usask_course_catalogue.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/knowledge-mapper.iml" filepath="$PROJECT_DIR$/.idea/knowledge-mapper.iml" />
     </modules>
   </component>
 </project>
