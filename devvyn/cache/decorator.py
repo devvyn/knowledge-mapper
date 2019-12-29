@@ -24,8 +24,10 @@ def cached(function: StringFunction) -> StringFunction:
     def get_content(url: str) -> str:
         return requests.get(url).text
 
-    content_fresh = get_content('https://example.com/')  # save file to cache after fetching
-    content_again = get_content('https://example.com/')  # load file from cache instead of fetching
+    content_fresh = get_content('https://example.com/')  # save file to
+    cache after fetching
+    content_again = get_content('https://example.com/')  # load file from
+    cache instead of fetching
     ```
 
     :param function: the URL fetch function to wrap
@@ -50,7 +52,7 @@ def cached(function: StringFunction) -> StringFunction:
             return cache.get(key)
         except KeyError:
             text = function(key)
-            cache.save(key, text)
+            cache.set(key, text)
         return text
 
     return wrapped
