@@ -4,9 +4,10 @@ with a `FileCache` class to allow easy saving and loading.
 """
 import collections
 import os
+import re
 import sys
 from pathlib import Path
-from typing import Iterable, Iterator, AbstractSet, Any, Union, Generator
+from typing import AbstractSet, Any, Generator, Iterable, Iterator, Union
 
 from typeguard import typechecked
 
@@ -17,17 +18,19 @@ CACHE_PATH: str = './data/'  # default (tail to working directory)
 
 
 @typechecked
-def mkdir_path(path: PATH) -> PATH:
+def mkdir_path(path: PATH) -> Path:
     """
-    Check validity of the given _path and create an empty directory if one does not already exist.
+    Check validity of the given path and create an empty directory if one
+    does not already exist.
 
-    :param path: file system _path for cache directory
-    :return: absolute _path to valid and ready cache directory
+    :param path: file system path for cache directory
+    :return: absolute path to valid and ready cache directory
     """
 
     resolve = Path(path).resolve()
     try:
-        resolve.mkdir(parents=True, exist_ok=True)  # don't raise error if directory exists
+        resolve.mkdir(parents=True,
+                      exist_ok=True)  # don't raise error if directory exists
     except FileExistsError:
         # there's a file with the same name already
         print(f"File exists at {resolve}.", file=sys.stderr)
@@ -39,7 +42,8 @@ def mkdir_path(path: PATH) -> PATH:
 @typechecked
 def dir_path(path: PATH) -> Generator[Path, None, None]:
     """
-    Get an iterator of `Path` objects corresponding to the files in the `path` directory.
+    Get an iterator of `Path` objects corresponding to the files in the
+    `path` directory.
 
     :param path:
     :return:
@@ -51,21 +55,35 @@ def dir_path(path: PATH) -> Generator[Path, None, None]:
 
 class FileCache(collections.MutableMapping):
     """
-    Get and put files on disk in the host file system in the directory given by `path`.
+    Get and put files on disk in the host file system in the directory given
+    by `path`.
     """
-    _path: Path
+    _root: Path
 
     def __contains__(self, item):
-        return self.path.joinpath(item).is_file()
+        return self.file_path(item).is_file()
+
+    def file_path(self, item: PATH) -> Path:
+        return self.root.joinpath(item)
 
     def __setitem__(self, key, v) -> None:
         self.save(key, v)
 
     def __delitem__(self, key) -> None:
-        Path(self.path, key).unlink()
+        Path(self.root, key).unlink()
 
     def __getitem__(self, k) -> str:
-        return self.get(key=k)
+        """
+        Mimic the `__getitem__` method of built-in `dict`.
+
+        :param k: Key
+        :raises KeyError: if key does not exist
+        :return: Stored value
+        """
+        try:
+            return self.load(k)
+        except KeyError:
+            raise
 
     def __len__(self) -> int:
         return len(dir(self))
@@ -74,7 +92,7 @@ class FileCache(collections.MutableMapping):
         return self.keys()
 
     def keys(self) -> AbstractSet[PATH]:
-        return frozenset(dir_path(self.path))
+        return frozenset(dir_path(self.root))
 
     def values(self) -> Generator[str, Any, None]:
         values_generator = (
@@ -92,68 +110,87 @@ class FileCache(collections.MutableMapping):
 
         :param cache_dir:
         """
-        self.path = cache_dir
+        self.root = cache_dir
 
     @property
-    def path(self) -> Path:
+    def root(self) -> Path:
         """
         Cache directory path.
 
         :return:
         """
-        return self._path
+        return self._root
 
-    @path.setter
-    def path(self, cache_dir: PATH) -> None:
+    @root.setter
+    @typechecked
+    def root(self, cache_dir: PATH) -> None:
         """
-        Set the path to the cache directory after resolving, creating, and validating it.
+        Set the path to the cache directory after resolving, creating,
+        and validating it.
 
         :param cache_dir:
         :return:
         """
-        self._path = mkdir_path(cache_dir)
+        self._root = mkdir_path(cache_dir)
 
-    @path.deleter
-    def path(self) -> None:
-        del self._path
+    @root.deleter
+    def root(self) -> None:
+        del self._root
 
+    @typechecked
     def load(self, key: str) -> str:
         """
         Get value if key exists.
 
         :raise KeyError: `key` is not in cache
         """
-        path = self.path.joinpath(key)
+        path = self.file_path(key)
         try:
             result = path.read_text()
         except FileNotFoundError:
             raise KeyError('Key does not exist: ', key)
         return result
 
-    def save(self, key: str, text: str) -> int:
+    @typechecked
+    def save(self, filename: str, text: str) -> int:
         """
-        Write the given text to a file on local storage.
+        Write the given text to a file on local storage in the current root.
 
-        :param key: The
-        :param text:
         :return: The number of bytes written
         """
-        path = Path(self.path, key)
-        return path.write_text(text)
+        file_path = self.file_path(filename)
+        return file_path.write_text(text)
+
+    @typechecked
+    def set(self, key: str, text: str) -> None:
+        """ Store the text in the file cache under the given key. """
+        filename = sanitize_filename(key)
+        self[filename] = text
 
     class MISSING:
         """ Sentry """
-        pass
 
     @typechecked
     def get(self, key: str) -> Any:
         """
-        If key exists, return value.
+        Given key is normalized and if normalized match exists, return
+        stored value.
 
-        :param key: key to data
-        :return: value stored with `key`
+        :raises KeyError: if key does not exist
         """
-        if not isinstance(key, str):
-            raise TypeError(
-                f"`key` should be type `str`, but it's `{type(key)}`.")
-        return self.load(key)
+        try:
+            return self[key]
+        except KeyError:
+            raise
+
+
+@typechecked
+def sanitize_filename(filename: str) -> str:
+    """
+    Make the given string into a filename by removing
+    non-descriptive characters.
+
+    :param filename:
+    :return:
+    """
+    return re.sub(r'(?u)[^-\w.]', '', filename)
