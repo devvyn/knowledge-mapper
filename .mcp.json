@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "saskatchewan-postsecondary": {
+      "command": "uv",
+      "args": ["run", "--with", "mcp", "python", "-m", "devvyn.mcp"],
+      "cwd": "/Users/devvynmurphy/Documents/Code/knowledge-mapper"
+    }
+  }
+}
