@@ -50,7 +50,7 @@ class AcademicField(NamedSource):
 
     # @todo: make separate dataclass and logic class
     def __init__(self, level: str, name: str, src: str) -> None:
-        super().__init__(name, src)
+        super().__init__(src=src, name=name)
         self.level = level
 
         # @todo: use src

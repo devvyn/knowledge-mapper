@@ -3,13 +3,13 @@ Unified data model.
 
 Fetches and parses pages to build a dict-like data object.
 """
-import collections
+from collections.abc import Hashable, MappingView
 from dataclasses import dataclass
 from typing import (Any, Iterator, KeysView, ValuesView, ItemsView, ClassVar)
 
 
 @dataclass
-class SourceMapping(collections.MappingView):
+class SourceMapping(MappingView):
     """ Immutable dictionary view of data structure with a source URL for
     the root. The `src` parameter is required because `data` may be generated
     after initialization."""
@@ -56,11 +56,11 @@ class SourceMapping(collections.MappingView):
     def __len__(self) -> int:
         return len(self.data)
 
-    def __iter__(self) -> Iterator[collections.Hashable]:
+    def __iter__(self) -> Iterator[Hashable]:
         return iter(self.keys())
 
-    def __getitem__(self, k: collections.Hashable) -> Any:
-        if not isinstance(k, collections.Hashable):
+    def __getitem__(self, k: Hashable) -> Any:
+        if not isinstance(k, Hashable):
             raise TypeError(f'"{k:repr}" is not hashable')
         return self.get(k)
 

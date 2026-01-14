@@ -2,7 +2,7 @@
 Convenience functions for storing text in files in a data directory,
 with a `FileCache` class to allow easy saving and loading.
 """
-import collections
+from collections.abc import MutableMapping
 import os
 import re
 import sys
@@ -53,7 +53,7 @@ def dir_path(path: PATH) -> Generator[Path, None, None]:
     return path.iterdir()
 
 
-class FileCache(collections.MutableMapping):
+class FileCache(MutableMapping):
     """
     Get and put files on disk in the host file system in the directory given
     by `path`.
