@@ -108,6 +108,146 @@ CST_TO_USASK_CMPT = TransferAgreement(
 )
 
 
+# =============================================================================
+# Saskatchewan Polytechnic → University of Regina
+# =============================================================================
+
+# Computer Systems Technology → Post-Diploma B.Sc. Computer Science
+# Source: https://www.uregina.ca/science/computer-science/undergraduate-programs/bsc-post-diploma-cs.html
+
+CST_TO_UREGINA_CS = TransferAgreement(
+    source_institution="saskpolytech",
+    source_program="CSTDP",  # Computer Systems Technology Diploma
+    target_institution="uregina",
+    target_program="Post-Diploma B.Sc. Computer Science",
+    total_credits=60.0,
+    effective_date=date(2017, 1, 1),  # Expanded agreement signed 2017
+    notes="""
+    Graduates of Saskatchewan Polytechnic's Computer Systems Technology diploma
+    receive 60 credit hours toward the 120-credit B.Sc. in Computer Science.
+
+    Remaining 20 courses required:
+    - 9 Computer Science courses (Web/Database, Digital Systems, AI, Project)
+    - 5 Mathematics courses (Calculus I & II, Linear Algebra, Proofs, +1 elective)
+    - 2 English courses (Critical Reading and Writing I & II)
+    - 4 Electives (2 Arts/Media, 2 Natural Science)
+
+    Requirements:
+    - Diploma completed within last 10 years
+    - Minimum 70% graduating average
+    - Math C30 or equivalent
+    - Must maintain 65% GPA at U of R
+
+    Typical completion time: 2 years.
+    """,
+    url="https://www.uregina.ca/science/computer-science/undergraduate-programs/bsc-post-diploma-cs.html",
+    course_equivalencies=[
+        # Block transfer - specific course equivalencies not published
+        # U of R grants 60 credit hours as a block for the diploma
+        TransferEquivalency(
+            course_from=CourseReference("saskpolytech", "CSTDP"),
+            course_to=CourseReference("uregina", "CS 110"),
+            notes="Programming and Problem Solving (block transfer)",
+        ),
+        TransferEquivalency(
+            course_from=CourseReference("saskpolytech", "CSTDP"),
+            course_to=CourseReference("uregina", "CS 115"),
+            notes="Object-Oriented Design (block transfer)",
+        ),
+        TransferEquivalency(
+            course_from=CourseReference("saskpolytech", "CSTDP"),
+            course_to=CourseReference("uregina", "CS 210"),
+            notes="Data Structures and Abstractions (block transfer)",
+        ),
+    ],
+)
+
+# Business Information Systems → Post-Diploma B.Sc. Computer Science
+BIS_TO_UREGINA_CS = TransferAgreement(
+    source_institution="saskpolytech",
+    source_program="BIS",  # Business Information Systems
+    target_institution="uregina",
+    target_program="Post-Diploma B.Sc. Computer Science",
+    total_credits=60.0,
+    effective_date=date(2017, 1, 1),
+    notes="""
+    Graduates of Saskatchewan Polytechnic's Business Information Systems diploma
+    may also be eligible for the Post-Diploma B.Sc. in Computer Science.
+
+    Same requirements as CST transfer:
+    - 60 credit hours transferred
+    - 20 courses (60 credits) remaining
+    - Diploma within last 10 years, 70% average, Math C30
+    """,
+    url="https://www.uregina.ca/science/computer-science/undergraduate-programs/bsc-post-diploma-cs.html",
+    course_equivalencies=[
+        TransferEquivalency(
+            course_from=CourseReference("saskpolytech", "BIS"),
+            course_to=CourseReference("uregina", "CS 110"),
+            notes="Programming fundamentals (block transfer)",
+        ),
+    ],
+)
+
+# Graphic Communications → Bachelor of Design
+# Source: https://www.uregina.ca/news/2024/university-of-regina-and-saskatchewan-polytechnic-partner-to-enhance-new-pathways-for-creative-technologies-and-design-students.html
+
+GRAPHIC_COMM_TO_UREGINA_DESIGN = TransferAgreement(
+    source_institution="saskpolytech",
+    source_program="GRAPHIC_COMM",  # Graphic Communications Diploma
+    target_institution="uregina",
+    target_program="Bachelor of Design",
+    total_credits=60.0,
+    effective_date=date(2024, 1, 1),
+    notes="""
+    Graduates of Saskatchewan Polytechnic's Graphic Communications diploma
+    can transfer up to 60 credit hours (two years) toward the four-year
+    Bachelor of Design degree at the University of Regina.
+
+    Part of the expanded 2024 Creative Technologies and Design pathway.
+    """,
+    url="https://www.uregina.ca/news/2024/university-of-regina-and-saskatchewan-polytechnic-partner-to-enhance-new-pathways-for-creative-technologies-and-design-students.html",
+    course_equivalencies=[],  # Block transfer, no specific course mappings
+)
+
+# Interactive Design and Technology → Bachelor of Design
+IDT_TO_UREGINA_DESIGN = TransferAgreement(
+    source_institution="saskpolytech",
+    source_program="IDT",  # Interactive Design and Technology Diploma
+    target_institution="uregina",
+    target_program="Bachelor of Design",
+    total_credits=60.0,
+    effective_date=date(2024, 1, 1),
+    notes="""
+    Graduates of Saskatchewan Polytechnic's Interactive Design and Technology
+    diploma can transfer up to 60 credit hours toward the Bachelor of Design.
+
+    Part of the expanded 2024 Creative Technologies and Design pathway.
+    """,
+    url="https://www.uregina.ca/news/2024/university-of-regina-and-saskatchewan-polytechnic-partner-to-enhance-new-pathways-for-creative-technologies-and-design-students.html",
+    course_equivalencies=[],
+)
+
+# Engineering Design and Drafting Technology → Bachelor of Design
+EDDT_TO_UREGINA_DESIGN = TransferAgreement(
+    source_institution="saskpolytech",
+    source_program="EDDT",  # Engineering Design and Drafting Technology
+    target_institution="uregina",
+    target_program="Bachelor of Design",
+    total_credits=60.0,
+    effective_date=date(2024, 1, 1),
+    notes="""
+    Graduates of Saskatchewan Polytechnic's Engineering Design and Drafting
+    Technology diploma can transfer up to 60 credit hours toward the
+    Bachelor of Design degree.
+
+    Part of the expanded 2024 Creative Technologies and Design pathway.
+    """,
+    url="https://www.uregina.ca/news/2024/university-of-regina-and-saskatchewan-polytechnic-partner-to-enhance-new-pathways-for-creative-technologies-and-design-students.html",
+    course_equivalencies=[],
+)
+
+
 # Course-level equivalencies (approximate mappings based on content)
 # These are INFORMAL suggestions based on similar course content
 # Official credit is granted for the diploma as a whole, not individual courses
@@ -121,11 +261,25 @@ COURSE_CONTENT_SIMILARITIES = [
     ("COSA 190", "CMPT 270", "Both cover software design/OO concepts"),
 ]
 
+# SaskPolytech → U of R content similarities
+COURSE_CONTENT_SIMILARITIES_UREGINA = [
+    ("COSC 180", "CS 110", "Both cover intro programming"),
+    ("COSC 182", "CS 115", "Both cover OO design"),
+    ("COSC 286", "CS 210", "Both cover data structures"),
+]
+
 
 def get_all_agreements() -> list[TransferAgreement]:
     """Get all known transfer agreements."""
     return [
+        # USask pathways
         CST_TO_USASK_CMPT,
+        # U of R pathways
+        CST_TO_UREGINA_CS,
+        BIS_TO_UREGINA_CS,
+        GRAPHIC_COMM_TO_UREGINA_DESIGN,
+        IDT_TO_UREGINA_DESIGN,
+        EDDT_TO_UREGINA_DESIGN,
     ]
 
 
@@ -162,6 +316,15 @@ def add_transfer_equivalencies(graph: UnifiedPrerequisiteGraph) -> None:
             course_to=CourseReference("usask", usask_code),
             notes=f"Content similarity: {notes}",
             bidirectional=False,  # One-way: SP course prepares for USask
+        ))
+
+    # U of R content similarities
+    for sp_code, uregina_code, notes in COURSE_CONTENT_SIMILARITIES_UREGINA:
+        graph.add_equivalency(TransferEquivalency(
+            course_from=CourseReference("saskpolytech", sp_code),
+            course_to=CourseReference("uregina", uregina_code),
+            notes=f"Content similarity: {notes}",
+            bidirectional=False,
         ))
 
 
