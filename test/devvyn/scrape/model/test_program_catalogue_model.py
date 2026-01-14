@@ -17,12 +17,26 @@ class TestProgramCatalogue:
             for child in catalogue_children
         ), f'dictionary contains non-study level object'
 
-    def test_program_catalogue_all_field_pages_parsed(self, catalogue):
-        assert len(catalogue) > 0
-        for level, fields in catalogue.items():
-            for field, programs in fields.items():
-                field_report = f'empty collection at {level=}, {field=}'
-                assert len(programs) > 0, field_report
+    def test_program_catalogue_field_pages_parsed(self, catalogue):
+        """
+        Verify that known fields can be parsed for programs.
+
+        Tests specific fields known to have programs, rather than
+        iterating all fields (which is slow and hits the server).
+        """
+        undergrad = catalogue.get("Undergraduate")
+        assert undergrad is not None
+
+        # Computer Science should have programs
+        cs = undergrad.data.get("Computer Science")
+        assert cs is not None, "Computer Science field not found"
+        assert len(cs.programs) > 0, "Computer Science has no programs"
+
+        # Check a few program names exist
+        program_names = list(cs.programs.keys())
+        assert any("Bachelor" in name for name in program_names), (
+            "No Bachelor programs found in Computer Science"
+        )
 
     @pytest.fixture
     def catalogue(self):

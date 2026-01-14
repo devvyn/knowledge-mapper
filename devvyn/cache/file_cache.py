@@ -3,11 +3,12 @@ Convenience functions for storing text in files in a data directory,
 with a `FileCache` class to allow easy saving and loading.
 """
 from collections.abc import MutableMapping
+from datetime import datetime
 import os
 import re
 import sys
 from pathlib import Path
-from typing import AbstractSet, Any, Generator, Iterable, Iterator, Union
+from typing import AbstractSet, Any, Generator, Iterable, Iterator, Optional, Union
 
 from typeguard import typechecked
 
@@ -182,6 +183,35 @@ class FileCache(MutableMapping):
             return self[key]
         except KeyError:
             raise
+
+    @typechecked
+    def cached_at(self, key: str) -> Optional[datetime]:
+        """
+        Get the timestamp when a cached item was last modified.
+
+        Uses file modification time as proxy for cache freshness.
+
+        :param key: Cache key
+        :return: datetime of last modification, or None if not cached
+        """
+        path = self.file_path(key)
+        if not path.is_file():
+            return None
+        mtime = path.stat().st_mtime
+        return datetime.fromtimestamp(mtime)
+
+    @typechecked
+    def age_seconds(self, key: str) -> Optional[float]:
+        """
+        Get the age of a cached item in seconds.
+
+        :param key: Cache key
+        :return: Age in seconds, or None if not cached
+        """
+        cached = self.cached_at(key)
+        if cached is None:
+            return None
+        return (datetime.now() - cached).total_seconds()
 
 
 @typechecked

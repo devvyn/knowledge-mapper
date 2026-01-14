@@ -71,6 +71,18 @@ def program_url(field, level, program):
     return program_page_url
 
 
+def get_element_text(element) -> str:
+    """
+    Get all text content from an element, including nested elements.
+
+    Uses itertext() to recursively extract text from child elements.
+    """
+    el = element.etree_element
+    # Join all text fragments (handles <span>, <strong>, etc.)
+    text = "".join(el.itertext())
+    return clean_whitespace(text)
+
+
 def field_data(content: str, base_href: str) -> dict:
     """
     Parse field page and return dict-like summary of academic programs.
@@ -83,11 +95,12 @@ def field_data(content: str, base_href: str) -> dict:
         html5lib.parse(content))
     links_selector = 'section#Programs ul>li>a'
     links = root.query_all(links_selector)
-    programs_in_subject = {
-        clean_whitespace(element.etree_element.text):
-            abs_url(base_href, get_href(element))
-        for element in links
-    }
+    programs_in_subject = {}
+    for element in links:
+        text = get_element_text(element)
+        if text:  # Skip empty links
+            url = abs_url(base_href, get_href(element))
+            programs_in_subject[text] = url
     return programs_in_subject
 
 
