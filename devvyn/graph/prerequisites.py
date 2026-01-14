@@ -232,8 +232,8 @@ async def build_graph_for_subject(subject: str) -> PrerequisiteGraph:
             prereqs = parse_prerequisites(tech)
             course_code = f"{course_data['subject']} {course_data['course_number']}"
 
-            # Add edges for all prerequisite courses
-            for prereq in prereqs.all_courses:
+            # Add edges only for required prerequisites (not alternatives)
+            for prereq in prereqs.required_courses:
                 # Skip high school courses
                 if any(hs in prereq for hs in ["Mathematics", "Computer Science", "Pre-Calculus", "Foundations"]):
                     continue
