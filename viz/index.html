@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SK Post-Secondary Visualizations</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #0d1117 0%, #161b22 100%);
+            color: #c9d1d9;
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        h1 {
+            font-size: 2.5em;
+            color: #58a6ff;
+            margin-bottom: 15px;
+        }
+        .subtitle {
+            color: #8b949e;
+            font-size: 1.1em;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+        .stat {
+            text-align: center;
+        }
+        .stat-value {
+            font-size: 2em;
+            font-weight: 600;
+            color: #58a6ff;
+        }
+        .stat-label {
+            color: #8b949e;
+            font-size: 0.9em;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin-top: 40px;
+        }
+
+        .card {
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+        .card:hover {
+            border-color: #58a6ff;
+            transform: translateY(-4px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        .card-preview {
+            height: 180px;
+            background: linear-gradient(135deg, #21262d 0%, #30363d 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4em;
+        }
+        .card-content {
+            padding: 20px;
+        }
+        .card-title {
+            font-size: 1.3em;
+            color: #eee;
+            margin-bottom: 8px;
+        }
+        .card-desc {
+            color: #8b949e;
+            font-size: 0.9em;
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+        .card-tags {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .tag {
+            background: #21262d;
+            color: #8b949e;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.75em;
+        }
+        .tag.interactive { background: #238636; color: white; }
+        .tag.export { background: #a371f7; color: white; }
+
+        a.card-link {
+            display: block;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .downloads {
+            margin-top: 50px;
+            text-align: center;
+        }
+        .downloads h2 {
+            color: #eee;
+            margin-bottom: 20px;
+        }
+        .download-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .download-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #21262d;
+            color: #c9d1d9;
+            padding: 12px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            border: 1px solid #30363d;
+            transition: all 0.2s;
+        }
+        .download-btn:hover {
+            background: #30363d;
+            border-color: #58a6ff;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 60px;
+            padding-top: 30px;
+            border-top: 1px solid #30363d;
+            color: #8b949e;
+            font-size: 0.85em;
+        }
+        footer a { color: #58a6ff; text-decoration: none; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Saskatchewan Post-Secondary</h1>
+            <p class="subtitle">
+                Interactive visualizations of courses, prerequisites, transfer pathways,
+                and degree requirements across Saskatchewan universities and polytechnics.
+            </p>
+            <div class="stats">
+                <div class="stat">
+                    <div class="stat-value">239</div>
+                    <div class="stat-label">Courses</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">2</div>
+                    <div class="stat-label">Institutions</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">8</div>
+                    <div class="stat-label">Degree Programs</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">164</div>
+                    <div class="stat-label">Prerequisites</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">20</div>
+                    <div class="stat-label">Transfer Links</div>
+                </div>
+            </div>
+        </header>
+
+        <div class="grid">
+            <a href="full-explorer.html" class="card-link">
+                <div class="card">
+                    <div class="card-preview">🕸️</div>
+                    <div class="card-content">
+                        <h3 class="card-title">Network Explorer</h3>
+                        <p class="card-desc">
+                            Full force-directed graph of all courses and their connections.
+                            Search, filter by institution, toggle link types.
+                        </p>
+                        <div class="card-tags">
+                            <span class="tag interactive">Interactive</span>
+                            <span class="tag">D3.js</span>
+                            <span class="tag">247 nodes</span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+            <a href="hierarchical.html" class="card-link">
+                <div class="card">
+                    <div class="card-preview">📊</div>
+                    <div class="card-content">
+                        <h3 class="card-title">Hierarchical View</h3>
+                        <p class="card-desc">
+                            Courses organized by subject and level (100/200/300/400).
+                            Click to see prerequisites and what each course unlocks.
+                        </p>
+                        <div class="card-tags">
+                            <span class="tag interactive">Interactive</span>
+                            <span class="tag">By Level</span>
+                            <span class="tag">By Subject</span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+            <a href="sankey.html" class="card-link">
+                <div class="card">
+                    <div class="card-preview">🌊</div>
+                    <div class="card-content">
+                        <h3 class="card-title">Credit Flow Sankey</h3>
+                        <p class="card-desc">
+                            Visualize how courses flow into requirement blocks and degrees.
+                            See credit allocation across C1-C5 requirements.
+                        </p>
+                        <div class="card-tags">
+                            <span class="tag interactive">Interactive</span>
+                            <span class="tag">Sankey</span>
+                            <span class="tag">Degrees</span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+            <a href="timeline.html" class="card-link">
+                <div class="card">
+                    <div class="card-preview">📅</div>
+                    <div class="card-content">
+                        <h3 class="card-title">Academic Timeline</h3>
+                        <p class="card-desc">
+                            Plan your path semester by semester. Click courses to mark
+                            complete and see what unlocks. Track progress toward degree.
+                        </p>
+                        <div class="card-tags">
+                            <span class="tag interactive">Interactive</span>
+                            <span class="tag">Planner</span>
+                            <span class="tag">4-Year</span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+            <a href="pathfinder.html" class="card-link">
+                <div class="card">
+                    <div class="card-preview">🧭</div>
+                    <div class="card-content">
+                        <h3 class="card-title">Course Pathfinder</h3>
+                        <p class="card-desc">
+                            Find all prerequisite paths from entry-level to any advanced course.
+                            Shows shortest routes with step-by-step highlighting.
+                        </p>
+                        <div class="card-tags">
+                            <span class="tag interactive">Interactive</span>
+                            <span class="tag">BFS</span>
+                            <span class="tag">Routes</span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+            <a href="degree-explorer.html" class="card-link">
+                <div class="card">
+                    <div class="card-preview">🎓</div>
+                    <div class="card-content">
+                        <h3 class="card-title">Degree Stacking</h3>
+                        <p class="card-desc">
+                            Enter your completed courses and see progress toward multiple
+                            degrees. Find overlapping requirements for efficient stacking.
+                        </p>
+                        <div class="card-tags">
+                            <span class="tag interactive">Interactive</span>
+                            <span class="tag">Progress</span>
+                            <span class="tag">Multi-Degree</span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="downloads">
+            <h2>Data Downloads</h2>
+            <div class="download-links">
+                <a href="graph-data.json" download class="download-btn">
+                    📄 graph-data.json
+                </a>
+                <a href="sk-postsecondary.graphml" download class="download-btn">
+                    🔷 Gephi GraphML
+                </a>
+            </div>
+        </div>
+
+        <footer>
+            <p>
+                Data sourced from
+                <a href="https://catalogue.usask.ca">USask Catalogue</a> and
+                <a href="https://webapi.saskpolytech.ca">SaskPolytech API</a>.
+                Built with D3.js and the knowledge-mapper MCP server.
+            </p>
+        </footer>
+    </div>
+</body>
+</html>

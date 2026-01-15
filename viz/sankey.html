@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Credit Flow Sankey</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-sankey@0.12.3/dist/d3-sankey.min.js"></script>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0d1117;
+            color: #c9d1d9;
+            min-height: 100vh;
+        }
+        header {
+            text-align: center;
+            padding: 30px;
+            background: linear-gradient(180deg, #161b22 0%, #0d1117 100%);
+        }
+        h1 { color: #58a6ff; margin-bottom: 10px; }
+        .subtitle { color: #8b949e; }
+
+        #controls {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            padding: 20px;
+            background: #161b22;
+            border-bottom: 1px solid #30363d;
+        }
+        select, button {
+            background: #21262d;
+            color: #c9d1d9;
+            border: 1px solid #30363d;
+            padding: 10px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+        select:hover, button:hover { border-color: #58a6ff; }
+        button { background: #238636; border-color: #238636; }
+        button:hover { background: #2ea043; }
+
+        #chart {
+            width: 100%;
+            height: calc(100vh - 180px);
+            overflow: auto;
+        }
+        svg { display: block; margin: auto; }
+
+        .node rect {
+            fill-opacity: 0.9;
+            stroke: #30363d;
+            stroke-width: 1;
+            cursor: pointer;
+            transition: fill-opacity 0.2s;
+        }
+        .node rect:hover { fill-opacity: 1; }
+        .node text {
+            font-size: 11px;
+            fill: #c9d1d9;
+            pointer-events: none;
+        }
+
+        .link {
+            fill: none;
+            stroke-opacity: 0.3;
+            transition: stroke-opacity 0.2s;
+        }
+        .link:hover { stroke-opacity: 0.6; }
+
+        .tooltip {
+            position: absolute;
+            background: #161b22;
+            border: 1px solid #30363d;
+            padding: 12px;
+            border-radius: 8px;
+            pointer-events: none;
+            font-size: 0.85em;
+            max-width: 250px;
+            z-index: 100;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        .tooltip.visible { opacity: 1; }
+        .tooltip strong { color: #58a6ff; }
+
+        .legend {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 15px;
+            font-size: 0.85em;
+        }
+        .legend h3 { color: #58a6ff; margin-bottom: 10px; font-size: 1em; }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin: 6px 0;
+        }
+        .legend-color {
+            width: 20px;
+            height: 12px;
+            margin-right: 10px;
+            border-radius: 2px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Credit Flow Diagram</h1>
+        <p class="subtitle">How courses flow into requirements and degrees</p>
+    </header>
+
+    <div id="controls">
+        <select id="degree-select">
+            <option value="all">All Degrees</option>
+        </select>
+        <select id="view-mode">
+            <option value="detailed">Detailed (with requirement blocks)</option>
+            <option value="simple">Simple (courses → degrees)</option>
+        </select>
+    </div>
+
+    <div id="chart"></div>
+
+    <div class="legend">
+        <h3>Flow Types</h3>
+        <div class="legend-item">
+            <div class="legend-color" style="background: #58a6ff;"></div>
+            <span>Core Requirements</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-color" style="background: #3fb950;"></div>
+            <span>Electives</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-color" style="background: #a371f7;"></div>
+            <span>Breadth/College</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-color" style="background: #f0883e;"></div>
+            <span>Cognate</span>
+        </div>
+    </div>
+
+    <div class="tooltip" id="tooltip"></div>
+
+    <script>
+    // Degree requirement data (simplified from actual model)
+    const degreeData = {
+        'bsc-4yr-cmpt': {
+            name: 'B.Sc. 4yr Computer Science',
+            credits: 120,
+            blocks: [
+                { id: 'C1', name: 'College', credits: 15, color: '#a371f7',
+                  courses: ['ENG 110', 'INDG 107', 'MATH 163'] },
+                { id: 'C2', name: 'Breadth', credits: 9, color: '#a371f7',
+                  courses: ['HIST', 'PSYC', 'SOC'] },
+                { id: 'C3', name: 'Cognate', credits: 15, color: '#f0883e',
+                  courses: ['PHYS 115', 'CHEM 112', 'PHIL 232', 'MATH 110'] },
+                { id: 'C4', name: 'Major', credits: 57, color: '#58a6ff',
+                  courses: ['CMPT 141', 'CMPT 145', 'CMPT 214', 'CMPT 215', 'CMPT 260',
+                           'CMPT 270', 'CMPT 280', 'CMPT 317', 'CMPT 332', 'CMPT 340',
+                           'CMPT 353', 'CMPT 360', 'CMPT 370', 'CMPT 411', 'STAT 242'] },
+                { id: 'C5', name: 'Electives', credits: 24, color: '#3fb950',
+                  courses: ['Elective'] }
+            ]
+        },
+        'bsc-4yr-math': {
+            name: 'B.Sc. 4yr Mathematics',
+            credits: 120,
+            blocks: [
+                { id: 'C1', name: 'College', credits: 15, color: '#a371f7',
+                  courses: ['ENG 110', 'INDG 107', 'MATH 163'] },
+                { id: 'C2', name: 'Breadth', credits: 9, color: '#a371f7',
+                  courses: ['HIST', 'PSYC', 'SOC'] },
+                { id: 'C3', name: 'Cognate', credits: 15, color: '#f0883e',
+                  courses: ['CMPT 141', 'PHYS 115', 'CHEM 112'] },
+                { id: 'C4', name: 'Major', credits: 45, color: '#58a6ff',
+                  courses: ['MATH 110', 'MATH 116', 'MATH 163', 'MATH 164', 'MATH 266',
+                           'MATH 276', 'MATH 277', 'MATH 361', 'STAT 241'] },
+                { id: 'C5', name: 'Electives', credits: 42, color: '#3fb950',
+                  courses: ['Elective'] }
+            ]
+        },
+        'honours-cmpt': {
+            name: 'B.Sc. Honours CS',
+            credits: 120,
+            blocks: [
+                { id: 'C1', name: 'College', credits: 15, color: '#a371f7',
+                  courses: ['ENG 110', 'INDG 107', 'MATH 163'] },
+                { id: 'C2', name: 'Breadth', credits: 9, color: '#a371f7',
+                  courses: ['HIST', 'PSYC', 'SOC'] },
+                { id: 'C3', name: 'Cognate', credits: 15, color: '#f0883e',
+                  courses: ['PHYS 115', 'CHEM 112', 'PHIL 232', 'MATH 110'] },
+                { id: 'C4', name: 'Major', credits: 60, color: '#58a6ff',
+                  courses: ['CMPT 141', 'CMPT 145', 'CMPT 214', 'CMPT 215', 'CMPT 260',
+                           'CMPT 270', 'CMPT 280', 'CMPT 360', 'CMPT 364', 'CMPT 400',
+                           'CMPT 317', 'CMPT 332', 'CMPT 340', 'STAT 241'] },
+                { id: 'C5', name: 'Electives', credits: 21, color: '#3fb950',
+                  courses: ['Elective'] }
+            ]
+        },
+        'dbl-honours': {
+            name: 'Double Honours CS+Math',
+            credits: 120,
+            blocks: [
+                { id: 'C1', name: 'College', credits: 9, color: '#a371f7',
+                  courses: ['ENG 110', 'INDG 107'] },
+                { id: 'C2', name: 'Breadth', credits: 9, color: '#a371f7',
+                  courses: ['HIST', 'PSYC', 'SOC'] },
+                { id: 'C3', name: 'Cognate', credits: 9, color: '#f0883e',
+                  courses: ['PHYS 115', 'CHEM 112'] },
+                { id: 'C4', name: 'Combined Major', credits: 84, color: '#58a6ff',
+                  courses: ['CMPT 141', 'CMPT 145', 'CMPT 214', 'CMPT 215', 'CMPT 260',
+                           'CMPT 270', 'CMPT 280', 'CMPT 360', 'CMPT 364', 'CMPT 400',
+                           'MATH 110', 'MATH 116', 'MATH 163', 'MATH 164', 'MATH 266',
+                           'MATH 276', 'MATH 277', 'MATH 361', 'MATH 362', 'STAT 241'] },
+                { id: 'C5', name: 'Electives', credits: 9, color: '#3fb950',
+                  courses: ['Elective'] }
+            ]
+        }
+    };
+
+    // Populate degree select
+    const degreeSelect = document.getElementById('degree-select');
+    Object.entries(degreeData).forEach(([id, data]) => {
+        const opt = document.createElement('option');
+        opt.value = id;
+        opt.textContent = data.name;
+        degreeSelect.appendChild(opt);
+    });
+
+    function buildSankeyData(degreeId, mode) {
+        const nodes = [];
+        const links = [];
+
+        if (degreeId === 'all') {
+            // Show all degrees
+            Object.entries(degreeData).forEach(([id, data]) => {
+                addDegreeToSankey(id, data, nodes, links, mode);
+            });
+        } else {
+            const data = degreeData[degreeId];
+            addDegreeToSankey(degreeId, data, nodes, links, mode);
+        }
+
+        return { nodes, links };
+    }
+
+    function addDegreeToSankey(degreeId, data, nodes, links, mode) {
+        const nodeIndex = {};
+        const getNodeIndex = (id) => {
+            if (!(id in nodeIndex)) {
+                nodeIndex[id] = nodes.length;
+                nodes.push({ id, name: id });
+            }
+            return nodeIndex[id];
+        };
+
+        // Add degree node
+        const degreeNode = getNodeIndex(`degree:${degreeId}`);
+        nodes[degreeNode].name = data.name;
+        nodes[degreeNode].color = '#db61a2';
+
+        if (mode === 'detailed') {
+            // Add requirement blocks
+            data.blocks.forEach(block => {
+                const blockNodeId = `${degreeId}:${block.id}`;
+                const blockNode = getNodeIndex(blockNodeId);
+                nodes[blockNode].name = `${block.name} (${block.credits}cu)`;
+                nodes[blockNode].color = block.color;
+
+                // Link block to degree
+                links.push({
+                    source: blockNode,
+                    target: degreeNode,
+                    value: block.credits,
+                    color: block.color
+                });
+
+                // Add courses to block
+                block.courses.forEach(course => {
+                    if (course === 'Elective' || course === 'HIST' || course === 'PSYC' || course === 'SOC') {
+                        // Generic placeholders
+                        const courseNode = getNodeIndex(`generic:${course}`);
+                        nodes[courseNode].name = course;
+                        nodes[courseNode].color = '#8b949e';
+                        links.push({
+                            source: courseNode,
+                            target: blockNode,
+                            value: 3,
+                            color: block.color + '66'
+                        });
+                    } else {
+                        const courseNode = getNodeIndex(`course:${course}`);
+                        nodes[courseNode].name = course;
+                        nodes[courseNode].color = course.startsWith('CMPT') ? '#58a6ff' :
+                                                  course.startsWith('MATH') ? '#a371f7' :
+                                                  course.startsWith('STAT') ? '#3fb950' : '#8b949e';
+                        links.push({
+                            source: courseNode,
+                            target: blockNode,
+                            value: 3,
+                            color: block.color + '66'
+                        });
+                    }
+                });
+            });
+        } else {
+            // Simple mode: courses directly to degree
+            const allCourses = new Set();
+            data.blocks.forEach(block => {
+                block.courses.forEach(c => {
+                    if (c !== 'Elective' && c !== 'HIST' && c !== 'PSYC' && c !== 'SOC') {
+                        allCourses.add(c);
+                    }
+                });
+            });
+
+            allCourses.forEach(course => {
+                const courseNode = getNodeIndex(`course:${course}`);
+                nodes[courseNode].name = course;
+                nodes[courseNode].color = course.startsWith('CMPT') ? '#58a6ff' :
+                                          course.startsWith('MATH') ? '#a371f7' :
+                                          course.startsWith('STAT') ? '#3fb950' : '#8b949e';
+                links.push({
+                    source: courseNode,
+                    target: degreeNode,
+                    value: 3,
+                    color: nodes[courseNode].color + '66'
+                });
+            });
+        }
+    }
+
+    function render() {
+        const degreeId = document.getElementById('degree-select').value;
+        const mode = document.getElementById('view-mode').value;
+
+        const data = buildSankeyData(degreeId, mode);
+
+        const width = Math.max(1200, window.innerWidth - 100);
+        const height = Math.max(800, data.nodes.length * 20);
+
+        document.getElementById('chart').innerHTML = '';
+
+        const svg = d3.select('#chart')
+            .append('svg')
+            .attr('width', width)
+            .attr('height', height);
+
+        const sankey = d3.sankey()
+            .nodeId(d => d.id)
+            .nodeWidth(20)
+            .nodePadding(10)
+            .nodeAlign(d3.sankeyLeft)
+            .extent([[50, 50], [width - 50, height - 50]]);
+
+        const { nodes, links } = sankey({
+            nodes: data.nodes.map(d => Object.assign({}, d)),
+            links: data.links.map(d => Object.assign({}, d))
+        });
+
+        // Links
+        svg.append('g')
+            .selectAll('path')
+            .data(links)
+            .join('path')
+            .attr('class', 'link')
+            .attr('d', d3.sankeyLinkHorizontal())
+            .attr('stroke', d => d.color || '#8b949e')
+            .attr('stroke-width', d => Math.max(1, d.width))
+            .on('mouseover', (event, d) => showLinkTooltip(event, d))
+            .on('mouseout', hideTooltip);
+
+        // Nodes
+        const node = svg.append('g')
+            .selectAll('g')
+            .data(nodes)
+            .join('g')
+            .attr('class', 'node');
+
+        node.append('rect')
+            .attr('x', d => d.x0)
+            .attr('y', d => d.y0)
+            .attr('height', d => Math.max(1, d.y1 - d.y0))
+            .attr('width', d => d.x1 - d.x0)
+            .attr('fill', d => d.color || '#8b949e')
+            .on('mouseover', (event, d) => showNodeTooltip(event, d))
+            .on('mouseout', hideTooltip);
+
+        node.append('text')
+            .attr('x', d => d.x0 < width / 2 ? d.x1 + 6 : d.x0 - 6)
+            .attr('y', d => (d.y1 + d.y0) / 2)
+            .attr('dy', '0.35em')
+            .attr('text-anchor', d => d.x0 < width / 2 ? 'start' : 'end')
+            .text(d => d.name);
+    }
+
+    function showNodeTooltip(event, d) {
+        const tooltip = document.getElementById('tooltip');
+        let html = `<strong>${d.name}</strong>`;
+
+        const inflow = d.targetLinks?.reduce((sum, l) => sum + l.value, 0) || 0;
+        const outflow = d.sourceLinks?.reduce((sum, l) => sum + l.value, 0) || 0;
+
+        if (inflow) html += `<br>Receives: ${inflow} credits`;
+        if (outflow) html += `<br>Provides: ${outflow} credits`;
+
+        tooltip.innerHTML = html;
+        tooltip.style.left = (event.pageX + 15) + 'px';
+        tooltip.style.top = (event.pageY - 10) + 'px';
+        tooltip.classList.add('visible');
+    }
+
+    function showLinkTooltip(event, d) {
+        const tooltip = document.getElementById('tooltip');
+        tooltip.innerHTML = `
+            <strong>${d.source.name}</strong> → <strong>${d.target.name}</strong>
+            <br>${d.value} credit units
+        `;
+        tooltip.style.left = (event.pageX + 15) + 'px';
+        tooltip.style.top = (event.pageY - 10) + 'px';
+        tooltip.classList.add('visible');
+    }
+
+    function hideTooltip() {
+        document.getElementById('tooltip').classList.remove('visible');
+    }
+
+    // Event handlers
+    document.getElementById('degree-select').addEventListener('change', render);
+    document.getElementById('view-mode').addEventListener('change', render);
+
+    // Initial render
+    render();
+    </script>
+</body>
+</html>

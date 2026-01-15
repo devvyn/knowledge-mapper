@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Course Pathfinder</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0d1117;
+            color: #c9d1d9;
+            height: 100vh;
+            display: flex;
+        }
+
+        #sidebar {
+            width: 350px;
+            background: #161b22;
+            padding: 20px;
+            overflow-y: auto;
+            border-right: 1px solid #30363d;
+        }
+        h1 { color: #58a6ff; font-size: 1.4em; margin-bottom: 8px; }
+        .subtitle { color: #8b949e; font-size: 0.85em; margin-bottom: 20px; }
+
+        .section { margin-bottom: 25px; }
+        .section-title {
+            font-size: 0.8em;
+            text-transform: uppercase;
+            color: #8b949e;
+            margin-bottom: 10px;
+            letter-spacing: 0.5px;
+        }
+
+        select, input {
+            width: 100%;
+            background: #21262d;
+            color: #c9d1d9;
+            border: 1px solid #30363d;
+            padding: 10px 12px;
+            border-radius: 6px;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+        }
+        select:focus, input:focus { border-color: #58a6ff; outline: none; }
+
+        button {
+            width: 100%;
+            background: #238636;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 0.9em;
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
+        button:hover { background: #2ea043; }
+        button.secondary {
+            background: #21262d;
+            border: 1px solid #30363d;
+        }
+        button.secondary:hover { border-color: #58a6ff; }
+
+        #paths-list {
+            margin-top: 15px;
+        }
+        .path-item {
+            background: #21262d;
+            border-radius: 6px;
+            padding: 12px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            border: 1px solid transparent;
+            transition: all 0.2s;
+        }
+        .path-item:hover { border-color: #58a6ff; }
+        .path-item.active {
+            border-color: #58a6ff;
+            background: #58a6ff15;
+        }
+        .path-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+        .path-length {
+            background: #58a6ff33;
+            color: #58a6ff;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.75em;
+        }
+        .path-courses {
+            font-size: 0.85em;
+            color: #8b949e;
+        }
+        .path-courses span {
+            display: inline-block;
+            margin: 2px;
+            padding: 2px 6px;
+            background: #30363d;
+            border-radius: 4px;
+        }
+
+        #graph { flex: 1; position: relative; }
+        svg { width: 100%; height: 100%; }
+
+        .node circle {
+            stroke: #30363d;
+            stroke-width: 2;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .node.on-path circle {
+            stroke: #58a6ff;
+            stroke-width: 3;
+        }
+        .node.start circle { fill: #3fb950 !important; }
+        .node.end circle { fill: #f0883e !important; }
+        .node.dimmed { opacity: 0.15; }
+
+        .node text {
+            font-size: 10px;
+            fill: #c9d1d9;
+            pointer-events: none;
+        }
+
+        .link {
+            stroke: #30363d;
+            stroke-opacity: 0.4;
+            transition: all 0.2s;
+        }
+        .link.on-path {
+            stroke: #58a6ff;
+            stroke-opacity: 1;
+            stroke-width: 3;
+        }
+        .link.dimmed { stroke-opacity: 0.1; }
+
+        #legend {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 15px;
+            font-size: 0.8em;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin: 6px 0;
+        }
+        .legend-dot {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .tooltip {
+            position: absolute;
+            background: #161b22;
+            border: 1px solid #30363d;
+            padding: 10px;
+            border-radius: 6px;
+            pointer-events: none;
+            font-size: 0.85em;
+            z-index: 100;
+            opacity: 0;
+        }
+        .tooltip.visible { opacity: 1; }
+    </style>
+</head>
+<body>
+    <div id="sidebar">
+        <h1>Course Pathfinder</h1>
+        <p class="subtitle">Find paths from entry-level to advanced courses</p>
+
+        <div class="section">
+            <div class="section-title">Starting Point</div>
+            <select id="start-select">
+                <option value="">Select a course or "Entry Level"</option>
+                <option value="entry">Entry Level (No Prerequisites)</option>
+            </select>
+        </div>
+
+        <div class="section">
+            <div class="section-title">Target Course</div>
+            <select id="end-select">
+                <option value="">Select target course</option>
+            </select>
+        </div>
+
+        <div class="section">
+            <div class="section-title">Filter by Subject</div>
+            <select id="subject-filter">
+                <option value="all">All Subjects</option>
+            </select>
+        </div>
+
+        <button id="find-paths">Find Paths</button>
+        <button id="clear-paths" class="secondary">Clear Highlight</button>
+
+        <div class="section">
+            <div class="section-title">Found Paths</div>
+            <div id="paths-list">
+                <p style="color: #8b949e; font-size: 0.85em;">
+                    Select start and end points, then click "Find Paths"
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div id="graph">
+        <div id="legend">
+            <div class="legend-item">
+                <div class="legend-dot" style="background: #3fb950;"></div>
+                <span>Start</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-dot" style="background: #f0883e;"></div>
+                <span>Target</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-dot" style="background: #58a6ff;"></div>
+                <span>On Path</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="tooltip" id="tooltip"></div>
+
+    <script>
+    let graphData = null;
+    let simulation = null;
+    let svg, g, link, node;
+    let currentPaths = [];
+    let activePath = null;
+
+    // Load data
+    fetch('graph-data.json')
+        .then(r => r.json())
+        .then(data => {
+            graphData = data;
+            populateSelects();
+            initGraph();
+        });
+
+    function populateSelects() {
+        const courses = graphData.nodes
+            .filter(n => n.type === 'course')
+            .sort((a, b) => a.label.localeCompare(b.label));
+
+        const subjects = new Set();
+        courses.forEach(c => subjects.add(c.subject));
+
+        // Populate start select
+        const startSelect = document.getElementById('start-select');
+        courses.forEach(c => {
+            const opt = document.createElement('option');
+            opt.value = c.id;
+            opt.textContent = `${c.label} - ${c.title || c.institution}`;
+            startSelect.appendChild(opt);
+        });
+
+        // Populate end select (300+ level courses as common targets)
+        const endSelect = document.getElementById('end-select');
+        courses.filter(c => {
+            const level = parseInt(c.label.match(/\d+/)?.[0] || '0');
+            return level >= 300;
+        }).forEach(c => {
+            const opt = document.createElement('option');
+            opt.value = c.id;
+            opt.textContent = `${c.label} - ${c.title || c.institution}`;
+            endSelect.appendChild(opt);
+        });
+
+        // Populate subject filter
+        const subjSelect = document.getElementById('subject-filter');
+        [...subjects].sort().forEach(subj => {
+            const opt = document.createElement('option');
+            opt.value = subj;
+            opt.textContent = subj;
+            subjSelect.appendChild(opt);
+        });
+    }
+
+    function initGraph() {
+        const width = document.getElementById('graph').clientWidth;
+        const height = document.getElementById('graph').clientHeight;
+
+        svg = d3.select('#graph').append('svg');
+        g = svg.append('g');
+
+        const zoom = d3.zoom()
+            .scaleExtent([0.2, 3])
+            .on('zoom', (e) => g.attr('transform', e.transform));
+        svg.call(zoom);
+
+        // Only show prerequisite links for pathfinding
+        const prereqLinks = graphData.links.filter(l => l.type === 'prerequisite');
+
+        simulation = d3.forceSimulation(graphData.nodes.filter(n => n.type === 'course'))
+            .force('link', d3.forceLink(prereqLinks).id(d => d.id).distance(80))
+            .force('charge', d3.forceManyBody().strength(-150))
+            .force('center', d3.forceCenter(width / 2, height / 2))
+            .force('collision', d3.forceCollide().radius(25));
+
+        link = g.append('g')
+            .selectAll('line')
+            .data(prereqLinks)
+            .join('line')
+            .attr('class', 'link')
+            .attr('marker-end', 'url(#arrow)');
+
+        // Arrow marker
+        svg.append('defs').append('marker')
+            .attr('id', 'arrow')
+            .attr('viewBox', '0 -5 10 10')
+            .attr('refX', 20)
+            .attr('refY', 0)
+            .attr('markerWidth', 6)
+            .attr('markerHeight', 6)
+            .attr('orient', 'auto')
+            .append('path')
+            .attr('d', 'M0,-5L10,0L0,5')
+            .attr('fill', '#30363d');
+
+        node = g.append('g')
+            .selectAll('g')
+            .data(graphData.nodes.filter(n => n.type === 'course'))
+            .join('g')
+            .attr('class', 'node')
+            .call(d3.drag()
+                .on('start', dragstarted)
+                .on('drag', dragged)
+                .on('end', dragended))
+            .on('click', handleNodeClick)
+            .on('mouseover', showTooltip)
+            .on('mouseout', hideTooltip);
+
+        node.append('circle')
+            .attr('r', 10)
+            .attr('fill', d => d.institution === 'usask' ? '#58a6ff' : '#f0883e');
+
+        node.append('text')
+            .attr('dx', 14)
+            .attr('dy', 4)
+            .text(d => d.label);
+
+        simulation.on('tick', () => {
+            link
+                .attr('x1', d => d.source.x)
+                .attr('y1', d => d.source.y)
+                .attr('x2', d => d.target.x)
+                .attr('y2', d => d.target.y);
+            node.attr('transform', d => `translate(${d.x},${d.y})`);
+        });
+    }
+
+    function dragstarted(event) {
+        if (!event.active) simulation.alphaTarget(0.3).restart();
+        event.subject.fx = event.subject.x;
+        event.subject.fy = event.subject.y;
+    }
+    function dragged(event) {
+        event.subject.fx = event.x;
+        event.subject.fy = event.y;
+    }
+    function dragended(event) {
+        if (!event.active) simulation.alphaTarget(0);
+        event.subject.fx = null;
+        event.subject.fy = null;
+    }
+
+    function handleNodeClick(event, d) {
+        // Set as start or end
+        const startSelect = document.getElementById('start-select');
+        const endSelect = document.getElementById('end-select');
+
+        if (!startSelect.value || startSelect.value === 'entry') {
+            startSelect.value = d.id;
+        } else if (!endSelect.value) {
+            endSelect.value = d.id;
+        } else {
+            // Replace end
+            endSelect.value = d.id;
+        }
+    }
+
+    function showTooltip(event, d) {
+        const tooltip = document.getElementById('tooltip');
+        tooltip.innerHTML = `<strong>${d.label}</strong><br>${d.title || ''}<br>${d.institution}`;
+        tooltip.style.left = (event.pageX + 15) + 'px';
+        tooltip.style.top = (event.pageY - 10) + 'px';
+        tooltip.classList.add('visible');
+    }
+
+    function hideTooltip() {
+        document.getElementById('tooltip').classList.remove('visible');
+    }
+
+    function findPaths() {
+        const startId = document.getElementById('start-select').value;
+        const endId = document.getElementById('end-select').value;
+
+        if (!endId) {
+            alert('Please select a target course');
+            return;
+        }
+
+        // Build adjacency list (prereq → course that needs it)
+        const forward = {};  // course → courses it unlocks
+        graphData.links.filter(l => l.type === 'prerequisite').forEach(l => {
+            const src = typeof l.source === 'object' ? l.source.id : l.source;
+            const tgt = typeof l.target === 'object' ? l.target.id : l.target;
+            if (!forward[src]) forward[src] = [];
+            forward[src].push(tgt);
+        });
+
+        // BFS to find paths
+        const paths = [];
+
+        if (startId === 'entry' || !startId) {
+            // Find entry points (courses with no prereqs)
+            const entryPoints = graphData.nodes
+                .filter(n => n.type === 'course')
+                .filter(n => !graphData.links.some(l =>
+                    l.type === 'prerequisite' &&
+                    (typeof l.target === 'object' ? l.target.id : l.target) === n.id
+                ))
+                .map(n => n.id);
+
+            entryPoints.forEach(entry => {
+                const found = bfsPath(forward, entry, endId, 10);
+                if (found) paths.push(...found);
+            });
+        } else {
+            const found = bfsPath(forward, startId, endId, 10);
+            if (found) paths.push(...found);
+        }
+
+        // Sort by length
+        paths.sort((a, b) => a.length - b.length);
+        currentPaths = paths.slice(0, 10);  // Top 10
+
+        displayPaths();
+    }
+
+    function bfsPath(adj, start, end, maxDepth) {
+        const paths = [];
+        const queue = [[start]];
+
+        while (queue.length > 0 && paths.length < 5) {
+            const path = queue.shift();
+            const current = path[path.length - 1];
+
+            if (path.length > maxDepth) continue;
+
+            if (current === end) {
+                paths.push(path);
+                continue;
+            }
+
+            const neighbors = adj[current] || [];
+            for (const next of neighbors) {
+                if (!path.includes(next)) {
+                    queue.push([...path, next]);
+                }
+            }
+        }
+
+        return paths;
+    }
+
+    function displayPaths() {
+        const list = document.getElementById('paths-list');
+
+        if (currentPaths.length === 0) {
+            list.innerHTML = '<p style="color: #f85149;">No paths found</p>';
+            return;
+        }
+
+        list.innerHTML = currentPaths.map((path, i) => `
+            <div class="path-item" data-index="${i}">
+                <div class="path-header">
+                    <span>Path ${i + 1}</span>
+                    <span class="path-length">${path.length} courses</span>
+                </div>
+                <div class="path-courses">
+                    ${path.map(id => {
+                        const node = graphData.nodes.find(n => n.id === id);
+                        return `<span>${node?.label || id}</span>`;
+                    }).join(' → ')}
+                </div>
+            </div>
+        `).join('');
+
+        // Add click handlers
+        list.querySelectorAll('.path-item').forEach(item => {
+            item.addEventListener('click', () => {
+                const index = parseInt(item.dataset.index);
+                highlightPath(currentPaths[index]);
+
+                // Update active state
+                list.querySelectorAll('.path-item').forEach(p => p.classList.remove('active'));
+                item.classList.add('active');
+            });
+        });
+
+        // Highlight first path
+        if (currentPaths.length > 0) {
+            highlightPath(currentPaths[0]);
+            list.querySelector('.path-item').classList.add('active');
+        }
+    }
+
+    function highlightPath(path) {
+        activePath = new Set(path);
+        const startId = document.getElementById('start-select').value;
+        const endId = document.getElementById('end-select').value;
+
+        // Reset all
+        node.classed('on-path', false).classed('start', false).classed('end', false).classed('dimmed', false);
+        link.classed('on-path', false).classed('dimmed', false);
+
+        // Highlight path nodes
+        node.each(function(d) {
+            const el = d3.select(this);
+            if (activePath.has(d.id)) {
+                el.classed('on-path', true);
+                if (d.id === path[0]) el.classed('start', true);
+                if (d.id === path[path.length - 1]) el.classed('end', true);
+            } else {
+                el.classed('dimmed', true);
+            }
+        });
+
+        // Highlight path links
+        link.each(function(l) {
+            const src = typeof l.source === 'object' ? l.source.id : l.source;
+            const tgt = typeof l.target === 'object' ? l.target.id : l.target;
+
+            const el = d3.select(this);
+            const srcIdx = path.indexOf(src);
+            const tgtIdx = path.indexOf(tgt);
+
+            if (srcIdx !== -1 && tgtIdx !== -1 && tgtIdx === srcIdx + 1) {
+                el.classed('on-path', true);
+            } else {
+                el.classed('dimmed', true);
+            }
+        });
+    }
+
+    function clearHighlight() {
+        node.classed('on-path', false).classed('start', false).classed('end', false).classed('dimmed', false);
+        link.classed('on-path', false).classed('dimmed', false);
+        document.querySelectorAll('.path-item').forEach(p => p.classList.remove('active'));
+    }
+
+    // Event handlers
+    document.getElementById('find-paths').addEventListener('click', findPaths);
+    document.getElementById('clear-paths').addEventListener('click', clearHighlight);
+
+    document.getElementById('subject-filter').addEventListener('change', (e) => {
+        const subj = e.target.value;
+        if (subj === 'all') {
+            node.style('display', null);
+            link.style('display', null);
+        } else {
+            node.style('display', d => d.subject === subj ? null : 'none');
+            link.style('display', l => {
+                const src = typeof l.source === 'object' ? l.source : graphData.nodes.find(n => n.id === l.source);
+                const tgt = typeof l.target === 'object' ? l.target : graphData.nodes.find(n => n.id === l.target);
+                return (src?.subject === subj || tgt?.subject === subj) ? null : 'none';
+            });
+        }
+    });
+    </script>
+</body>
+</html>

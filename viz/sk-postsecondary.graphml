@@ -1,0 +1,3017 @@
+<?xml version="1.0" ?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns">
+  <key id="label" for="node" attr_name="label" attr_type="string"/>
+  <key id="title" for="node" attr_name="title" attr_type="string"/>
+  <key id="institution" for="node" attr_name="institution" attr_type="string"/>
+  <key id="type" for="node" attr_name="type" attr_type="string"/>
+  <key id="subject" for="node" attr_name="subject" attr_type="string"/>
+  <key id="credits" for="node" attr_name="credits" attr_type="double"/>
+  <key id="level" for="node" attr_name="level" attr_type="int"/>
+  <key id="edge_type" for="edge" attr_name="edge_type" attr_type="string"/>
+  <key id="weight" for="edge" attr_name="weight" attr_type="double"/>
+  <graph id="G" edgedefault="directed">
+    <node id="usask_CMPT 140">
+      <data key="label">CMPT 140</data>
+      <data key="title">Introduction to Creative Computing</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">CMPT</data>
+      <data key="credits">3.0</data>
+      <data key="level">100</data>
+    </node>
+    <node id="usask_CMPT 141">
+      <data key="label">CMPT 141</data>
+      <data key="title">Introduction to Computer Science</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">CMPT</data>
+      <data key="credits">3.0</data>
+      <data key="level">100</data>
+    </node>
+    <node id="usask_CMPT 142">
+      <data key="label">CMPT 142</data>
+      <data key="title">Introduction to Computer Science for Engineers</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">CMPT</data>
+      <data key="credits">3.0</data>
+      <data key="level">100</data>
+    </node>
+    <node id="usask_CMPT 145">
+      <data key="label">CMPT 145</data>
+      <data key="title">Principles of Computer Science</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">CMPT</data>
+      <data key="credits">3.0</data>
+      <data key="level">100</data>
+    </node>
+    <node id="usask_CMPT 146">
+      <data key="label">CMPT 146</data>
+      <data key="title">Principles of Computer Science for Engineers</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">CMPT</data>
+      <data key="credits">3.0</data>
+      <data key="level">100</data>
+    </node>
+    <node id="usask_CMPT 214">
+      <data key="label">CMPT 214</data>
+      <data key="title">Programming Principles and Practice</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">CMPT</data>
+      <data key="credits">3.0</data>
+      <data key="level">200</data>
+    </node>
+    <node id="usask_CMPT 215">
+      <data key="label">CMPT 215</data>
+      <data key="title">Introduction to Computer Organization and Architecture</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">CMPT</data>
+      <data key="credits">3.0</data>
+      <data key="level">200</data>
+    </node>
+    <node id="usask_CMPT 260">
+      <data key="label">CMPT 260</data>
+      <data key="title">Mathematical Logic and Computing</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">CMPT</data>
+      <data key="credits">3.0</data>
+      <data key="level">200</data>
+    </node>
+    <node id="usask_CMPT 263">
+      <data key="label">CMPT 263</data>
+      <data key="title">Computational Logic and Program Reasoning</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">CMPT</data>
+      <data key="credits">3.0</data>
+      <data key="level">200</data>
+    </node>
+    <node id="usask_CMPT 270">
+      <data key="label">CMPT 270</data>
+      <data key="title">Developing Object-Oriented Systems</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">CMPT</data>
+      <data key="credits">3.0</data>
+      <data key="level">200</data>
+    </node>
+    <node id="usask_CMPT 280">
+      <data key="label">CMPT 280</data>
+      <data key="title">Intermediate Data Structures and Algorithms</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">CMPT</data>
+      <data key="credits">3.0</data>
+      <data key="level">200</data>
+    </node>
+    <node id="usask_CMPT 281">
+      <data key="label">CMPT 281</data>
+      <data key="title">Website Design and Development</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">CMPT</data>
+      <data key="credits">3.0</data>
+      <data key="level">200</data>
+    </node>
+    <node id="usask_CMPT 298">
+      <data key="label">CMPT 298</data>
+      <data key="title">Special Topics</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">CMPT</data>
+      <data key="credits">3.0</data>
+      <data key="level">200</data>
+    </node>
+    <node id="usask_CMPT 299">
+      <data key="label">CMPT 299</data>
+      <data key="title">Special Topics</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">CMPT</data>
+      <data key="credits">3.0</data>
+      <data key="level">200</data>
+    </node>
+    <node id="usask_CMPT 306">
+      <data key="label">CMPT 306</data>
+      <data key="title">Game Mechanics</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">CMPT</data>
+      <data key="credits">3.0</data>
+      <data key="level">300</data>
+    </node>
+    <node id="usask_CMPT 317">
+      <data key="label">CMPT 317</data>
+      <data key="title">Introduction to Artificial Intelligence</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">CMPT</data>
+      <data key="credits">3.0</data>
+      <data key="level">300</data>
+    </node>
+    <node id="usask_CMPT 318">
+      <data key="label">CMPT 318</data>
+      <data key="title">Data Analytics</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">CMPT</data>
+      <data key="credits">3.0</data>
+      <data key="level">300</data>
+    </node>
+    <node id="usask_CMPT 332">
+      <data key="label">CMPT 332</data>
+      <data key="title">Operating Systems Concepts</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">CMPT</data>
+      <data key="credits">3.0</data>
+      <data key="level">300</data>
+    </node>
+    <node id="usask_CMPT 340">
+      <data key="label">CMPT 340</data>
+      <data key="title">Programming Language Paradigms</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">CMPT</data>
+      <data key="credits">3.0</data>
+      <data key="level">300</data>
+    </node>
+    <node id="usask_CMPT 353">
+      <data key="label">CMPT 353</data>
+      <data key="title">Full Stack Web Programming</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">CMPT</data>
+      <data key="credits">3.0</data>
+      <data key="level">300</data>
+    </node>
+    <node id="usask_CMPT 360">
+      <data key="label">CMPT 360</data>
+      <data key="title">Algorithm Design Analysis and Correctness</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">CMPT</data>
+      <data key="credits">3.0</data>
+      <data key="level">300</data>
+    </node>
+    <node id="usask_CMPT 364">
+      <data key="label">CMPT 364</data>
+      <data key="title">Automata and Formal Languages</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">CMPT</data>
+      <data key="credits">3.0</data>
+      <data key="level">300</data>
+    </node>
+    <node id="usask_CMPT 370">
+      <data key="label">CMPT 370</data>
+      <data key="title">Intermediate Software Engineering</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">CMPT</data>
+      <data key="credits">3.0</data>
+      <data key="level">300</data>
+    </node>
+    <node id="usask_CMPT 371">
+      <data key="label">CMPT 371</data>
+      <data key="title">Software Management</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">CMPT</data>
+      <data key="credits">3.0</data>
+      <data key="level">300</data>
+    </node>
+    <node id="usask_CMPT 381">
+      <data key="label">CMPT 381</data>
+      <data key="title">Implementation of Graphical User Interfaces</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">CMPT</data>
+      <data key="credits">3.0</data>
+      <data key="level">300</data>
+    </node>
+    <node id="usask_CMPT 384">
+      <data key="label">CMPT 384</data>
+      <data key="title">Information Visualization</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">CMPT</data>
+      <data key="credits">3.0</data>
+      <data key="level">300</data>
+    </node>
+    <node id="usask_CMPT 394">
+      <data key="label">CMPT 394</data>
+      <data key="title">Simulation Principles</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">CMPT</data>
+      <data key="credits">3.0</data>
+      <data key="level">300</data>
+    </node>
+    <node id="usask_CMPT 398">
+      <data key="label">CMPT 398</data>
+      <data key="title">Special Topics</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">CMPT</data>
+      <data key="credits">3.0</data>
+      <data key="level">300</data>
+    </node>
+    <node id="usask_CMPT 399">
+      <data key="label">CMPT 399</data>
+      <data key="title">Special Topics</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">CMPT</data>
+      <data key="credits">3.0</data>
+      <data key="level">300</data>
+    </node>
+    <node id="usask_CMPT 400">
+      <data key="label">CMPT 400</data>
+      <data key="title">Research Topics in Computer Science</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">CMPT</data>
+      <data key="credits">3.0</data>
+      <data key="level">400</data>
+    </node>
+    <node id="usask_CMPT 401">
+      <data key="label">CMPT 401</data>
+      <data key="title">Professional Internship I</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">CMPT</data>
+      <data key="credits">3.0</data>
+      <data key="level">400</data>
+    </node>
+    <node id="usask_CMPT 402">
+      <data key="label">CMPT 402</data>
+      <data key="title">Professional Internship II</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">CMPT</data>
+      <data key="credits">3.0</data>
+      <data key="level">400</data>
+    </node>
+    <node id="usask_CMPT 403">
+      <data key="label">CMPT 403</data>
+      <data key="title">Professional Internship III</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">CMPT</data>
+      <data key="credits">3.0</data>
+      <data key="level">400</data>
+    </node>
+    <node id="usask_CMPT 404">
+      <data key="label">CMPT 404</data>
+      <data key="title">Professional Internship IV</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">CMPT</data>
+      <data key="credits">3.0</data>
+      <data key="level">400</data>
+    </node>
+    <node id="usask_CMPT 405">
+      <data key="label">CMPT 405</data>
+      <data key="title">Project Design and Implementation</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">CMPT</data>
+      <data key="credits">3.0</data>
+      <data key="level">400</data>
+    </node>
+    <node id="usask_CMPT 406">
+      <data key="label">CMPT 406</data>
+      <data key="title">Game Design Workshop</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">CMPT</data>
+      <data key="credits">3.0</data>
+      <data key="level">400</data>
+    </node>
+    <node id="usask_CMPT 407">
+      <data key="label">CMPT 407</data>
+      <data key="title">Research Topics in Applied Computing</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">CMPT</data>
+      <data key="credits">3.0</data>
+      <data key="level">400</data>
+    </node>
+    <node id="usask_CMPT 412">
+      <data key="label">CMPT 412</data>
+      <data key="title">Social Computing and Participative Web 2.0</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">CMPT</data>
+      <data key="credits">3.0</data>
+      <data key="level">400</data>
+    </node>
+    <node id="usask_CMPT 423">
+      <data key="label">CMPT 423</data>
+      <data key="title">Machine Learning</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">CMPT</data>
+      <data key="credits">3.0</data>
+      <data key="level">400</data>
+    </node>
+    <node id="usask_CMPT 432">
+      <data key="label">CMPT 432</data>
+      <data key="title">Advanced Operating Systems Concepts</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">CMPT</data>
+      <data key="credits">3.0</data>
+      <data key="level">400</data>
+    </node>
+    <node id="usask_CMPT 433">
+      <data key="label">CMPT 433</data>
+      <data key="title">System and Network Administration</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">CMPT</data>
+      <data key="credits">3.0</data>
+      <data key="level">400</data>
+    </node>
+    <node id="usask_CMPT 434">
+      <data key="label">CMPT 434</data>
+      <data key="title">Computer Networks</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">CMPT</data>
+      <data key="credits">3.0</data>
+      <data key="level">400</data>
+    </node>
+    <node id="usask_CMPT 435">
+      <data key="label">CMPT 435</data>
+      <data key="title">Foundations of Concurrent Programming</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">CMPT</data>
+      <data key="credits">3.0</data>
+      <data key="level">400</data>
+    </node>
+    <node id="usask_CMPT 438">
+      <data key="label">CMPT 438</data>
+      <data key="title">Introduction to Computer Security</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">CMPT</data>
+      <data key="credits">3.0</data>
+      <data key="level">400</data>
+    </node>
+    <node id="usask_CMPT 439">
+      <data key="label">CMPT 439</data>
+      <data key="title">Software Security.</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">CMPT</data>
+      <data key="credits">3.0</data>
+      <data key="level">400</data>
+    </node>
+    <node id="usask_CMPT 440">
+      <data key="label">CMPT 440</data>
+      <data key="title">Advanced Topics in Programming Languages</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">CMPT</data>
+      <data key="credits">3.0</data>
+      <data key="level">400</data>
+    </node>
+    <node id="usask_CMPT 442">
+      <data key="label">CMPT 442</data>
+      <data key="title">Compiler Design and Implementation</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">CMPT</data>
+      <data key="credits">3.0</data>
+      <data key="level">400</data>
+    </node>
+    <node id="usask_CMPT 451">
+      <data key="label">CMPT 451</data>
+      <data key="title">Modelling and Algorithms for Biological Systems</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">CMPT</data>
+      <data key="credits">3.0</data>
+      <data key="level">400</data>
+    </node>
+    <node id="usask_CMPT 453">
+      <data key="label">CMPT 453</data>
+      <data key="title">Cloud and Mobile Computing</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">CMPT</data>
+      <data key="credits">3.0</data>
+      <data key="level">400</data>
+    </node>
+    <node id="usask_CMPT 463">
+      <data key="label">CMPT 463</data>
+      <data key="title">Advanced Algorithms</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">CMPT</data>
+      <data key="credits">3.0</data>
+      <data key="level">400</data>
+    </node>
+    <node id="usask_CMPT 470">
+      <data key="label">CMPT 470</data>
+      <data key="title">Advanced Software Engineering</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">CMPT</data>
+      <data key="credits">3.0</data>
+      <data key="level">400</data>
+    </node>
+    <node id="usask_CMPT 479">
+      <data key="label">CMPT 479</data>
+      <data key="title">Usability Engineering</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">CMPT</data>
+      <data key="credits">3.0</data>
+      <data key="level">400</data>
+    </node>
+    <node id="usask_CMPT 480">
+      <data key="label">CMPT 480</data>
+      <data key="title">Accessible Computing</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">CMPT</data>
+      <data key="credits">3.0</data>
+      <data key="level">400</data>
+    </node>
+    <node id="usask_CMPT 481">
+      <data key="label">CMPT 481</data>
+      <data key="title">Human Computer Interaction</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">CMPT</data>
+      <data key="credits">3.0</data>
+      <data key="level">400</data>
+    </node>
+    <node id="usask_CMPT 484">
+      <data key="label">CMPT 484</data>
+      <data key="title">Graph Drawing and Network Visualization</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">CMPT</data>
+      <data key="credits">3.0</data>
+      <data key="level">400</data>
+    </node>
+    <node id="usask_CMPT 485">
+      <data key="label">CMPT 485</data>
+      <data key="title">Computer Graphics and Animation</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">CMPT</data>
+      <data key="credits">3.0</data>
+      <data key="level">400</data>
+    </node>
+    <node id="usask_CMPT 487">
+      <data key="label">CMPT 487</data>
+      <data key="title">Image Processing and Computer Vision</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">CMPT</data>
+      <data key="credits">3.0</data>
+      <data key="level">400</data>
+    </node>
+    <node id="usask_CMPT 489">
+      <data key="label">CMPT 489</data>
+      <data key="title">Deep Learning and Applications</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">CMPT</data>
+      <data key="credits">3.0</data>
+      <data key="level">400</data>
+    </node>
+    <node id="usask_CMPT 498">
+      <data key="label">CMPT 498</data>
+      <data key="title">Special Topics</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">CMPT</data>
+      <data key="credits">3.0</data>
+      <data key="level">400</data>
+    </node>
+    <node id="usask_CMPT 499">
+      <data key="label">CMPT 499</data>
+      <data key="title">Special Topics</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">CMPT</data>
+      <data key="credits">3.0</data>
+      <data key="level">400</data>
+    </node>
+    <node id="usask_CMPT 810">
+      <data key="label">CMPT 810</data>
+      <data key="title">Algorithms</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">CMPT</data>
+      <data key="credits">3.0</data>
+      <data key="level">800</data>
+    </node>
+    <node id="usask_CMPT 811">
+      <data key="label">CMPT 811</data>
+      <data key="title">Advanced Human Computer Interaction</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">CMPT</data>
+      <data key="credits">3.0</data>
+      <data key="level">800</data>
+    </node>
+    <node id="usask_CMPT 813">
+      <data key="label">CMPT 813</data>
+      <data key="title">Advanced Modelling and Algorithms on Biological Systems</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">CMPT</data>
+      <data key="credits">3.0</data>
+      <data key="level">800</data>
+    </node>
+    <node id="usask_CMPT 815">
+      <data key="label">CMPT 815</data>
+      <data key="title">Computer Systems and Performance Evaluation</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">CMPT</data>
+      <data key="credits">3.0</data>
+      <data key="level">800</data>
+    </node>
+    <node id="usask_CMPT 816">
+      <data key="label">CMPT 816</data>
+      <data key="title">Advanced Software Engineering</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">CMPT</data>
+      <data key="credits">3.0</data>
+      <data key="level">800</data>
+    </node>
+    <node id="usask_CMPT 817">
+      <data key="label">CMPT 817</data>
+      <data key="title">Usability Engineering</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">CMPT</data>
+      <data key="credits">3.0</data>
+      <data key="level">800</data>
+    </node>
+    <node id="usask_CMPT 819">
+      <data key="label">CMPT 819</data>
+      <data key="title">Advanced Image Processing and Computer Vision</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">CMPT</data>
+      <data key="credits">3.0</data>
+      <data key="level">800</data>
+    </node>
+    <node id="usask_CMPT 820">
+      <data key="label">CMPT 820</data>
+      <data key="title">Topics in Learning and Intelligent Systems</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">CMPT</data>
+      <data key="credits">3.0</data>
+      <data key="level">800</data>
+    </node>
+    <node id="usask_CMPT 821">
+      <data key="label">CMPT 821</data>
+      <data key="title">Advanced Topics in Programming Languages</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">CMPT</data>
+      <data key="credits">3.0</data>
+      <data key="level">800</data>
+    </node>
+    <node id="usask_CMPT 823">
+      <data key="label">CMPT 823</data>
+      <data key="title">Compilers</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">CMPT</data>
+      <data key="credits">3.0</data>
+      <data key="level">800</data>
+    </node>
+    <node id="usask_CMPT 824">
+      <data key="label">CMPT 824</data>
+      <data key="title">Graph Drawing and Network Visualization</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">CMPT</data>
+      <data key="credits">3.0</data>
+      <data key="level">800</data>
+    </node>
+    <node id="usask_CMPT 827">
+      <data key="label">CMPT 827</data>
+      <data key="title">Cognitive Scientific Approaches to AI</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">CMPT</data>
+      <data key="credits">3.0</data>
+      <data key="level">800</data>
+    </node>
+    <node id="usask_CMPT 828">
+      <data key="label">CMPT 828</data>
+      <data key="title">Advanced Deep Learning</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">CMPT</data>
+      <data key="credits">3.0</data>
+      <data key="level">800</data>
+    </node>
+    <node id="usask_CMPT 829">
+      <data key="label">CMPT 829</data>
+      <data key="title">Computer Graphics</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">CMPT</data>
+      <data key="credits">3.0</data>
+      <data key="level">800</data>
+    </node>
+    <node id="usask_CMPT 830">
+      <data key="label">CMPT 830</data>
+      <data key="title">Bioinformatics and Computational Biology</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">CMPT</data>
+      <data key="credits">3.0</data>
+      <data key="level">800</data>
+    </node>
+    <node id="usask_CMPT 832">
+      <data key="label">CMPT 832</data>
+      <data key="title">Advanced Operating Systems</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">CMPT</data>
+      <data key="credits">3.0</data>
+      <data key="level">800</data>
+    </node>
+    <node id="usask_CMPT 835">
+      <data key="label">CMPT 835</data>
+      <data key="title">Foundations of Concurrent Programming</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">CMPT</data>
+      <data key="credits">3.0</data>
+      <data key="level">800</data>
+    </node>
+    <node id="usask_CMPT 838">
+      <data key="label">CMPT 838</data>
+      <data key="title">Foundations of Computer Security</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">CMPT</data>
+      <data key="credits">3.0</data>
+      <data key="level">800</data>
+    </node>
+    <node id="usask_CMPT 839">
+      <data key="label">CMPT 839</data>
+      <data key="title">Foundations of Software Security.</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">CMPT</data>
+      <data key="credits">3.0</data>
+      <data key="level">800</data>
+    </node>
+    <node id="usask_CMPT 842">
+      <data key="label">CMPT 842</data>
+      <data key="title">Mobile and Cloud Computing</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">CMPT</data>
+      <data key="credits">3.0</data>
+      <data key="level">800</data>
+    </node>
+    <node id="usask_CMPT 846">
+      <data key="label">CMPT 846</data>
+      <data key="title">Software Maintenance and Evolution</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">CMPT</data>
+      <data key="credits">3.0</data>
+      <data key="level">800</data>
+    </node>
+    <node id="usask_CMPT 851">
+      <data key="label">CMPT 851</data>
+      <data key="title">Parallel Programming for Scientific Computing</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">CMPT</data>
+      <data key="credits">3.0</data>
+      <data key="level">800</data>
+    </node>
+    <node id="usask_CMPT 854">
+      <data key="label">CMPT 854</data>
+      <data key="title">Empirical Software Engineering</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">CMPT</data>
+      <data key="credits">3.0</data>
+      <data key="level">800</data>
+    </node>
+    <node id="usask_CMPT 856">
+      <data key="label">CMPT 856</data>
+      <data key="title">Topics in Software Engineering</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">CMPT</data>
+      <data key="credits">3.0</data>
+      <data key="level">800</data>
+    </node>
+    <node id="usask_CMPT 857">
+      <data key="label">CMPT 857</data>
+      <data key="title">Readings in Bioinformatics</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">CMPT</data>
+      <data key="credits">3.0</data>
+      <data key="level">800</data>
+    </node>
+    <node id="usask_CMPT 858">
+      <data key="label">CMPT 858</data>
+      <data key="title">Topics in Modeling and Operations Research</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">CMPT</data>
+      <data key="credits">3.0</data>
+      <data key="level">800</data>
+    </node>
+    <node id="usask_CMPT 865">
+      <data key="label">CMPT 865</data>
+      <data key="title">Advanced Parallel and Distributed Systems</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">CMPT</data>
+      <data key="credits">3.0</data>
+      <data key="level">800</data>
+    </node>
+    <node id="usask_CMPT 866">
+      <data key="label">CMPT 866</data>
+      <data key="title">Topics in Human Computer Interaction</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">CMPT</data>
+      <data key="credits">3.0</data>
+      <data key="level">800</data>
+    </node>
+    <node id="usask_CMPT 867">
+      <data key="label">CMPT 867</data>
+      <data key="title">Affective Computing</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">CMPT</data>
+      <data key="credits">3.0</data>
+      <data key="level">800</data>
+    </node>
+    <node id="usask_CMPT 868">
+      <data key="label">CMPT 868</data>
+      <data key="title">Social Computing</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">CMPT</data>
+      <data key="credits">3.0</data>
+      <data key="level">800</data>
+    </node>
+    <node id="usask_CMPT 870">
+      <data key="label">CMPT 870</data>
+      <data key="title">Foundations of Game User Research</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">CMPT</data>
+      <data key="credits">3.0</data>
+      <data key="level">800</data>
+    </node>
+    <node id="usask_CMPT 878">
+      <data key="label">CMPT 878</data>
+      <data key="title">Computational Agriculture</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">CMPT</data>
+      <data key="credits">3.0</data>
+      <data key="level">800</data>
+    </node>
+    <node id="usask_CMPT 885">
+      <data key="label">CMPT 885</data>
+      <data key="title">Human Centric Software Renovation</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">CMPT</data>
+      <data key="credits">3.0</data>
+      <data key="level">800</data>
+    </node>
+    <node id="usask_CMPT 886">
+      <data key="label">CMPT 886</data>
+      <data key="title">Research Methods I</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">CMPT</data>
+      <data key="credits">3.0</data>
+      <data key="level">800</data>
+    </node>
+    <node id="usask_CMPT 887">
+      <data key="label">CMPT 887</data>
+      <data key="title">Research Methods II</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">CMPT</data>
+      <data key="credits">3.0</data>
+      <data key="level">800</data>
+    </node>
+    <node id="usask_CMPT 898">
+      <data key="label">CMPT 898</data>
+      <data key="title">Special Topics</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">CMPT</data>
+      <data key="credits">3.0</data>
+      <data key="level">800</data>
+    </node>
+    <node id="usask_CMPT 899">
+      <data key="label">CMPT 899</data>
+      <data key="title">Special Topics</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">CMPT</data>
+      <data key="credits">3.0</data>
+      <data key="level">800</data>
+    </node>
+    <node id="usask_CMPT 990">
+      <data key="label">CMPT 990</data>
+      <data key="title">Seminar</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">CMPT</data>
+      <data key="credits">3.0</data>
+      <data key="level">900</data>
+    </node>
+    <node id="usask_CMPT 994">
+      <data key="label">CMPT 994</data>
+      <data key="title">Research – Thesis</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">CMPT</data>
+      <data key="credits">3.0</data>
+      <data key="level">900</data>
+    </node>
+    <node id="usask_CMPT 996">
+      <data key="label">CMPT 996</data>
+      <data key="title">Research – Dissertation</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">CMPT</data>
+      <data key="credits">3.0</data>
+      <data key="level">900</data>
+    </node>
+    <node id="usask_MATH 101">
+      <data key="label">MATH 101</data>
+      <data key="title">Quantitative Reasoning</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">MATH</data>
+      <data key="credits">3.0</data>
+      <data key="level">100</data>
+    </node>
+    <node id="usask_MATH 102">
+      <data key="label">MATH 102</data>
+      <data key="title">Precalculus Mathematics</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">MATH</data>
+      <data key="credits">3.0</data>
+      <data key="level">100</data>
+    </node>
+    <node id="usask_MATH 104">
+      <data key="label">MATH 104</data>
+      <data key="title">Elementary Calculus</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">MATH</data>
+      <data key="credits">3.0</data>
+      <data key="level">100</data>
+    </node>
+    <node id="usask_MATH 110">
+      <data key="label">MATH 110</data>
+      <data key="title">Calculus I</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">MATH</data>
+      <data key="credits">3.0</data>
+      <data key="level">100</data>
+    </node>
+    <node id="usask_MATH 116">
+      <data key="label">MATH 116</data>
+      <data key="title">Calculus II</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">MATH</data>
+      <data key="credits">3.0</data>
+      <data key="level">100</data>
+    </node>
+    <node id="usask_MATH 125">
+      <data key="label">MATH 125</data>
+      <data key="title">Mathematics for the Life Sciences</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">MATH</data>
+      <data key="credits">3.0</data>
+      <data key="level">100</data>
+    </node>
+    <node id="usask_MATH 133">
+      <data key="label">MATH 133</data>
+      <data key="title">Engineering Mathematics I</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">MATH</data>
+      <data key="credits">3.0</data>
+      <data key="level">100</data>
+    </node>
+    <node id="usask_MATH 134">
+      <data key="label">MATH 134</data>
+      <data key="title">Engineering Mathematics II</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">MATH</data>
+      <data key="credits">3.0</data>
+      <data key="level">100</data>
+    </node>
+    <node id="usask_MATH 150">
+      <data key="label">MATH 150</data>
+      <data key="title">Mathematics for Early and Middle Years Teachers</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">MATH</data>
+      <data key="credits">3.0</data>
+      <data key="level">100</data>
+    </node>
+    <node id="usask_MATH 163">
+      <data key="label">MATH 163</data>
+      <data key="title">Introduction to Mathematical Reasoning</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">MATH</data>
+      <data key="credits">3.0</data>
+      <data key="level">100</data>
+    </node>
+    <node id="usask_MATH 164">
+      <data key="label">MATH 164</data>
+      <data key="title">Introduction to Linear Algebra</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">MATH</data>
+      <data key="credits">3.0</data>
+      <data key="level">100</data>
+    </node>
+    <node id="usask_MATH 176">
+      <data key="label">MATH 176</data>
+      <data key="title">Advanced Calculus I</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">MATH</data>
+      <data key="credits">3.0</data>
+      <data key="level">100</data>
+    </node>
+    <node id="usask_MATH 177">
+      <data key="label">MATH 177</data>
+      <data key="title">Advanced Calculus II</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">MATH</data>
+      <data key="credits">3.0</data>
+      <data key="level">100</data>
+    </node>
+    <node id="usask_MATH 211">
+      <data key="label">MATH 211</data>
+      <data key="title">Numerical Analysis I</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">MATH</data>
+      <data key="credits">3.0</data>
+      <data key="level">200</data>
+    </node>
+    <node id="usask_MATH 223">
+      <data key="label">MATH 223</data>
+      <data key="title">Calculus III for Engineers</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">MATH</data>
+      <data key="credits">3.0</data>
+      <data key="level">200</data>
+    </node>
+    <node id="usask_MATH 224">
+      <data key="label">MATH 224</data>
+      <data key="title">Calculus IV for Engineers</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">MATH</data>
+      <data key="credits">3.0</data>
+      <data key="level">200</data>
+    </node>
+    <node id="usask_MATH 225">
+      <data key="label">MATH 225</data>
+      <data key="title">Intermediate Calculus I</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">MATH</data>
+      <data key="credits">3.0</data>
+      <data key="level">200</data>
+    </node>
+    <node id="usask_MATH 226">
+      <data key="label">MATH 226</data>
+      <data key="title">Intermediate Calculus II</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">MATH</data>
+      <data key="credits">3.0</data>
+      <data key="level">200</data>
+    </node>
+    <node id="usask_MATH 238">
+      <data key="label">MATH 238</data>
+      <data key="title">Introduction to Differential Equations</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">MATH</data>
+      <data key="credits">3.0</data>
+      <data key="level">200</data>
+    </node>
+    <node id="usask_MATH 258">
+      <data key="label">MATH 258</data>
+      <data key="title">Euclidean Geometry</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">MATH</data>
+      <data key="credits">3.0</data>
+      <data key="level">200</data>
+    </node>
+    <node id="usask_MATH 266">
+      <data key="label">MATH 266</data>
+      <data key="title">Linear Algebra II</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">MATH</data>
+      <data key="credits">3.0</data>
+      <data key="level">200</data>
+    </node>
+    <node id="usask_MATH 276">
+      <data key="label">MATH 276</data>
+      <data key="title">Vector Calculus I</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">MATH</data>
+      <data key="credits">3.0</data>
+      <data key="level">200</data>
+    </node>
+    <node id="usask_MATH 277">
+      <data key="label">MATH 277</data>
+      <data key="title">Vector Calculus II</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">MATH</data>
+      <data key="credits">3.0</data>
+      <data key="level">200</data>
+    </node>
+    <node id="usask_MATH 298">
+      <data key="label">MATH 298</data>
+      <data key="title">Special Topics</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">MATH</data>
+      <data key="credits">3.0</data>
+      <data key="level">200</data>
+    </node>
+    <node id="usask_MATH 299">
+      <data key="label">MATH 299</data>
+      <data key="title">Special Topics</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">MATH</data>
+      <data key="credits">3.0</data>
+      <data key="level">200</data>
+    </node>
+    <node id="usask_MATH 313">
+      <data key="label">MATH 313</data>
+      <data key="title">Numerical Linear Algebra</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">MATH</data>
+      <data key="credits">3.0</data>
+      <data key="level">300</data>
+    </node>
+    <node id="usask_MATH 314">
+      <data key="label">MATH 314</data>
+      <data key="title">Numerical Solution of Ordinary Differential Equations</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">MATH</data>
+      <data key="credits">3.0</data>
+      <data key="level">300</data>
+    </node>
+    <node id="usask_MATH 327">
+      <data key="label">MATH 327</data>
+      <data key="title">Graph Theory</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">MATH</data>
+      <data key="credits">3.0</data>
+      <data key="level">300</data>
+    </node>
+    <node id="usask_MATH 328">
+      <data key="label">MATH 328</data>
+      <data key="title">Combinatorics and Enumeration</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">MATH</data>
+      <data key="credits">3.0</data>
+      <data key="level">300</data>
+    </node>
+    <node id="usask_MATH 331">
+      <data key="label">MATH 331</data>
+      <data key="title">Applied Differential Equations</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">MATH</data>
+      <data key="credits">3.0</data>
+      <data key="level">300</data>
+    </node>
+    <node id="usask_MATH 336">
+      <data key="label">MATH 336</data>
+      <data key="title">Mathematical Modelling I</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">MATH</data>
+      <data key="credits">3.0</data>
+      <data key="level">300</data>
+    </node>
+    <node id="usask_MATH 339">
+      <data key="label">MATH 339</data>
+      <data key="title">Differential Equations and Special Functions</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">MATH</data>
+      <data key="credits">3.0</data>
+      <data key="level">300</data>
+    </node>
+    <node id="usask_MATH 352">
+      <data key="label">MATH 352</data>
+      <data key="title">Elementary Differential Geometry</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">MATH</data>
+      <data key="credits">3.0</data>
+      <data key="level">300</data>
+    </node>
+    <node id="usask_MATH 361">
+      <data key="label">MATH 361</data>
+      <data key="title">Group Theory</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">MATH</data>
+      <data key="credits">3.0</data>
+      <data key="level">300</data>
+    </node>
+    <node id="usask_MATH 362">
+      <data key="label">MATH 362</data>
+      <data key="title">Rings and Fields</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">MATH</data>
+      <data key="credits">3.0</data>
+      <data key="level">300</data>
+    </node>
+    <node id="usask_MATH 364">
+      <data key="label">MATH 364</data>
+      <data key="title">Number Theory</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">MATH</data>
+      <data key="credits">3.0</data>
+      <data key="level">300</data>
+    </node>
+    <node id="usask_MATH 371">
+      <data key="label">MATH 371</data>
+      <data key="title">Real Analysis I</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">MATH</data>
+      <data key="credits">3.0</data>
+      <data key="level">300</data>
+    </node>
+    <node id="usask_MATH 373">
+      <data key="label">MATH 373</data>
+      <data key="title">Real Analysis II</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">MATH</data>
+      <data key="credits">3.0</data>
+      <data key="level">300</data>
+    </node>
+    <node id="usask_MATH 379">
+      <data key="label">MATH 379</data>
+      <data key="title">Complex Analysis</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">MATH</data>
+      <data key="credits">3.0</data>
+      <data key="level">300</data>
+    </node>
+    <node id="usask_MATH 398">
+      <data key="label">MATH 398</data>
+      <data key="title">Special Topics</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">MATH</data>
+      <data key="credits">3.0</data>
+      <data key="level">300</data>
+    </node>
+    <node id="usask_MATH 399">
+      <data key="label">MATH 399</data>
+      <data key="title">Special Topics</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">MATH</data>
+      <data key="credits">3.0</data>
+      <data key="level">300</data>
+    </node>
+    <node id="usask_MATH 402">
+      <data key="label">MATH 402</data>
+      <data key="title">Honours Thesis in Mathematics and Statistics</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">MATH</data>
+      <data key="credits">3.0</data>
+      <data key="level">400</data>
+    </node>
+    <node id="usask_MATH 420">
+      <data key="label">MATH 420</data>
+      <data key="title">Topics in Combinatorics</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">MATH</data>
+      <data key="credits">3.0</data>
+      <data key="level">400</data>
+    </node>
+    <node id="usask_MATH 436">
+      <data key="label">MATH 436</data>
+      <data key="title">Mathematical Modelling II</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">MATH</data>
+      <data key="credits">3.0</data>
+      <data key="level">400</data>
+    </node>
+    <node id="usask_MATH 438">
+      <data key="label">MATH 438</data>
+      <data key="title">Methods of Applied Mathematics</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">MATH</data>
+      <data key="credits">3.0</data>
+      <data key="level">400</data>
+    </node>
+    <node id="usask_MATH 439">
+      <data key="label">MATH 439</data>
+      <data key="title">Partial Differential Equations</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">MATH</data>
+      <data key="credits">3.0</data>
+      <data key="level">400</data>
+    </node>
+    <node id="usask_MATH 450">
+      <data key="label">MATH 450</data>
+      <data key="title">Topics in Geometry</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">MATH</data>
+      <data key="credits">3.0</data>
+      <data key="level">400</data>
+    </node>
+    <node id="usask_MATH 460">
+      <data key="label">MATH 460</data>
+      <data key="title">Topics in Algebra</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">MATH</data>
+      <data key="credits">3.0</data>
+      <data key="level">400</data>
+    </node>
+    <node id="usask_MATH 465">
+      <data key="label">MATH 465</data>
+      <data key="title">Introduction to Cryptography</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">MATH</data>
+      <data key="credits">3.0</data>
+      <data key="level">400</data>
+    </node>
+    <node id="usask_MATH 470">
+      <data key="label">MATH 470</data>
+      <data key="title">Topics in Analysis</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">MATH</data>
+      <data key="credits">3.0</data>
+      <data key="level">400</data>
+    </node>
+    <node id="usask_MATH 480">
+      <data key="label">MATH 480</data>
+      <data key="title">Topics in Mathematical Physics</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">MATH</data>
+      <data key="credits">3.0</data>
+      <data key="level">400</data>
+    </node>
+    <node id="usask_MATH 498">
+      <data key="label">MATH 498</data>
+      <data key="title">Special Topics</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">MATH</data>
+      <data key="credits">3.0</data>
+      <data key="level">400</data>
+    </node>
+    <node id="usask_MATH 499">
+      <data key="label">MATH 499</data>
+      <data key="title">Special Topics</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">MATH</data>
+      <data key="credits">3.0</data>
+      <data key="level">400</data>
+    </node>
+    <node id="usask_MATH 818">
+      <data key="label">MATH 818</data>
+      <data key="title">Special Topics in Applied Mathematics</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">MATH</data>
+      <data key="credits">3.0</data>
+      <data key="level">800</data>
+    </node>
+    <node id="usask_MATH 838">
+      <data key="label">MATH 838</data>
+      <data key="title">Methods of Applied Mathematics II</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">MATH</data>
+      <data key="credits">3.0</data>
+      <data key="level">800</data>
+    </node>
+    <node id="usask_MATH 839">
+      <data key="label">MATH 839</data>
+      <data key="title">Methods of Applied Mathematics I</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">MATH</data>
+      <data key="credits">3.0</data>
+      <data key="level">800</data>
+    </node>
+    <node id="usask_MATH 872">
+      <data key="label">MATH 872</data>
+      <data key="title">Special Topics in Pure Mathematics</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">MATH</data>
+      <data key="credits">3.0</data>
+      <data key="level">800</data>
+    </node>
+    <node id="usask_MATH 898">
+      <data key="label">MATH 898</data>
+      <data key="title">Special Topics</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">MATH</data>
+      <data key="credits">3.0</data>
+      <data key="level">800</data>
+    </node>
+    <node id="usask_MATH 899">
+      <data key="label">MATH 899</data>
+      <data key="title">Special Topics</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">MATH</data>
+      <data key="credits">3.0</data>
+      <data key="level">800</data>
+    </node>
+    <node id="usask_MATH 990">
+      <data key="label">MATH 990</data>
+      <data key="title">Seminar</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">MATH</data>
+      <data key="credits">3.0</data>
+      <data key="level">900</data>
+    </node>
+    <node id="usask_MATH 992">
+      <data key="label">MATH 992</data>
+      <data key="title">Research – Project</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">MATH</data>
+      <data key="credits">3.0</data>
+      <data key="level">900</data>
+    </node>
+    <node id="usask_MATH 994">
+      <data key="label">MATH 994</data>
+      <data key="title">Research – Thesis</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">MATH</data>
+      <data key="credits">3.0</data>
+      <data key="level">900</data>
+    </node>
+    <node id="usask_MATH 996">
+      <data key="label">MATH 996</data>
+      <data key="title">Research – Dissertation</data>
+      <data key="institution">usask</data>
+      <data key="type">course</data>
+      <data key="subject">MATH</data>
+      <data key="credits">3.0</data>
+      <data key="level">900</data>
+    </node>
+    <node id="saskpolytech_ADMN 220">
+      <data key="label">ADMN 220</data>
+      <data key="title">Organizational Behaviour</data>
+      <data key="institution">saskpolytech</data>
+      <data key="type">course</data>
+      <data key="subject">ADMN</data>
+      <data key="credits">4.0</data>
+      <data key="level">200</data>
+    </node>
+    <node id="saskpolytech_CNET 184">
+      <data key="label">CNET 184</data>
+      <data key="title">Data Communications and Networking</data>
+      <data key="institution">saskpolytech</data>
+      <data key="type">course</data>
+      <data key="subject">CNET</data>
+      <data key="credits">4.0</data>
+      <data key="level">100</data>
+    </node>
+    <node id="saskpolytech_CODS 100">
+      <data key="label">CODS 100</data>
+      <data key="title">Data Automation</data>
+      <data key="institution">saskpolytech</data>
+      <data key="type">course</data>
+      <data key="subject">CODS</data>
+      <data key="credits">4.0</data>
+      <data key="level">100</data>
+    </node>
+    <node id="saskpolytech_COOS 181">
+      <data key="label">COOS 181</data>
+      <data key="title">Operating Systems Fundamentals</data>
+      <data key="institution">saskpolytech</data>
+      <data key="type">course</data>
+      <data key="subject">COOS</data>
+      <data key="credits">4.0</data>
+      <data key="level">100</data>
+    </node>
+    <node id="saskpolytech_COSC 180">
+      <data key="label">COSC 180</data>
+      <data key="title">Introduction to Programming</data>
+      <data key="institution">saskpolytech</data>
+      <data key="type">course</data>
+      <data key="subject">COSC</data>
+      <data key="credits">4.0</data>
+      <data key="level">100</data>
+    </node>
+    <node id="saskpolytech_CWEB 180">
+      <data key="label">CWEB 180</data>
+      <data key="title">Web Site Development</data>
+      <data key="institution">saskpolytech</data>
+      <data key="type">course</data>
+      <data key="subject">CWEB</data>
+      <data key="credits">4.0</data>
+      <data key="level">100</data>
+    </node>
+    <node id="saskpolytech_CWEB 195">
+      <data key="label">CWEB 195</data>
+      <data key="title">User Experience Fundamentals</data>
+      <data key="institution">saskpolytech</data>
+      <data key="type">course</data>
+      <data key="subject">CWEB</data>
+      <data key="credits">2.0</data>
+      <data key="level">100</data>
+    </node>
+    <node id="saskpolytech_CDBM 280">
+      <data key="label">CDBM 280</data>
+      <data key="title">Database Management Systems</data>
+      <data key="institution">saskpolytech</data>
+      <data key="type">course</data>
+      <data key="subject">CDBM</data>
+      <data key="credits">4.0</data>
+      <data key="level">200</data>
+    </node>
+    <node id="saskpolytech_COHS 190">
+      <data key="label">COHS 190</data>
+      <data key="title">Hardware</data>
+      <data key="institution">saskpolytech</data>
+      <data key="type">course</data>
+      <data key="subject">COHS</data>
+      <data key="credits">3.0</data>
+      <data key="level">100</data>
+    </node>
+    <node id="saskpolytech_COOS 190">
+      <data key="label">COOS 190</data>
+      <data key="title">Server Administration</data>
+      <data key="institution">saskpolytech</data>
+      <data key="type">course</data>
+      <data key="subject">COOS</data>
+      <data key="credits">4.0</data>
+      <data key="level">100</data>
+    </node>
+    <node id="saskpolytech_COSA 190">
+      <data key="label">COSA 190</data>
+      <data key="title">Systems Analysis and Design</data>
+      <data key="institution">saskpolytech</data>
+      <data key="type">course</data>
+      <data key="subject">COSA</data>
+      <data key="credits">4.0</data>
+      <data key="level">100</data>
+    </node>
+    <node id="saskpolytech_COSC 182">
+      <data key="label">COSC 182</data>
+      <data key="title">Intermediate Programming</data>
+      <data key="institution">saskpolytech</data>
+      <data key="type">course</data>
+      <data key="subject">COSC</data>
+      <data key="credits">4.0</data>
+      <data key="level">100</data>
+    </node>
+    <node id="saskpolytech_CWEB 190">
+      <data key="label">CWEB 190</data>
+      <data key="title">Internet Programming and Web Applications 1</data>
+      <data key="institution">saskpolytech</data>
+      <data key="type">course</data>
+      <data key="subject">CWEB</data>
+      <data key="credits">4.0</data>
+      <data key="level">100</data>
+    </node>
+    <node id="saskpolytech_TCOM 190">
+      <data key="label">TCOM 190</data>
+      <data key="title">Technical Communications</data>
+      <data key="institution">saskpolytech</data>
+      <data key="type">course</data>
+      <data key="subject">TCOM</data>
+      <data key="credits">3.0</data>
+      <data key="level">100</data>
+    </node>
+    <node id="saskpolytech_COSA 195">
+      <data key="label">COSA 195</data>
+      <data key="title">Systems Project</data>
+      <data key="institution">saskpolytech</data>
+      <data key="type">course</data>
+      <data key="subject">COSA</data>
+      <data key="credits">3.0</data>
+      <data key="level">100</data>
+    </node>
+    <node id="saskpolytech_COSC 195">
+      <data key="label">COSC 195</data>
+      <data key="title">Mobile Application Programming</data>
+      <data key="institution">saskpolytech</data>
+      <data key="type">course</data>
+      <data key="subject">COSC</data>
+      <data key="credits">3.0</data>
+      <data key="level">100</data>
+    </node>
+    <node id="saskpolytech_CWEB 280">
+      <data key="label">CWEB 280</data>
+      <data key="title">Internet Programming and Web Applications 2</data>
+      <data key="institution">saskpolytech</data>
+      <data key="type">course</data>
+      <data key="subject">CWEB</data>
+      <data key="credits">4.0</data>
+      <data key="level">200</data>
+    </node>
+    <node id="saskpolytech_CLTR 200">
+      <data key="label">CLTR 200</data>
+      <data key="title">Culture and Diversity</data>
+      <data key="institution">saskpolytech</data>
+      <data key="type">course</data>
+      <data key="subject">CLTR</data>
+      <data key="credits">2.0</data>
+      <data key="level">200</data>
+    </node>
+    <node id="saskpolytech_COAP 288">
+      <data key="label">COAP 288</data>
+      <data key="title">Applied Machine Learning</data>
+      <data key="institution">saskpolytech</data>
+      <data key="type">course</data>
+      <data key="subject">COAP</data>
+      <data key="credits">4.0</data>
+      <data key="level">200</data>
+    </node>
+    <node id="saskpolytech_COHS 280">
+      <data key="label">COHS 280</data>
+      <data key="title">Enterprise Systems Support</data>
+      <data key="institution">saskpolytech</data>
+      <data key="type">course</data>
+      <data key="subject">COHS</data>
+      <data key="credits">4.0</data>
+      <data key="level">200</data>
+    </node>
+    <node id="saskpolytech_COSC 286">
+      <data key="label">COSC 286</data>
+      <data key="title">Data Structures and Algorithms</data>
+      <data key="institution">saskpolytech</data>
+      <data key="type">course</data>
+      <data key="subject">COSC</data>
+      <data key="credits">4.0</data>
+      <data key="level">200</data>
+    </node>
+    <node id="saskpolytech_COSC 295">
+      <data key="label">COSC 295</data>
+      <data key="title">Advanced Mobile Application Management</data>
+      <data key="institution">saskpolytech</data>
+      <data key="type">course</data>
+      <data key="subject">COSC</data>
+      <data key="credits">4.0</data>
+      <data key="level">200</data>
+    </node>
+    <node id="saskpolytech_CSEC 280">
+      <data key="label">CSEC 280</data>
+      <data key="title">Cyber Security 1</data>
+      <data key="institution">saskpolytech</data>
+      <data key="type">course</data>
+      <data key="subject">CSEC</data>
+      <data key="credits">4.0</data>
+      <data key="level">200</data>
+    </node>
+    <node id="saskpolytech_PROJ 271">
+      <data key="label">PROJ 271</data>
+      <data key="title">Capstone Project 1</data>
+      <data key="institution">saskpolytech</data>
+      <data key="type">course</data>
+      <data key="subject">PROJ</data>
+      <data key="credits">4.0</data>
+      <data key="level">200</data>
+    </node>
+    <node id="saskpolytech_ANLT 290">
+      <data key="label">ANLT 290</data>
+      <data key="title">Mathematics and Data Analytics</data>
+      <data key="institution">saskpolytech</data>
+      <data key="type">course</data>
+      <data key="subject">ANLT</data>
+      <data key="credits">4.0</data>
+      <data key="level">200</data>
+    </node>
+    <node id="saskpolytech_COOS 291">
+      <data key="label">COOS 291</data>
+      <data key="title">Advanced Operating Systems</data>
+      <data key="institution">saskpolytech</data>
+      <data key="type">course</data>
+      <data key="subject">COOS</data>
+      <data key="credits">4.0</data>
+      <data key="level">200</data>
+    </node>
+    <node id="saskpolytech_COOS 294">
+      <data key="label">COOS 294</data>
+      <data key="title">Cloud Infrastructure Administration</data>
+      <data key="institution">saskpolytech</data>
+      <data key="type">course</data>
+      <data key="subject">COOS</data>
+      <data key="credits">4.0</data>
+      <data key="level">200</data>
+    </node>
+    <node id="saskpolytech_COSC 288">
+      <data key="label">COSC 288</data>
+      <data key="title">Advanced Backend Development</data>
+      <data key="institution">saskpolytech</data>
+      <data key="type">course</data>
+      <data key="subject">COSC</data>
+      <data key="credits">4.0</data>
+      <data key="level">200</data>
+    </node>
+    <node id="saskpolytech_CSEC 295">
+      <data key="label">CSEC 295</data>
+      <data key="title">Cyber Security 2</data>
+      <data key="institution">saskpolytech</data>
+      <data key="type">course</data>
+      <data key="subject">CSEC</data>
+      <data key="credits">4.0</data>
+      <data key="level">200</data>
+    </node>
+    <node id="saskpolytech_PROJ 272">
+      <data key="label">PROJ 272</data>
+      <data key="title">Capstone Project 2</data>
+      <data key="institution">saskpolytech</data>
+      <data key="type">course</data>
+      <data key="subject">PROJ</data>
+      <data key="credits">4.0</data>
+      <data key="level">200</data>
+    </node>
+    <node id="saskpolytech_TCOM 291">
+      <data key="label">TCOM 291</data>
+      <data key="title">Career Path and Industry Engagement</data>
+      <data key="institution">saskpolytech</data>
+      <data key="type">course</data>
+      <data key="subject">TCOM</data>
+      <data key="credits">2.0</data>
+      <data key="level">200</data>
+    </node>
+    <node id="saskpolytech_COET 295">
+      <data key="label">COET 295</data>
+      <data key="title">Emerging Technologies</data>
+      <data key="institution">saskpolytech</data>
+      <data key="type">course</data>
+      <data key="subject">COET</data>
+      <data key="credits">3.0</data>
+      <data key="level">200</data>
+    </node>
+    <node id="saskpolytech_COOS 295">
+      <data key="label">COOS 295</data>
+      <data key="title">Systems Administration</data>
+      <data key="institution">saskpolytech</data>
+      <data key="type">course</data>
+      <data key="subject">COOS</data>
+      <data key="credits">3.0</data>
+      <data key="level">200</data>
+    </node>
+    <node id="saskpolytech_PROJ 273">
+      <data key="label">PROJ 273</data>
+      <data key="title">Capstone Project 3</data>
+      <data key="institution">saskpolytech</data>
+      <data key="type">course</data>
+      <data key="subject">PROJ</data>
+      <data key="credits">4.0</data>
+      <data key="level">200</data>
+    </node>
+    <node id="saskpolytech_CAD 100">
+      <data key="label">CAD 100</data>
+      <data key="title">Computer Aided Design</data>
+      <data key="institution">saskpolytech</data>
+      <data key="type">course</data>
+      <data key="subject">CAD</data>
+      <data key="credits">3.0</data>
+      <data key="level">100</data>
+    </node>
+    <node id="saskpolytech_COMP 112">
+      <data key="label">COMP 112</data>
+      <data key="title">Introduction to Computer Programming</data>
+      <data key="institution">saskpolytech</data>
+      <data key="type">course</data>
+      <data key="subject">COMP</data>
+      <data key="credits">3.0</data>
+      <data key="level">100</data>
+    </node>
+    <node id="saskpolytech_ENGE 120">
+      <data key="label">ENGE 120</data>
+      <data key="title">Basic Electricity</data>
+      <data key="institution">saskpolytech</data>
+      <data key="type">course</data>
+      <data key="subject">ENGE</data>
+      <data key="credits">4.0</data>
+      <data key="level">100</data>
+    </node>
+    <node id="saskpolytech_INDG 100">
+      <data key="label">INDG 100</data>
+      <data key="title">Introduction to Indigenous Studies</data>
+      <data key="institution">saskpolytech</data>
+      <data key="type">course</data>
+      <data key="subject">INDG</data>
+      <data key="credits">1.0</data>
+      <data key="level">100</data>
+    </node>
+    <node id="saskpolytech_LABS 120">
+      <data key="label">LABS 120</data>
+      <data key="title">Basic Electricity Lab</data>
+      <data key="institution">saskpolytech</data>
+      <data key="type">course</data>
+      <data key="subject">LABS</data>
+      <data key="credits">4.0</data>
+      <data key="level">100</data>
+    </node>
+    <node id="saskpolytech_MAT 110">
+      <data key="label">MAT 110</data>
+      <data key="title">Mathematics for Engineering Technologies</data>
+      <data key="institution">saskpolytech</data>
+      <data key="type">course</data>
+      <data key="subject">MAT</data>
+      <data key="credits">4.0</data>
+      <data key="level">100</data>
+    </node>
+    <node id="saskpolytech_SEM 101">
+      <data key="label">SEM 101</data>
+      <data key="title">Technology Seminars</data>
+      <data key="institution">saskpolytech</data>
+      <data key="type">course</data>
+      <data key="subject">SEM</data>
+      <data key="credits">1.0</data>
+      <data key="level">100</data>
+    </node>
+    <node id="saskpolytech_STAT 200">
+      <data key="label">STAT 200</data>
+      <data key="title">Statistics for Technology</data>
+      <data key="institution">saskpolytech</data>
+      <data key="type">course</data>
+      <data key="subject">STAT</data>
+      <data key="credits">2.0</data>
+      <data key="level">200</data>
+    </node>
+    <node id="saskpolytech_TCOM 102">
+      <data key="label">TCOM 102</data>
+      <data key="title">Workplace Communication</data>
+      <data key="institution">saskpolytech</data>
+      <data key="type">course</data>
+      <data key="subject">TCOM</data>
+      <data key="credits">3.0</data>
+      <data key="level">100</data>
+    </node>
+    <node id="saskpolytech_COHS 220">
+      <data key="label">COHS 220</data>
+      <data key="title">Networking Computers</data>
+      <data key="institution">saskpolytech</data>
+      <data key="type">course</data>
+      <data key="subject">COHS</data>
+      <data key="credits">3.0</data>
+      <data key="level">200</data>
+    </node>
+    <node id="saskpolytech_DGTL 110">
+      <data key="label">DGTL 110</data>
+      <data key="title">Digital Logic</data>
+      <data key="institution">saskpolytech</data>
+      <data key="type">course</data>
+      <data key="subject">DGTL</data>
+      <data key="credits">2.0</data>
+      <data key="level">100</data>
+    </node>
+    <node id="saskpolytech_DGTL 111">
+      <data key="label">DGTL 111</data>
+      <data key="title">Digital Logic Laboratory</data>
+      <data key="institution">saskpolytech</data>
+      <data key="type">course</data>
+      <data key="subject">DGTL</data>
+      <data key="credits">3.0</data>
+      <data key="level">100</data>
+    </node>
+    <node id="saskpolytech_ENGE 107">
+      <data key="label">ENGE 107</data>
+      <data key="title">Semiconductor Electronics</data>
+      <data key="institution">saskpolytech</data>
+      <data key="type">course</data>
+      <data key="subject">ENGE</data>
+      <data key="credits">4.0</data>
+      <data key="level">100</data>
+    </node>
+    <node id="saskpolytech_ENGE 200">
+      <data key="label">ENGE 200</data>
+      <data key="title">Alternating Current (AC) Basic Electricity</data>
+      <data key="institution">saskpolytech</data>
+      <data key="type">course</data>
+      <data key="subject">ENGE</data>
+      <data key="credits">4.0</data>
+      <data key="level">200</data>
+    </node>
+    <node id="saskpolytech_INST 223">
+      <data key="label">INST 223</data>
+      <data key="title">Basic Instruments</data>
+      <data key="institution">saskpolytech</data>
+      <data key="type">course</data>
+      <data key="subject">INST</data>
+      <data key="credits">3.0</data>
+      <data key="level">200</data>
+    </node>
+    <node id="saskpolytech_MAT 112">
+      <data key="label">MAT 112</data>
+      <data key="title">Differential Calculus for Engineering Technologies</data>
+      <data key="institution">saskpolytech</data>
+      <data key="type">course</data>
+      <data key="subject">MAT</data>
+      <data key="credits">3.0</data>
+      <data key="level">100</data>
+    </node>
+    <node id="saskpolytech_TCOM 103">
+      <data key="label">TCOM 103</data>
+      <data key="title">Technical Communication</data>
+      <data key="institution">saskpolytech</data>
+      <data key="type">course</data>
+      <data key="subject">TCOM</data>
+      <data key="credits">3.0</data>
+      <data key="level">100</data>
+    </node>
+    <node id="saskpolytech_COOP 101">
+      <data key="label">COOP 101</data>
+      <data key="title">Cooperative Work Term</data>
+      <data key="institution">saskpolytech</data>
+      <data key="type">course</data>
+      <data key="subject">COOP</data>
+      <data key="credits">3.0</data>
+      <data key="level">100</data>
+    </node>
+    <node id="saskpolytech_CIRC 220">
+      <data key="label">CIRC 220</data>
+      <data key="title">Analog Integrated Circuits</data>
+      <data key="institution">saskpolytech</data>
+      <data key="type">course</data>
+      <data key="subject">CIRC</data>
+      <data key="credits">4.0</data>
+      <data key="level">200</data>
+    </node>
+    <node id="saskpolytech_COAP 222">
+      <data key="label">COAP 222</data>
+      <data key="title">Computer Programming</data>
+      <data key="institution">saskpolytech</data>
+      <data key="type">course</data>
+      <data key="subject">COAP</data>
+      <data key="credits">4.0</data>
+      <data key="level">200</data>
+    </node>
+    <node id="saskpolytech_COMP 221">
+      <data key="label">COMP 221</data>
+      <data key="title">Computer Hardware Fundamentals</data>
+      <data key="institution">saskpolytech</data>
+      <data key="type">course</data>
+      <data key="subject">COMP</data>
+      <data key="credits">4.0</data>
+      <data key="level">200</data>
+    </node>
+    <node id="saskpolytech_COMP 222">
+      <data key="label">COMP 222</data>
+      <data key="title">Microcontroller Programming</data>
+      <data key="institution">saskpolytech</data>
+      <data key="type">course</data>
+      <data key="subject">COMP</data>
+      <data key="credits">4.0</data>
+      <data key="level">200</data>
+    </node>
+    <node id="saskpolytech_ENGE 221">
+      <data key="label">ENGE 221</data>
+      <data key="title">Robotics and Embedded Systems</data>
+      <data key="institution">saskpolytech</data>
+      <data key="type">course</data>
+      <data key="subject">ENGE</data>
+      <data key="credits">4.0</data>
+      <data key="level">200</data>
+    </node>
+    <node id="saskpolytech_MAT 210">
+      <data key="label">MAT 210</data>
+      <data key="title">Integral Calculus for Engineering Technologies</data>
+      <data key="institution">saskpolytech</data>
+      <data key="type">course</data>
+      <data key="subject">MAT</data>
+      <data key="credits">3.0</data>
+      <data key="level">200</data>
+    </node>
+    <node id="saskpolytech_COOP 201">
+      <data key="label">COOP 201</data>
+      <data key="title">Cooperative Work Term</data>
+      <data key="institution">saskpolytech</data>
+      <data key="type">course</data>
+      <data key="subject">COOP</data>
+      <data key="credits">3.0</data>
+      <data key="level">200</data>
+    </node>
+    <node id="saskpolytech_CNST 220">
+      <data key="label">CNST 220</data>
+      <data key="title">Construction Techniques</data>
+      <data key="institution">saskpolytech</data>
+      <data key="type">course</data>
+      <data key="subject">CNST</data>
+      <data key="credits">3.0</data>
+      <data key="level">200</data>
+    </node>
+    <node id="saskpolytech_COMP 207">
+      <data key="label">COMP 207</data>
+      <data key="title">Computer Interfacing</data>
+      <data key="institution">saskpolytech</data>
+      <data key="type">course</data>
+      <data key="subject">COMP</data>
+      <data key="credits">2.0</data>
+      <data key="level">200</data>
+    </node>
+    <node id="saskpolytech_COMP 217">
+      <data key="label">COMP 217</data>
+      <data key="title">Computer Interfacing Laboratory</data>
+      <data key="institution">saskpolytech</data>
+      <data key="type">course</data>
+      <data key="subject">COMP</data>
+      <data key="credits">3.0</data>
+      <data key="level">200</data>
+    </node>
+    <node id="saskpolytech_COMP 219">
+      <data key="label">COMP 219</data>
+      <data key="title">Cloud Computing</data>
+      <data key="institution">saskpolytech</data>
+      <data key="type">course</data>
+      <data key="subject">COMP</data>
+      <data key="credits">2.0</data>
+      <data key="level">200</data>
+    </node>
+    <node id="saskpolytech_DGTL 207">
+      <data key="label">DGTL 207</data>
+      <data key="title">FPGA Programming and Applications</data>
+      <data key="institution">saskpolytech</data>
+      <data key="type">course</data>
+      <data key="subject">DGTL</data>
+      <data key="credits">3.0</data>
+      <data key="level">200</data>
+    </node>
+    <node id="saskpolytech_MAT 211">
+      <data key="label">MAT 211</data>
+      <data key="title">Advanced Mathematics for Engineering Technologies</data>
+      <data key="institution">saskpolytech</data>
+      <data key="type">course</data>
+      <data key="subject">MAT</data>
+      <data key="credits">3.0</data>
+      <data key="level">200</data>
+    </node>
+    <node id="saskpolytech_PHYS 105">
+      <data key="label">PHYS 105</data>
+      <data key="title">Physics</data>
+      <data key="institution">saskpolytech</data>
+      <data key="type">course</data>
+      <data key="subject">PHYS</data>
+      <data key="credits">3.0</data>
+      <data key="level">100</data>
+    </node>
+    <node id="saskpolytech_PROJ 287">
+      <data key="label">PROJ 287</data>
+      <data key="title">Project Management</data>
+      <data key="institution">saskpolytech</data>
+      <data key="type">course</data>
+      <data key="subject">PROJ</data>
+      <data key="credits">2.0</data>
+      <data key="level">200</data>
+    </node>
+    <node id="saskpolytech_COOP 301">
+      <data key="label">COOP 301</data>
+      <data key="title">Cooperative Work Term</data>
+      <data key="institution">saskpolytech</data>
+      <data key="type">course</data>
+      <data key="subject">COOP</data>
+      <data key="credits">3.0</data>
+      <data key="level">300</data>
+    </node>
+    <node id="saskpolytech_COAP 300">
+      <data key="label">COAP 300</data>
+      <data key="title">Artificial Intelligence</data>
+      <data key="institution">saskpolytech</data>
+      <data key="type">course</data>
+      <data key="subject">COAP</data>
+      <data key="credits">2.0</data>
+      <data key="level">300</data>
+    </node>
+    <node id="saskpolytech_COAP 301">
+      <data key="label">COAP 301</data>
+      <data key="title">Artificial Intelligence Laboratory</data>
+      <data key="institution">saskpolytech</data>
+      <data key="type">course</data>
+      <data key="subject">COAP</data>
+      <data key="credits">3.0</data>
+      <data key="level">300</data>
+    </node>
+    <node id="saskpolytech_COMP 227">
+      <data key="label">COMP 227</data>
+      <data key="title">Process Control Systems</data>
+      <data key="institution">saskpolytech</data>
+      <data key="type">course</data>
+      <data key="subject">COMP</data>
+      <data key="credits">4.0</data>
+      <data key="level">200</data>
+    </node>
+    <node id="saskpolytech_COMP 303">
+      <data key="label">COMP 303</data>
+      <data key="title">Mobile Application Development</data>
+      <data key="institution">saskpolytech</data>
+      <data key="type">course</data>
+      <data key="subject">COMP</data>
+      <data key="credits">2.0</data>
+      <data key="level">300</data>
+    </node>
+    <node id="saskpolytech_COMP 304">
+      <data key="label">COMP 304</data>
+      <data key="title">Mobile Application Development Laboratory</data>
+      <data key="institution">saskpolytech</data>
+      <data key="type">course</data>
+      <data key="subject">COMP</data>
+      <data key="credits">3.0</data>
+      <data key="level">300</data>
+    </node>
+    <node id="saskpolytech_CSEC 300">
+      <data key="label">CSEC 300</data>
+      <data key="title">Cybersecurity</data>
+      <data key="institution">saskpolytech</data>
+      <data key="type">course</data>
+      <data key="subject">CSEC</data>
+      <data key="credits">4.0</data>
+      <data key="level">300</data>
+    </node>
+    <node id="saskpolytech_PROJ 222">
+      <data key="label">PROJ 222</data>
+      <data key="title">Capstone Research Project</data>
+      <data key="institution">saskpolytech</data>
+      <data key="type">course</data>
+      <data key="subject">PROJ</data>
+      <data key="credits">4.0</data>
+      <data key="level">200</data>
+    </node>
+    <node id="saskpolytech_TCOM 104">
+      <data key="label">TCOM 104</data>
+      <data key="title">Applied Research in Technology</data>
+      <data key="institution">saskpolytech</data>
+      <data key="type">course</data>
+      <data key="subject">TCOM</data>
+      <data key="credits">2.0</data>
+      <data key="level">100</data>
+    </node>
+    <node id="usask_bsc-3yr-cmpt">
+      <data key="label">Computer Science</data>
+      <data key="title">Bachelor of Science Three-year - Computer Science</data>
+      <data key="institution">usask</data>
+      <data key="type">degree</data>
+      <data key="credits">90.0</data>
+    </node>
+    <node id="usask_bsc-4yr-cmpt">
+      <data key="label">Computer Science</data>
+      <data key="title">Bachelor of Science Four-year - Computer Science</data>
+      <data key="institution">usask</data>
+      <data key="type">degree</data>
+      <data key="credits">120.0</data>
+    </node>
+    <node id="usask_bsc-honours-cmpt">
+      <data key="label">Computer Science</data>
+      <data key="title">Bachelor of Science Honours - Computer Science</data>
+      <data key="institution">usask</data>
+      <data key="type">degree</data>
+      <data key="credits">120.0</data>
+    </node>
+    <node id="usask_bsc-3yr-math">
+      <data key="label">Mathematics</data>
+      <data key="title">Bachelor of Science Three-year - Mathematics</data>
+      <data key="institution">usask</data>
+      <data key="type">degree</data>
+      <data key="credits">90.0</data>
+    </node>
+    <node id="usask_bsc-4yr-math">
+      <data key="label">Mathematics</data>
+      <data key="title">Bachelor of Science Four-year - Mathematics</data>
+      <data key="institution">usask</data>
+      <data key="type">degree</data>
+      <data key="credits">120.0</data>
+    </node>
+    <node id="usask_bsc-dbl-honours-cmpt-math">
+      <data key="label">Computer Science and Mathematics</data>
+      <data key="title">Bachelor of Science Double Honours - Computer Science and Mathematics</data>
+      <data key="institution">usask</data>
+      <data key="type">degree</data>
+      <data key="credits">120.0</data>
+    </node>
+    <node id="usask_minor-cmpt">
+      <data key="label">Computer Science Minor</data>
+      <data key="title">Computer Science Minor</data>
+      <data key="institution">usask</data>
+      <data key="type">degree</data>
+      <data key="credits">18.0</data>
+    </node>
+    <node id="usask_minor-math">
+      <data key="label">Mathematics Minor</data>
+      <data key="title">Mathematics Minor</data>
+      <data key="institution">usask</data>
+      <data key="type">degree</data>
+      <data key="credits">18.0</data>
+    </node>
+    <edge id="e0" source="usask_CMPT 142" target="usask_CMPT 146">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e1" source="usask_CMPT 260" target="usask_CMPT 215">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e2" source="usask_CMPT 214" target="usask_CMPT 215">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e3" source="usask_CMPT 260" target="usask_CMPT 263">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e4" source="usask_CMPT 270" target="usask_CMPT 280">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e5" source="usask_CMPT 270" target="usask_CMPT 306">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e6" source="usask_CMPT 280" target="usask_CMPT 317">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e7" source="usask_CMPT 270" target="usask_CMPT 318">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e8" source="usask_MATH 164" target="usask_CMPT 318">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e9" source="usask_CME 331" target="usask_CMPT 332">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e10" source="usask_CMPT 280" target="usask_CMPT 332">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e11" source="usask_CMPT 214" target="usask_CMPT 332">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e12" source="usask_CMPT 270" target="usask_CMPT 340">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e13" source="usask_CMPT 214" target="usask_CMPT 340">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e14" source="usask_CMPT 263" target="usask_CMPT 340">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e15" source="usask_CMPT 280" target="usask_CMPT 353">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e16" source="usask_CMPT 280" target="usask_CMPT 360">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e17" source="usask_CMPT 260" target="usask_CMPT 364">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e18" source="usask_CMPT 280" target="usask_CMPT 370">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e19" source="usask_CMPT 214" target="usask_CMPT 371">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e20" source="usask_CMPT 280" target="usask_CMPT 381">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e21" source="usask_CMPT 280" target="usask_CMPT 384">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e22" source="usask_CMPT 270" target="usask_CMPT 394">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e23" source="usask_MATH 110" target="usask_CMPT 394">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e24" source="usask_CMPT 401" target="usask_CMPT 402">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e25" source="usask_CMPT 402" target="usask_CMPT 403">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e26" source="usask_CMPT 403" target="usask_CMPT 404">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e27" source="usask_CMPT 306" target="usask_CMPT 406">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e28" source="usask_MATH 164" target="usask_CMPT 423">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e29" source="usask_CMPT 332" target="usask_CMPT 432">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e30" source="usask_CMPT 332" target="usask_CMPT 434">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e31" source="usask_CMPT 215" target="usask_CMPT 435">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e32" source="usask_CMPT 332" target="usask_CMPT 439">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e33" source="usask_CMPT 340" target="usask_CMPT 440">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e34" source="usask_CMPT 215" target="usask_CMPT 442">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e35" source="usask_CMPT 364" target="usask_CMPT 442">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e36" source="usask_CMPT 280" target="usask_CMPT 451">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e37" source="usask_BMSC 200" target="usask_CMPT 451">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e38" source="usask_CMPT 360" target="usask_CMPT 463">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e39" source="usask_CMPT 370" target="usask_CMPT 470">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e40" source="usask_CMPT 214" target="usask_CMPT 470">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e41" source="usask_CMPT 370" target="usask_CMPT 479">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e42" source="usask_CMPT 384" target="usask_CMPT 484">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e43" source="usask_CMPT 317" target="usask_CMPT 489">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e44" source="usask_CMPT 370" target="usask_CMPT 811">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e45" source="usask_CMPT 360" target="usask_CMPT 813">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e46" source="usask_CMPT 451" target="usask_CMPT 813">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e47" source="usask_CMPT 317" target="usask_CMPT 827">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e48" source="usask_CMPT 332" target="usask_CMPT 832">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e49" source="usask_CMPT 816" target="usask_CMPT 856">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e50" source="usask_CMPT 815" target="usask_CMPT 865">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e51" source="usask_CMPT 481" target="usask_CMPT 867">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e52" source="usask_CMPT 886" target="usask_CMPT 887">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e53" source="usask_MATH 102" target="usask_MATH 104">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e54" source="usask_MATH 102" target="usask_MATH 125">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e55" source="usask_MATH 102" target="usask_MATH 133">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e56" source="usask_MATH 164" target="usask_MATH 211">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e57" source="usask_MATH 223" target="usask_MATH 224">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e58" source="usask_MATH 164" target="usask_MATH 238">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e59" source="usask_MATH 163" target="usask_MATH 258">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e60" source="usask_MATH 164" target="usask_MATH 266">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e61" source="usask_MATH 164" target="usask_MATH 276">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e62" source="usask_MATH 276" target="usask_MATH 277">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e63" source="usask_MATH 211" target="usask_MATH 313">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e64" source="usask_MATH 211" target="usask_MATH 314">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e65" source="usask_MATH 238" target="usask_MATH 314">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e66" source="usask_CMPT 260" target="usask_MATH 327">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e67" source="usask_CMPT 260" target="usask_MATH 328">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e68" source="usask_MATH 211" target="usask_MATH 336">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e69" source="usask_STAT 241" target="usask_MATH 336">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e70" source="usask_MATH 276" target="usask_MATH 339">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e71" source="usask_MATH 223" target="usask_MATH 339">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e72" source="usask_MATH 226" target="usask_MATH 352">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e73" source="usask_MATH 266" target="usask_MATH 352">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e74" source="usask_MATH 238" target="usask_MATH 352">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e75" source="usask_MATH 163" target="usask_MATH 361">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e76" source="usask_MATH 163" target="usask_MATH 362">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e77" source="usask_MATH 163" target="usask_MATH 364">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e78" source="usask_MATH 163" target="usask_MATH 371">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e79" source="usask_MATH 371" target="usask_MATH 373">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e80" source="usask_MATH 225" target="usask_MATH 379">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e81" source="usask_MATH 238" target="usask_MATH 379">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e82" source="usask_MATH 336" target="usask_MATH 436">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e83" source="usask_MATH 277" target="usask_MATH 438">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e84" source="usask_MATH 238" target="usask_MATH 438">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e85" source="usask_MATH 238" target="usask_MATH 439">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e86" source="usask_MATH 361" target="usask_MATH 460">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e87" source="usask_MATH 362" target="usask_MATH 460">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e88" source="usask_MATH 364" target="usask_MATH 465">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e89" source="usask_MATH 379" target="usask_MATH 470">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e90" source="usask_MATH 371" target="usask_MATH 470">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e91" source="usask_MATH 379" target="usask_MATH 480">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e92" source="usask_PHYS 383" target="usask_MATH 480">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e93" source="usask_MATH 339" target="usask_MATH 838">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e94" source="usask_MATH 373" target="usask_MATH 838">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e95" source="usask_MATH 331" target="usask_MATH 838">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e96" source="usask_MATH 371" target="usask_MATH 838">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e97" source="usask_MATH 379" target="usask_MATH 839">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e98" source="usask_MATH 373" target="usask_MATH 839">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e99" source="usask_MATH 331" target="usask_MATH 839">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e100" source="usask_MATH 371" target="usask_MATH 839">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e101" source="usask_MATH 339" target="usask_MATH 839">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e102" source="saskpolytech_CODS 100" target="saskpolytech_CDBM 280">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e103" source="saskpolytech_COOS 181" target="saskpolytech_COOS 190">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e104" source="saskpolytech_COSC 180" target="saskpolytech_COSA 190">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e105" source="saskpolytech_COSC 180" target="saskpolytech_COSC 182">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e106" source="saskpolytech_CWEB 180" target="saskpolytech_CWEB 190">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e107" source="saskpolytech_ADMN 220" target="saskpolytech_TCOM 190">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e108" source="saskpolytech_TCOM 190" target="saskpolytech_COSA 195">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e109" source="saskpolytech_COSA 190" target="saskpolytech_COSA 195">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e110" source="saskpolytech_COSC 182" target="saskpolytech_COSC 195">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e111" source="saskpolytech_CWEB 190" target="saskpolytech_CWEB 280">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e112" source="saskpolytech_COHS 190" target="saskpolytech_COHS 280">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e113" source="saskpolytech_COSC 182" target="saskpolytech_COSC 286">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e114" source="saskpolytech_COSC 195" target="saskpolytech_COSC 295">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e115" source="saskpolytech_CNET 184" target="saskpolytech_CSEC 280">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e116" source="saskpolytech_COSA 195" target="saskpolytech_PROJ 271">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e117" source="saskpolytech_COOS 181" target="saskpolytech_COOS 291">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e118" source="saskpolytech_COOS 190" target="saskpolytech_COOS 294">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e119" source="saskpolytech_CWEB 280" target="saskpolytech_COSC 288">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e120" source="saskpolytech_CSEC 280" target="saskpolytech_CSEC 295">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e121" source="saskpolytech_PROJ 271" target="saskpolytech_PROJ 272">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e122" source="saskpolytech_COSC 292" target="saskpolytech_COET 295">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e123" source="saskpolytech_COOS 190" target="saskpolytech_COOS 295">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e124" source="saskpolytech_PROJ 272" target="saskpolytech_PROJ 273">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e125" source="saskpolytech_MAT 110(CONCURRENT)" target="saskpolytech_ENGE 120">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e126" source="saskpolytech_MAT 110(CONCURRENT)" target="saskpolytech_LABS 120">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e127" source="saskpolytech_DGTL 111(CONCURRENT)" target="saskpolytech_DGTL 110">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e128" source="saskpolytech_ENGE 120" target="saskpolytech_DGTL 110">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e129" source="saskpolytech_LABS 120" target="saskpolytech_DGTL 110">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e130" source="saskpolytech_DGTL 110(CONCURRENT)" target="saskpolytech_DGTL 111">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e131" source="saskpolytech_ENGE 120" target="saskpolytech_DGTL 111">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e132" source="saskpolytech_LABS 120" target="saskpolytech_DGTL 111">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e133" source="saskpolytech_ENGE 120" target="saskpolytech_ENGE 107">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e134" source="saskpolytech_LABS 120" target="saskpolytech_ENGE 107">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e135" source="saskpolytech_MAT 110" target="saskpolytech_ENGE 200">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e136" source="saskpolytech_ENGE 120" target="saskpolytech_ENGE 200">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e137" source="saskpolytech_LABS 120" target="saskpolytech_ENGE 200">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e138" source="saskpolytech_ENGE 120" target="saskpolytech_INST 223">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e139" source="saskpolytech_LABS 120" target="saskpolytech_INST 223">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e140" source="saskpolytech_MAT 110" target="saskpolytech_MAT 112">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e141" source="saskpolytech_TCOM 102 OR COM 170" target="saskpolytech_TCOM 103">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e142" source="saskpolytech_ENGE 107" target="saskpolytech_CIRC 220">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e143" source="saskpolytech_ENGE 200" target="saskpolytech_CIRC 220">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e144" source="saskpolytech_COMP 112" target="saskpolytech_COAP 222">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e145" source="saskpolytech_COMP 112" target="saskpolytech_COMP 222">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e146" source="saskpolytech_DGTL 111" target="saskpolytech_COMP 222">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e147" source="saskpolytech_DGTL 110" target="saskpolytech_COMP 222">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e148" source="saskpolytech_ENGE 107" target="saskpolytech_ENGE 221">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e149" source="saskpolytech_COMP 112" target="saskpolytech_ENGE 221">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e150" source="saskpolytech_DGTL 111" target="saskpolytech_ENGE 221">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e151" source="saskpolytech_DGTL 110" target="saskpolytech_ENGE 221">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e152" source="saskpolytech_MAT 112" target="saskpolytech_MAT 210">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e153" source="saskpolytech_COMP 222" target="saskpolytech_CNST 220">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e154" source="saskpolytech_CAD 100" target="saskpolytech_CNST 220">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e155" source="saskpolytech_COMP 222" target="saskpolytech_COMP 207">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e156" source="saskpolytech_COMP 221" target="saskpolytech_COMP 207">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e157" source="saskpolytech_COMP 217(CONCURRENT)" target="saskpolytech_COMP 207">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e158" source="saskpolytech_COMP 207(CONCURRENT)" target="saskpolytech_COMP 217">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e159" source="saskpolytech_COMP 222" target="saskpolytech_COMP 217">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e160" source="saskpolytech_COMP 221" target="saskpolytech_COMP 217">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e161" source="saskpolytech_COHS 220" target="saskpolytech_COMP 219">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e162" source="saskpolytech_DGTL 111" target="saskpolytech_DGTL 207">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e163" source="saskpolytech_DGTL 110" target="saskpolytech_DGTL 207">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e164" source="saskpolytech_MAT 210" target="saskpolytech_MAT 211">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e165" source="saskpolytech_COAP 222" target="saskpolytech_COAP 300">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e166" source="saskpolytech_COAP 301(CONCURRENT)" target="saskpolytech_COAP 300">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e167" source="saskpolytech_COAP 300(CONCURRENT)" target="saskpolytech_COAP 301">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e168" source="saskpolytech_COAP 222" target="saskpolytech_COAP 301">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e169" source="saskpolytech_DGTL 111" target="saskpolytech_COMP 227">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e170" source="saskpolytech_DGTL 110" target="saskpolytech_COMP 227">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e171" source="saskpolytech_COAP 222" target="saskpolytech_COMP 303">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e172" source="saskpolytech_COAP 222" target="saskpolytech_COMP 304">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e173" source="saskpolytech_COHS 220" target="saskpolytech_CSEC 300">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e174" source="saskpolytech_COAP 222" target="saskpolytech_PROJ 222">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e175" source="saskpolytech_COMP 217" target="saskpolytech_PROJ 222">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e176" source="saskpolytech_COMP 207" target="saskpolytech_PROJ 222">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e177" source="saskpolytech_ENGE 221" target="saskpolytech_PROJ 222">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e178" source="saskpolytech_TCOM 103 OR ENGL 101" target="saskpolytech_TCOM 104">
+      <data key="edge_type">prerequisite</data>
+      <data key="weight">1.0</data>
+    </edge>
+    <edge id="e179" source="saskpolytech_CSTDP" target="usask_CMPT 141">
+      <data key="edge_type">transfer</data>
+      <data key="weight">0.5</data>
+    </edge>
+    <edge id="e180" source="saskpolytech_CSTDP" target="usask_CMPT 145">
+      <data key="edge_type">transfer</data>
+      <data key="weight">0.5</data>
+    </edge>
+    <edge id="e181" source="saskpolytech_CSTDP" target="usask_CMPT 214">
+      <data key="edge_type">transfer</data>
+      <data key="weight">0.5</data>
+    </edge>
+    <edge id="e182" source="saskpolytech_CSTDP" target="usask_CMPT 270">
+      <data key="edge_type">transfer</data>
+      <data key="weight">0.5</data>
+    </edge>
+    <edge id="e183" source="saskpolytech_CSTDP" target="usask_CMPT 350">
+      <data key="edge_type">transfer</data>
+      <data key="weight">0.5</data>
+    </edge>
+    <edge id="e184" source="saskpolytech_CSTDP" target="usask_CMPT 355">
+      <data key="edge_type">transfer</data>
+      <data key="weight">0.5</data>
+    </edge>
+    <edge id="e185" source="saskpolytech_CSTDP" target="usask_CMPT 100">
+      <data key="edge_type">transfer</data>
+      <data key="weight">0.5</data>
+    </edge>
+    <edge id="e186" source="saskpolytech_CSTDP" target="usask_CMPT 281">
+      <data key="edge_type">transfer</data>
+      <data key="weight">0.5</data>
+    </edge>
+    <edge id="e187" source="saskpolytech_CSTDP" target="uregina_CS 110">
+      <data key="edge_type">transfer</data>
+      <data key="weight">0.5</data>
+    </edge>
+    <edge id="e188" source="saskpolytech_CSTDP" target="uregina_CS 115">
+      <data key="edge_type">transfer</data>
+      <data key="weight">0.5</data>
+    </edge>
+    <edge id="e189" source="saskpolytech_CSTDP" target="uregina_CS 210">
+      <data key="edge_type">transfer</data>
+      <data key="weight">0.5</data>
+    </edge>
+    <edge id="e190" source="saskpolytech_BIS" target="uregina_CS 110">
+      <data key="edge_type">transfer</data>
+      <data key="weight">0.5</data>
+    </edge>
+    <edge id="e191" source="saskpolytech_COSC 180" target="usask_CMPT 141">
+      <data key="edge_type">transfer</data>
+      <data key="weight">0.5</data>
+    </edge>
+    <edge id="e192" source="saskpolytech_COSC 182" target="usask_CMPT 145">
+      <data key="edge_type">transfer</data>
+      <data key="weight">0.5</data>
+    </edge>
+    <edge id="e193" source="saskpolytech_CDBM 280" target="usask_CMPT 350">
+      <data key="edge_type">transfer</data>
+      <data key="weight">0.5</data>
+    </edge>
+    <edge id="e194" source="saskpolytech_CNET 184" target="usask_CMPT 355">
+      <data key="edge_type">transfer</data>
+      <data key="weight">0.5</data>
+    </edge>
+    <edge id="e195" source="saskpolytech_COSA 190" target="usask_CMPT 270">
+      <data key="edge_type">transfer</data>
+      <data key="weight">0.5</data>
+    </edge>
+    <edge id="e196" source="saskpolytech_COSC 180" target="uregina_CS 110">
+      <data key="edge_type">transfer</data>
+      <data key="weight">0.5</data>
+    </edge>
+    <edge id="e197" source="saskpolytech_COSC 182" target="uregina_CS 115">
+      <data key="edge_type">transfer</data>
+      <data key="weight">0.5</data>
+    </edge>
+    <edge id="e198" source="saskpolytech_COSC 286" target="uregina_CS 210">
+      <data key="edge_type">transfer</data>
+      <data key="weight">0.5</data>
+    </edge>
+  </graph>
+</graphml>

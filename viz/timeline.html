@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Academic Timeline</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0d1117;
+            color: #c9d1d9;
+            min-height: 100vh;
+        }
+        header {
+            text-align: center;
+            padding: 30px;
+            background: linear-gradient(180deg, #161b22 0%, #0d1117 100%);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        h1 { color: #58a6ff; margin-bottom: 10px; }
+        .subtitle { color: #8b949e; margin-bottom: 20px; }
+
+        #controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        select, button {
+            background: #21262d;
+            color: #c9d1d9;
+            border: 1px solid #30363d;
+            padding: 8px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85em;
+        }
+        button.active { background: #238636; border-color: #238636; }
+
+        #timeline {
+            display: flex;
+            overflow-x: auto;
+            padding: 30px;
+            gap: 0;
+        }
+
+        .semester {
+            min-width: 280px;
+            flex-shrink: 0;
+            position: relative;
+        }
+        .semester-header {
+            text-align: center;
+            padding: 12px;
+            background: #161b22;
+            border-radius: 8px 8px 0 0;
+            border: 1px solid #30363d;
+            border-bottom: none;
+            font-weight: 600;
+        }
+        .semester-header.fall { border-top: 3px solid #f0883e; }
+        .semester-header.winter { border-top: 3px solid #58a6ff; }
+        .semester-header.spring { border-top: 3px solid #3fb950; }
+
+        .semester-content {
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 0 0 8px 8px;
+            padding: 15px;
+            min-height: 400px;
+        }
+
+        .course-slot {
+            background: #21262d;
+            border-radius: 6px;
+            padding: 12px;
+            margin-bottom: 10px;
+            border-left: 3px solid #30363d;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .course-slot:hover {
+            background: #30363d;
+            transform: translateY(-2px);
+        }
+        .course-slot.completed {
+            border-left-color: #3fb950;
+            background: #3fb95015;
+        }
+        .course-slot.available {
+            border-left-color: #58a6ff;
+            background: #58a6ff15;
+        }
+        .course-slot.locked {
+            opacity: 0.5;
+            border-left-color: #f85149;
+        }
+        .course-slot.selected {
+            border-left-color: #a371f7;
+            box-shadow: 0 0 15px rgba(163, 113, 247, 0.4);
+        }
+
+        .course-code {
+            font-weight: 600;
+            color: #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .course-code .credits {
+            font-size: 0.75em;
+            background: rgba(255,255,255,0.1);
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+        .course-title {
+            font-size: 0.85em;
+            color: #8b949e;
+            margin-top: 4px;
+        }
+        .course-prereqs {
+            font-size: 0.75em;
+            color: #f0883e;
+            margin-top: 6px;
+        }
+        .course-prereqs.satisfied { color: #3fb950; }
+
+        .arrow-container {
+            width: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .arrow {
+            width: 30px;
+            height: 2px;
+            background: #30363d;
+            position: relative;
+        }
+        .arrow::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: -4px;
+            border: 5px solid transparent;
+            border-left-color: #30363d;
+        }
+
+        #summary {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 15px 25px;
+            display: flex;
+            gap: 30px;
+            font-size: 0.9em;
+        }
+        .summary-item {
+            text-align: center;
+        }
+        .summary-value {
+            font-size: 1.5em;
+            font-weight: 600;
+            color: #58a6ff;
+        }
+        .summary-label {
+            color: #8b949e;
+            font-size: 0.85em;
+        }
+
+        #prereq-lines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 50;
+        }
+
+        .tooltip {
+            position: fixed;
+            background: #161b22;
+            border: 1px solid #30363d;
+            padding: 12px;
+            border-radius: 8px;
+            max-width: 280px;
+            pointer-events: none;
+            opacity: 0;
+            z-index: 1000;
+            font-size: 0.85em;
+        }
+        .tooltip.visible { opacity: 1; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Academic Timeline</h1>
+        <p class="subtitle">Plan your path through semesters • Click courses to mark as completed</p>
+        <div id="controls">
+            <select id="program-select">
+                <option value="cs-4yr">B.Sc. 4yr Computer Science</option>
+                <option value="cs-honours">B.Sc. Honours CS</option>
+                <option value="cs-math-dbl">Double Honours CS+Math</option>
+            </select>
+            <button id="reset-btn">Reset Progress</button>
+            <button id="auto-fill-btn">Auto-fill Prerequisites</button>
+        </div>
+    </header>
+
+    <div id="timeline"></div>
+
+    <div id="summary">
+        <div class="summary-item">
+            <div class="summary-value" id="completed-count">0</div>
+            <div class="summary-label">Completed</div>
+        </div>
+        <div class="summary-item">
+            <div class="summary-value" id="credits-count">0</div>
+            <div class="summary-label">Credits</div>
+        </div>
+        <div class="summary-item">
+            <div class="summary-value" id="available-count">0</div>
+            <div class="summary-label">Available</div>
+        </div>
+        <div class="summary-item">
+            <div class="summary-value" id="progress-pct">0%</div>
+            <div class="summary-label">Progress</div>
+        </div>
+    </div>
+
+    <svg id="prereq-lines"></svg>
+    <div class="tooltip" id="tooltip"></div>
+
+    <script>
+    // Sample program data with semester recommendations
+    const programs = {
+        'cs-4yr': {
+            name: 'B.Sc. 4yr Computer Science',
+            totalCredits: 120,
+            semesters: [
+                { name: 'Year 1 Fall', type: 'fall', courses: [
+                    { code: 'CMPT 141', title: 'Intro to CS', credits: 3, prereqs: [] },
+                    { code: 'MATH 110', title: 'Calculus I', credits: 3, prereqs: [] },
+                    { code: 'MATH 163', title: 'Intro Discrete Math', credits: 3, prereqs: [] },
+                    { code: 'ENG 110', title: 'English Writing', credits: 3, prereqs: [] },
+                    { code: 'PHYS 115', title: 'Physics I', credits: 3, prereqs: [] },
+                ]},
+                { name: 'Year 1 Winter', type: 'winter', courses: [
+                    { code: 'CMPT 145', title: 'Principles of CS', credits: 3, prereqs: ['CMPT 141'] },
+                    { code: 'MATH 116', title: 'Calculus II', credits: 3, prereqs: ['MATH 110'] },
+                    { code: 'INDG 107', title: 'Indigenous Studies', credits: 3, prereqs: [] },
+                    { code: 'CHEM 112', title: 'General Chemistry', credits: 3, prereqs: [] },
+                    { code: 'Elective 1', title: 'Breadth Elective', credits: 3, prereqs: [] },
+                ]},
+                { name: 'Year 2 Fall', type: 'fall', courses: [
+                    { code: 'CMPT 214', title: 'Programming Principles', credits: 3, prereqs: ['CMPT 145'] },
+                    { code: 'CMPT 260', title: 'Discrete Math for CS', credits: 3, prereqs: ['CMPT 145', 'MATH 163'] },
+                    { code: 'CMPT 270', title: 'OO Systems', credits: 3, prereqs: ['CMPT 145'] },
+                    { code: 'STAT 242', title: 'Statistics', credits: 3, prereqs: ['MATH 110'] },
+                    { code: 'PHIL 232', title: 'Ethics', credits: 3, prereqs: [] },
+                ]},
+                { name: 'Year 2 Winter', type: 'winter', courses: [
+                    { code: 'CMPT 215', title: 'Systems Programming', credits: 3, prereqs: ['CMPT 214'] },
+                    { code: 'CMPT 280', title: 'Data Structures', credits: 3, prereqs: ['CMPT 270', 'CMPT 260'] },
+                    { code: 'MATH 211', title: 'Linear Algebra', credits: 3, prereqs: ['MATH 110'] },
+                    { code: 'Elective 2', title: 'Breadth Elective', credits: 3, prereqs: [] },
+                    { code: 'Elective 3', title: 'Breadth Elective', credits: 3, prereqs: [] },
+                ]},
+                { name: 'Year 3 Fall', type: 'fall', courses: [
+                    { code: 'CMPT 317', title: 'Intro to AI', credits: 3, prereqs: ['CMPT 280'] },
+                    { code: 'CMPT 332', title: 'Operating Systems', credits: 3, prereqs: ['CMPT 215', 'CMPT 280'] },
+                    { code: 'CMPT 340', title: 'Databases', credits: 3, prereqs: ['CMPT 280'] },
+                    { code: 'CMPT Elective 1', title: 'CMPT 300-level', credits: 3, prereqs: ['CMPT 280'] },
+                    { code: 'Elective 4', title: 'Open Elective', credits: 3, prereqs: [] },
+                ]},
+                { name: 'Year 3 Winter', type: 'winter', courses: [
+                    { code: 'CMPT 353', title: 'Computer Networks', credits: 3, prereqs: ['CMPT 215'] },
+                    { code: 'CMPT 360', title: 'Algorithms', credits: 3, prereqs: ['CMPT 280'] },
+                    { code: 'CMPT 370', title: 'Software Engineering', credits: 3, prereqs: ['CMPT 280'] },
+                    { code: 'CMPT Elective 2', title: 'CMPT 300-level', credits: 3, prereqs: ['CMPT 280'] },
+                    { code: 'Elective 5', title: 'Open Elective', credits: 3, prereqs: [] },
+                ]},
+                { name: 'Year 4 Fall', type: 'fall', courses: [
+                    { code: 'CMPT 411', title: 'Machine Learning', credits: 3, prereqs: ['CMPT 317'] },
+                    { code: 'CMPT 4xx A', title: '400-level Elective', credits: 3, prereqs: ['CMPT 360'] },
+                    { code: 'CME 341', title: 'Computer Architecture', credits: 3, prereqs: ['CMPT 215'] },
+                    { code: 'Elective 6', title: 'Open Elective', credits: 3, prereqs: [] },
+                    { code: 'Elective 7', title: 'Open Elective', credits: 3, prereqs: [] },
+                ]},
+                { name: 'Year 4 Winter', type: 'winter', courses: [
+                    { code: 'CMPT 4xx B', title: '400-level Elective', credits: 3, prereqs: ['CMPT 360'] },
+                    { code: 'Elective 8', title: 'Open Elective', credits: 3, prereqs: [] },
+                    { code: 'Elective 9', title: 'Open Elective', credits: 3, prereqs: [] },
+                    { code: 'Elective 10', title: 'Open Elective', credits: 3, prereqs: [] },
+                    { code: 'Elective 11', title: 'Open Elective', credits: 3, prereqs: [] },
+                ]},
+            ]
+        },
+        'cs-honours': {
+            name: 'B.Sc. Honours CS',
+            totalCredits: 120,
+            semesters: [
+                { name: 'Year 1 Fall', type: 'fall', courses: [
+                    { code: 'CMPT 141', title: 'Intro to CS', credits: 3, prereqs: [] },
+                    { code: 'MATH 110', title: 'Calculus I', credits: 3, prereqs: [] },
+                    { code: 'MATH 163', title: 'Intro Discrete Math', credits: 3, prereqs: [] },
+                    { code: 'ENG 110', title: 'English Writing', credits: 3, prereqs: [] },
+                    { code: 'PHYS 115', title: 'Physics I', credits: 3, prereqs: [] },
+                ]},
+                { name: 'Year 1 Winter', type: 'winter', courses: [
+                    { code: 'CMPT 145', title: 'Principles of CS', credits: 3, prereqs: ['CMPT 141'] },
+                    { code: 'MATH 116', title: 'Calculus II', credits: 3, prereqs: ['MATH 110'] },
+                    { code: 'STAT 241', title: 'Probability', credits: 3, prereqs: ['MATH 110'] },
+                    { code: 'INDG 107', title: 'Indigenous Studies', credits: 3, prereqs: [] },
+                    { code: 'CHEM 112', title: 'General Chemistry', credits: 3, prereqs: [] },
+                ]},
+                { name: 'Year 2 Fall', type: 'fall', courses: [
+                    { code: 'CMPT 214', title: 'Programming Principles', credits: 3, prereqs: ['CMPT 145'] },
+                    { code: 'CMPT 260', title: 'Discrete Math for CS', credits: 3, prereqs: ['CMPT 145', 'MATH 163'] },
+                    { code: 'CMPT 270', title: 'OO Systems', credits: 3, prereqs: ['CMPT 145'] },
+                    { code: 'PHIL 232', title: 'Ethics', credits: 3, prereqs: [] },
+                    { code: 'Breadth 1', title: 'Humanities/Arts', credits: 3, prereqs: [] },
+                ]},
+                { name: 'Year 2 Winter', type: 'winter', courses: [
+                    { code: 'CMPT 215', title: 'Systems Programming', credits: 3, prereqs: ['CMPT 214'] },
+                    { code: 'CMPT 280', title: 'Data Structures', credits: 3, prereqs: ['CMPT 270', 'CMPT 260'] },
+                    { code: 'MATH 164', title: 'Discrete Math II', credits: 3, prereqs: ['MATH 163'] },
+                    { code: 'Breadth 2', title: 'Social Sciences', credits: 3, prereqs: [] },
+                    { code: 'Breadth 3', title: 'Fine Arts', credits: 3, prereqs: [] },
+                ]},
+                { name: 'Year 3 Fall', type: 'fall', courses: [
+                    { code: 'CMPT 360', title: 'Algorithms', credits: 3, prereqs: ['CMPT 280'] },
+                    { code: 'CMPT 364', title: 'Automata & Formal Lang', credits: 3, prereqs: ['CMPT 260'] },
+                    { code: 'CMPT 317', title: 'Intro to AI', credits: 3, prereqs: ['CMPT 280'] },
+                    { code: 'CMPT 332', title: 'Operating Systems', credits: 3, prereqs: ['CMPT 215', 'CMPT 280'] },
+                    { code: 'Elective 1', title: 'Open Elective', credits: 3, prereqs: [] },
+                ]},
+                { name: 'Year 3 Winter', type: 'winter', courses: [
+                    { code: 'CMPT 340', title: 'Databases', credits: 3, prereqs: ['CMPT 280'] },
+                    { code: 'CMPT 370', title: 'Software Engineering', credits: 3, prereqs: ['CMPT 280'] },
+                    { code: 'CMPT 381', title: 'HCI', credits: 3, prereqs: ['CMPT 280'] },
+                    { code: 'Elective 2', title: 'Open Elective', credits: 3, prereqs: [] },
+                    { code: 'Elective 3', title: 'Open Elective', credits: 3, prereqs: [] },
+                ]},
+                { name: 'Year 4 Fall', type: 'fall', courses: [
+                    { code: 'CMPT 400', title: 'Honours Project I', credits: 3, prereqs: ['CMPT 360', 'CMPT 364'] },
+                    { code: 'CMPT 4xx A', title: '400-level Elective', credits: 3, prereqs: ['CMPT 360'] },
+                    { code: 'CMPT 4xx B', title: '400-level Elective', credits: 3, prereqs: ['CMPT 360'] },
+                    { code: 'Elective 4', title: 'Open Elective', credits: 3, prereqs: [] },
+                    { code: 'Elective 5', title: 'Open Elective', credits: 3, prereqs: [] },
+                ]},
+                { name: 'Year 4 Winter', type: 'winter', courses: [
+                    { code: 'CMPT 400B', title: 'Honours Project II', credits: 3, prereqs: ['CMPT 400'] },
+                    { code: 'Elective 6', title: 'Open Elective', credits: 3, prereqs: [] },
+                    { code: 'Elective 7', title: 'Open Elective', credits: 3, prereqs: [] },
+                ]},
+            ]
+        },
+        'cs-math-dbl': {
+            name: 'Double Honours CS+Math',
+            totalCredits: 120,
+            semesters: [
+                { name: 'Year 1 Fall', type: 'fall', courses: [
+                    { code: 'CMPT 141', title: 'Intro to CS', credits: 3, prereqs: [] },
+                    { code: 'MATH 110', title: 'Calculus I', credits: 3, prereqs: [] },
+                    { code: 'MATH 163', title: 'Intro Discrete Math', credits: 3, prereqs: [] },
+                    { code: 'ENG 110', title: 'English Writing', credits: 3, prereqs: [] },
+                    { code: 'PHYS 115', title: 'Physics I', credits: 3, prereqs: [] },
+                ]},
+                { name: 'Year 1 Winter', type: 'winter', courses: [
+                    { code: 'CMPT 145', title: 'Principles of CS', credits: 3, prereqs: ['CMPT 141'] },
+                    { code: 'MATH 116', title: 'Calculus II', credits: 3, prereqs: ['MATH 110'] },
+                    { code: 'MATH 164', title: 'Discrete Math II', credits: 3, prereqs: ['MATH 163'] },
+                    { code: 'INDG 107', title: 'Indigenous Studies', credits: 3, prereqs: [] },
+                    { code: 'CHEM 112', title: 'General Chemistry', credits: 3, prereqs: [] },
+                ]},
+                { name: 'Year 2 Fall', type: 'fall', courses: [
+                    { code: 'CMPT 214', title: 'Programming Principles', credits: 3, prereqs: ['CMPT 145'] },
+                    { code: 'CMPT 260', title: 'Discrete Math for CS', credits: 3, prereqs: ['CMPT 145', 'MATH 163'] },
+                    { code: 'CMPT 270', title: 'OO Systems', credits: 3, prereqs: ['CMPT 145'] },
+                    { code: 'MATH 266', title: 'Linear Algebra', credits: 3, prereqs: ['MATH 110'] },
+                    { code: 'STAT 241', title: 'Probability', credits: 3, prereqs: ['MATH 110'] },
+                ]},
+                { name: 'Year 2 Winter', type: 'winter', courses: [
+                    { code: 'CMPT 215', title: 'Systems Programming', credits: 3, prereqs: ['CMPT 214'] },
+                    { code: 'CMPT 280', title: 'Data Structures', credits: 3, prereqs: ['CMPT 270', 'CMPT 260'] },
+                    { code: 'MATH 276', title: 'Linear Algebra II', credits: 3, prereqs: ['MATH 266'] },
+                    { code: 'MATH 277', title: 'Transition to Adv Math', credits: 3, prereqs: ['MATH 164'] },
+                    { code: 'Breadth', title: 'Humanities/Arts', credits: 3, prereqs: [] },
+                ]},
+                { name: 'Year 3 Fall', type: 'fall', courses: [
+                    { code: 'CMPT 360', title: 'Algorithms', credits: 3, prereqs: ['CMPT 280'] },
+                    { code: 'CMPT 364', title: 'Automata', credits: 3, prereqs: ['CMPT 260'] },
+                    { code: 'MATH 238', title: 'Intro Analysis', credits: 3, prereqs: ['MATH 116'] },
+                    { code: 'MATH 361', title: 'Real Analysis', credits: 3, prereqs: ['MATH 277'] },
+                    { code: 'CMPT 317', title: 'Intro to AI', credits: 3, prereqs: ['CMPT 280'] },
+                ]},
+                { name: 'Year 3 Winter', type: 'winter', courses: [
+                    { code: 'MATH 362', title: 'Complex Analysis', credits: 3, prereqs: ['MATH 361'] },
+                    { code: 'MATH 371', title: 'Abstract Algebra', credits: 3, prereqs: ['MATH 277'] },
+                    { code: 'MATH 379', title: 'Combinatorics', credits: 3, prereqs: ['MATH 164'] },
+                    { code: 'CMPT 340', title: 'Databases', credits: 3, prereqs: ['CMPT 280'] },
+                    { code: 'CMPT 370', title: 'Software Engineering', credits: 3, prereqs: ['CMPT 280'] },
+                ]},
+                { name: 'Year 4 Fall', type: 'fall', courses: [
+                    { code: 'CMPT 400', title: 'Honours Project', credits: 3, prereqs: ['CMPT 360', 'CMPT 364'] },
+                    { code: 'CMPT 4xx', title: '400-level CMPT', credits: 3, prereqs: ['CMPT 360'] },
+                    { code: 'MATH 4xx', title: '400-level MATH', credits: 3, prereqs: ['MATH 361'] },
+                    { code: 'Breadth 2', title: 'Social Sciences', credits: 3, prereqs: [] },
+                ]},
+                { name: 'Year 4 Winter', type: 'winter', courses: [
+                    { code: 'CMPT 400B', title: 'Honours Project II', credits: 3, prereqs: ['CMPT 400'] },
+                    { code: 'Elective', title: 'Open Elective', credits: 3, prereqs: [] },
+                ]},
+            ]
+        }
+    };
+
+    let currentProgram = 'cs-4yr';
+    let completedCourses = new Set();
+
+    function render() {
+        const program = programs[currentProgram];
+        const timeline = document.getElementById('timeline');
+        timeline.innerHTML = '';
+
+        program.semesters.forEach((semester, semIndex) => {
+            // Add arrow between semesters
+            if (semIndex > 0) {
+                const arrow = document.createElement('div');
+                arrow.className = 'arrow-container';
+                arrow.innerHTML = '<div class="arrow"></div>';
+                timeline.appendChild(arrow);
+            }
+
+            const semDiv = document.createElement('div');
+            semDiv.className = 'semester';
+
+            const header = document.createElement('div');
+            header.className = `semester-header ${semester.type}`;
+            header.textContent = semester.name;
+            semDiv.appendChild(header);
+
+            const content = document.createElement('div');
+            content.className = 'semester-content';
+
+            semester.courses.forEach(course => {
+                const slot = document.createElement('div');
+                slot.className = 'course-slot';
+                slot.dataset.code = course.code;
+
+                // Check status
+                const isCompleted = completedCourses.has(course.code);
+                const prereqsMet = course.prereqs.every(p => completedCourses.has(p));
+
+                if (isCompleted) {
+                    slot.classList.add('completed');
+                } else if (prereqsMet) {
+                    slot.classList.add('available');
+                } else {
+                    slot.classList.add('locked');
+                }
+
+                slot.innerHTML = `
+                    <div class="course-code">
+                        ${course.code}
+                        <span class="credits">${course.credits}cu</span>
+                    </div>
+                    <div class="course-title">${course.title}</div>
+                    ${course.prereqs.length ?
+                        `<div class="course-prereqs ${prereqsMet ? 'satisfied' : ''}">
+                            ${prereqsMet ? '✓' : '⚠'} ${course.prereqs.join(', ')}
+                        </div>` : ''}
+                `;
+
+                slot.addEventListener('click', () => toggleCourse(course.code));
+                content.appendChild(slot);
+            });
+
+            semDiv.appendChild(content);
+            timeline.appendChild(semDiv);
+        });
+
+        updateSummary();
+    }
+
+    function toggleCourse(code) {
+        if (completedCourses.has(code)) {
+            completedCourses.delete(code);
+        } else {
+            completedCourses.add(code);
+        }
+        render();
+    }
+
+    function updateSummary() {
+        const program = programs[currentProgram];
+        let totalCourses = 0;
+        let totalCredits = 0;
+        let availableCount = 0;
+
+        program.semesters.forEach(sem => {
+            sem.courses.forEach(course => {
+                totalCourses++;
+                if (completedCourses.has(course.code)) {
+                    totalCredits += course.credits;
+                } else {
+                    const prereqsMet = course.prereqs.every(p => completedCourses.has(p));
+                    if (prereqsMet) availableCount++;
+                }
+            });
+        });
+
+        document.getElementById('completed-count').textContent = completedCourses.size;
+        document.getElementById('credits-count').textContent = totalCredits;
+        document.getElementById('available-count').textContent = availableCount;
+        document.getElementById('progress-pct').textContent =
+            Math.round((totalCredits / program.totalCredits) * 100) + '%';
+    }
+
+    // Event handlers
+    document.getElementById('program-select').addEventListener('change', (e) => {
+        currentProgram = e.target.value;
+        completedCourses.clear();
+        render();
+    });
+
+    document.getElementById('reset-btn').addEventListener('click', () => {
+        completedCourses.clear();
+        render();
+    });
+
+    document.getElementById('auto-fill-btn').addEventListener('click', () => {
+        const program = programs[currentProgram];
+        // Auto-fill all courses with satisfied prereqs
+        let changed = true;
+        while (changed) {
+            changed = false;
+            program.semesters.forEach(sem => {
+                sem.courses.forEach(course => {
+                    if (!completedCourses.has(course.code)) {
+                        const prereqsMet = course.prereqs.every(p => completedCourses.has(p));
+                        if (prereqsMet && course.prereqs.length === 0) {
+                            completedCourses.add(course.code);
+                            changed = true;
+                        }
+                    }
+                });
+            });
+        }
+        render();
+    });
+
+    // Initial render
+    render();
+    </script>
+</body>
+</html>
