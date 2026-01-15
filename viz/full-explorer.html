@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Saskatchewan Post-Secondary Explorer</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0d1117;
+            color: #c9d1d9;
+            overflow: hidden;
+        }
+        #container { display: flex; height: 100vh; }
+
+        #sidebar {
+            width: 300px;
+            background: #161b22;
+            padding: 16px;
+            overflow-y: auto;
+            border-right: 1px solid #30363d;
+            display: flex;
+            flex-direction: column;
+        }
+        #graph { flex: 1; position: relative; }
+        svg { width: 100%; height: 100%; }
+
+        h1 { font-size: 1.3em; color: #58a6ff; margin-bottom: 8px; }
+        h2 { font-size: 0.9em; margin: 16px 0 8px; color: #8b949e; text-transform: uppercase; letter-spacing: 0.5px; }
+
+        .stats {
+            background: #21262d;
+            border-radius: 6px;
+            padding: 12px;
+            margin: 12px 0;
+            font-size: 0.85em;
+        }
+        .stats div { display: flex; justify-content: space-between; padding: 4px 0; }
+        .stats span:last-child { color: #58a6ff; font-weight: 600; }
+
+        .filters { margin: 12px 0; }
+        .filter-group { margin: 8px 0; }
+        .filter-group label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            padding: 4px 0;
+            font-size: 0.85em;
+        }
+        .filter-group input { margin-right: 8px; }
+
+        .color-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 8px;
+        }
+
+        #search {
+            width: 100%;
+            padding: 8px 12px;
+            background: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            color: #c9d1d9;
+            font-size: 0.9em;
+            margin-top: 8px;
+        }
+        #search:focus { border-color: #58a6ff; outline: none; }
+        #search-results {
+            max-height: 150px;
+            overflow-y: auto;
+            margin-top: 8px;
+        }
+        .search-result {
+            padding: 6px 8px;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 0.85em;
+        }
+        .search-result:hover { background: #21262d; }
+
+        #info-panel {
+            background: #21262d;
+            border-radius: 6px;
+            padding: 12px;
+            margin-top: auto;
+            font-size: 0.85em;
+        }
+        #info-panel h3 { color: #58a6ff; margin-bottom: 8px; font-size: 1em; }
+        #info-content { color: #8b949e; }
+        #info-content ul { list-style: none; margin-top: 8px; }
+        #info-content li { padding: 3px 0; border-bottom: 1px solid #30363d; }
+        #info-content li:last-child { border: none; }
+
+        .node { cursor: pointer; }
+        .node text {
+            font-size: 9px;
+            fill: #c9d1d9;
+            pointer-events: none;
+        }
+        .link { stroke-opacity: 0.3; }
+        .link.prerequisite { stroke: #8b949e; }
+        .link.transfer { stroke: #f0883e; stroke-dasharray: 4,2; }
+        .link.satisfies { stroke: #3fb950; stroke-opacity: 0.15; }
+        .link.highlighted { stroke-opacity: 1; stroke-width: 2px; }
+
+        .dimmed { opacity: 0.1; }
+
+        #legend {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(22, 27, 34, 0.95);
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 0.8em;
+            border: 1px solid #30363d;
+        }
+        #legend div { display: flex; align-items: center; margin: 4px 0; }
+
+        .tooltip {
+            position: absolute;
+            background: #161b22;
+            border: 1px solid #30363d;
+            padding: 10px;
+            border-radius: 6px;
+            pointer-events: none;
+            font-size: 0.85em;
+            max-width: 280px;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+        }
+        .tooltip strong { color: #58a6ff; }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <div id="sidebar">
+            <h1>SK Post-Secondary</h1>
+            <p style="font-size: 0.8em; color: #8b949e;">239 courses across 2 institutions</p>
+
+            <div class="stats" id="stats">Loading...</div>
+
+            <h2>Search</h2>
+            <input type="text" id="search" placeholder="Search courses or degrees...">
+            <div id="search-results"></div>
+
+            <h2>Filter by Institution</h2>
+            <div class="filters">
+                <div class="filter-group">
+                    <label><input type="checkbox" checked data-filter="inst" value="usask">
+                        <span class="color-dot" style="background: #58a6ff;"></span>USask</label>
+                    <label><input type="checkbox" checked data-filter="inst" value="saskpolytech">
+                        <span class="color-dot" style="background: #f0883e;"></span>SaskPolytech</label>
+                </div>
+            </div>
+
+            <h2>Filter by Type</h2>
+            <div class="filters">
+                <div class="filter-group">
+                    <label><input type="checkbox" checked data-filter="type" value="course">Courses</label>
+                    <label><input type="checkbox" checked data-filter="type" value="degree">Degrees</label>
+                </div>
+            </div>
+
+            <h2>Show Links</h2>
+            <div class="filters">
+                <div class="filter-group">
+                    <label><input type="checkbox" checked data-filter="link" value="prerequisite">Prerequisites</label>
+                    <label><input type="checkbox" checked data-filter="link" value="transfer">Transfer Equiv.</label>
+                    <label><input type="checkbox" data-filter="link" value="satisfies">Course→Degree</label>
+                </div>
+            </div>
+
+            <div id="info-panel">
+                <h3>Selection</h3>
+                <div id="info-content">Click a node to explore</div>
+            </div>
+        </div>
+        <div id="graph">
+            <div id="legend">
+                <div><span class="color-dot" style="background: #58a6ff;"></span>USask Course</div>
+                <div><span class="color-dot" style="background: #f0883e;"></span>SaskPolytech Course</div>
+                <div><span class="color-dot" style="background: #a371f7;"></span>Degree Program</div>
+                <div style="margin-top: 8px; border-top: 1px solid #30363d; padding-top: 8px;">
+                    <div><span style="display:inline-block;width:20px;height:2px;background:#8b949e;margin-right:8px;"></span>Prerequisite</div>
+                    <div><span style="display:inline-block;width:20px;height:2px;background:#f0883e;margin-right:8px;border-bottom:2px dashed #f0883e;"></span>Transfer</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    const colors = {
+        usask: '#58a6ff',
+        saskpolytech: '#f0883e',
+        degree: '#a371f7',
+        minor: '#3fb950',
+        honours: '#db61a2',
+    };
+
+    let graphData = null;
+    let simulation = null;
+    let svg, g, link, node;
+    let currentFilters = {
+        institutions: new Set(['usask', 'saskpolytech']),
+        types: new Set(['course', 'degree']),
+        linkTypes: new Set(['prerequisite', 'transfer'])
+    };
+
+    // Load data
+    fetch('graph-data.json')
+        .then(r => r.json())
+        .then(data => {
+            graphData = data;
+            initGraph();
+            updateStats();
+        })
+        .catch(e => {
+            document.getElementById('stats').innerHTML = 'Error loading data: ' + e;
+        });
+
+    function initGraph() {
+        const width = document.getElementById('graph').clientWidth;
+        const height = document.getElementById('graph').clientHeight;
+
+        svg = d3.select('#graph').append('svg');
+        g = svg.append('g');
+
+        // Zoom
+        const zoom = d3.zoom()
+            .scaleExtent([0.1, 4])
+            .on('zoom', (e) => g.attr('transform', e.transform));
+        svg.call(zoom);
+
+        // Create simulation
+        simulation = d3.forceSimulation(graphData.nodes)
+            .force('link', d3.forceLink(graphData.links).id(d => d.id).distance(50))
+            .force('charge', d3.forceManyBody().strength(-100))
+            .force('center', d3.forceCenter(width / 2, height / 2))
+            .force('collision', d3.forceCollide().radius(15))
+            .force('x', d3.forceX(width / 2).strength(0.05))
+            .force('y', d3.forceY(height / 2).strength(0.05));
+
+        // Links
+        link = g.append('g')
+            .selectAll('line')
+            .data(graphData.links)
+            .join('line')
+            .attr('class', d => `link ${d.type}`);
+
+        // Nodes
+        node = g.append('g')
+            .selectAll('g')
+            .data(graphData.nodes)
+            .join('g')
+            .attr('class', 'node')
+            .call(d3.drag()
+                .on('start', dragstarted)
+                .on('drag', dragged)
+                .on('end', dragended))
+            .on('click', handleClick)
+            .on('mouseover', showTooltip)
+            .on('mouseout', hideTooltip);
+
+        node.append('circle')
+            .attr('r', d => d.type === 'degree' ? 12 : 6)
+            .attr('fill', d => {
+                if (d.type === 'degree') return colors.degree;
+                return colors[d.institution] || '#8b949e';
+            });
+
+        node.append('text')
+            .attr('dx', 10)
+            .attr('dy', 4)
+            .text(d => d.type === 'degree' ? d.label : '');
+
+        simulation.on('tick', () => {
+            link
+                .attr('x1', d => d.source.x)
+                .attr('y1', d => d.source.y)
+                .attr('x2', d => d.target.x)
+                .attr('y2', d => d.target.y);
+            node.attr('transform', d => `translate(${d.x},${d.y})`);
+        });
+
+        // Initial zoom to fit
+        setTimeout(() => {
+            svg.transition().duration(500).call(
+                zoom.transform,
+                d3.zoomIdentity.translate(width/2, height/2).scale(0.6).translate(-width/2, -height/2)
+            );
+        }, 1000);
+    }
+
+    function updateStats() {
+        const courses = graphData.nodes.filter(n => n.type === 'course');
+        const usaskCourses = courses.filter(n => n.institution === 'usask').length;
+        const spCourses = courses.filter(n => n.institution === 'saskpolytech').length;
+        const prereqs = graphData.links.filter(l => l.type === 'prerequisite').length;
+        const transfers = graphData.links.filter(l => l.type === 'transfer').length;
+
+        document.getElementById('stats').innerHTML = `
+            <div><span>Total Courses</span><span>${courses.length}</span></div>
+            <div><span>USask</span><span>${usaskCourses}</span></div>
+            <div><span>SaskPolytech</span><span>${spCourses}</span></div>
+            <div><span>Prerequisites</span><span>${prereqs}</span></div>
+            <div><span>Transfer Links</span><span>${transfers}</span></div>
+            <div><span>Degree Programs</span><span>8</span></div>
+        `;
+    }
+
+    function dragstarted(event) {
+        if (!event.active) simulation.alphaTarget(0.3).restart();
+        event.subject.fx = event.subject.x;
+        event.subject.fy = event.subject.y;
+    }
+    function dragged(event) {
+        event.subject.fx = event.x;
+        event.subject.fy = event.y;
+    }
+    function dragended(event) {
+        if (!event.active) simulation.alphaTarget(0);
+        event.subject.fx = null;
+        event.subject.fy = null;
+    }
+
+    // Tooltip
+    const tooltip = d3.select('body').append('div').attr('class', 'tooltip').style('opacity', 0);
+
+    function showTooltip(event, d) {
+        let html = `<strong>${d.label}</strong>`;
+        if (d.title && d.title !== d.label) html += `<br>${d.title}`;
+        if (d.institution) html += `<br><span style="color:${colors[d.institution]}">${d.institution}</span>`;
+        if (d.credits) html += ` • ${d.credits} cu`;
+
+        tooltip.html(html)
+            .style('left', (event.pageX + 15) + 'px')
+            .style('top', (event.pageY - 10) + 'px')
+            .transition().duration(200).style('opacity', 1);
+    }
+
+    function hideTooltip() {
+        tooltip.transition().duration(300).style('opacity', 0);
+    }
+
+    function handleClick(event, d) {
+        event.stopPropagation();
+
+        // Find connected nodes
+        const connected = new Set([d.id]);
+        graphData.links.forEach(l => {
+            const srcId = typeof l.source === 'object' ? l.source.id : l.source;
+            const tgtId = typeof l.target === 'object' ? l.target.id : l.target;
+            if (srcId === d.id) connected.add(tgtId);
+            if (tgtId === d.id) connected.add(srcId);
+        });
+
+        // Highlight
+        node.classed('dimmed', n => !connected.has(n.id));
+        link.classed('dimmed', l => {
+            const srcId = typeof l.source === 'object' ? l.source.id : l.source;
+            const tgtId = typeof l.target === 'object' ? l.target.id : l.target;
+            return srcId !== d.id && tgtId !== d.id;
+        });
+        link.classed('highlighted', l => {
+            const srcId = typeof l.source === 'object' ? l.source.id : l.source;
+            const tgtId = typeof l.target === 'object' ? l.target.id : l.target;
+            return srcId === d.id || tgtId === d.id;
+        });
+
+        // Update info panel
+        updateInfoPanel(d, connected);
+    }
+
+    function updateInfoPanel(d, connected) {
+        let html = `<strong style="color:${colors[d.institution] || colors.degree}">${d.label}</strong>`;
+        if (d.title) html += `<br>${d.title}`;
+
+        // Find prerequisites and what it unlocks
+        const prereqs = [];
+        const unlocks = [];
+        const degrees = [];
+
+        graphData.links.forEach(l => {
+            const srcId = typeof l.source === 'object' ? l.source.id : l.source;
+            const tgtId = typeof l.target === 'object' ? l.target.id : l.target;
+
+            if (tgtId === d.id && l.type === 'prerequisite') {
+                const node = graphData.nodes.find(n => n.id === srcId);
+                if (node) prereqs.push(node.label);
+            }
+            if (srcId === d.id && l.type === 'prerequisite') {
+                const node = graphData.nodes.find(n => n.id === tgtId);
+                if (node) unlocks.push(node.label);
+            }
+            if (srcId === d.id && l.type === 'satisfies') {
+                const node = graphData.nodes.find(n => n.id === tgtId);
+                if (node) degrees.push(node.label);
+            }
+        });
+
+        if (prereqs.length) html += `<br><br><strong>Prerequisites:</strong><ul>${prereqs.map(p => `<li>${p}</li>`).join('')}</ul>`;
+        if (unlocks.length) html += `<strong>Unlocks:</strong><ul>${unlocks.map(u => `<li>${u}</li>`).join('')}</ul>`;
+        if (degrees.length) html += `<strong>Counts toward:</strong><ul>${degrees.map(deg => `<li>${deg}</li>`).join('')}</ul>`;
+
+        document.getElementById('info-content').innerHTML = html;
+    }
+
+    // Reset on background click
+    svg?.on('click', () => {
+        node?.classed('dimmed', false);
+        link?.classed('dimmed', false).classed('highlighted', false);
+        document.getElementById('info-content').innerHTML = 'Click a node to explore';
+    });
+
+    // Search
+    document.getElementById('search').addEventListener('input', (e) => {
+        const query = e.target.value.toLowerCase();
+        const results = document.getElementById('search-results');
+
+        if (query.length < 2) {
+            results.innerHTML = '';
+            return;
+        }
+
+        const matches = graphData.nodes
+            .filter(n => n.label.toLowerCase().includes(query) ||
+                        (n.title && n.title.toLowerCase().includes(query)))
+            .slice(0, 10);
+
+        results.innerHTML = matches.map(m =>
+            `<div class="search-result" data-id="${m.id}">${m.label} <span style="color:#8b949e">${m.institution || ''}</span></div>`
+        ).join('');
+
+        results.querySelectorAll('.search-result').forEach(el => {
+            el.addEventListener('click', () => {
+                const nodeData = graphData.nodes.find(n => n.id === el.dataset.id);
+                if (nodeData) {
+                    // Center on node
+                    const transform = d3.zoomTransform(svg.node());
+                    svg.transition().duration(500).call(
+                        d3.zoom().transform,
+                        d3.zoomIdentity.translate(
+                            document.getElementById('graph').clientWidth/2 - nodeData.x * transform.k,
+                            document.getElementById('graph').clientHeight/2 - nodeData.y * transform.k
+                        ).scale(transform.k)
+                    );
+                    // Simulate click
+                    handleClick({stopPropagation: () => {}}, nodeData);
+                }
+            });
+        });
+    });
+
+    // Filters
+    document.querySelectorAll('[data-filter]').forEach(input => {
+        input.addEventListener('change', applyFilters);
+    });
+
+    function applyFilters() {
+        const instFilters = new Set(
+            [...document.querySelectorAll('[data-filter="inst"]:checked')].map(i => i.value)
+        );
+        const typeFilters = new Set(
+            [...document.querySelectorAll('[data-filter="type"]:checked')].map(i => i.value)
+        );
+        const linkFilters = new Set(
+            [...document.querySelectorAll('[data-filter="link"]:checked')].map(i => i.value)
+        );
+
+        node?.style('display', d => {
+            if (d.type === 'degree') return typeFilters.has('degree') ? null : 'none';
+            return typeFilters.has('course') && instFilters.has(d.institution) ? null : 'none';
+        });
+
+        link?.style('display', d => linkFilters.has(d.type) ? null : 'none');
+    }
+    </script>
+</body>
+</html>
