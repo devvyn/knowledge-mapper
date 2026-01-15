@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learning Path Explorer</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0d1117;
+            color: #c9d1d9;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        #main-content {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        #sidebar {
+            width: 380px;
+            background: #161b22;
+            padding: 20px;
+            overflow-y: auto;
+            border-right: 1px solid #30363d;
+        }
+        h1 { color: #3fb950; font-size: 1.4em; margin-bottom: 8px; }
+        .subtitle { color: #8b949e; font-size: 0.85em; margin-bottom: 20px; }
+
+        .section { margin-bottom: 25px; }
+        .section-title {
+            font-size: 0.8em;
+            text-transform: uppercase;
+            color: #8b949e;
+            margin-bottom: 10px;
+            letter-spacing: 0.5px;
+        }
+
+        input, select {
+            width: 100%;
+            background: #21262d;
+            color: #c9d1d9;
+            border: 1px solid #30363d;
+            padding: 10px 12px;
+            border-radius: 6px;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+        }
+        input:focus, select:focus { border-color: #3fb950; outline: none; }
+
+        button {
+            width: 100%;
+            background: #238636;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 0.9em;
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
+        button:hover { background: #2ea043; }
+        button.secondary {
+            background: #21262d;
+            border: 1px solid #30363d;
+        }
+        button.secondary:hover { border-color: #3fb950; }
+
+        .concept-chip {
+            display: inline-block;
+            background: #3fb95033;
+            border: 1px solid #3fb950;
+            color: #3fb950;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            margin: 3px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .concept-chip:hover {
+            background: #3fb95055;
+        }
+        .concept-chip.selected {
+            background: #3fb950;
+            color: #0d1117;
+        }
+
+        #concepts-grid {
+            display: flex;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+
+        #search-results {
+            margin-top: 10px;
+        }
+
+        .path-card {
+            background: #21262d;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 12px;
+            border: 1px solid transparent;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .path-card:hover { border-color: #3fb950; }
+        .path-card.active {
+            border-color: #3fb950;
+            background: #3fb95015;
+        }
+        .path-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .path-title {
+            font-weight: 600;
+            color: #3fb950;
+        }
+        .path-meta {
+            display: flex;
+            gap: 10px;
+            font-size: 0.8em;
+        }
+        .meta-item {
+            background: #30363d;
+            padding: 3px 8px;
+            border-radius: 4px;
+            color: #8b949e;
+        }
+        .meta-item.free {
+            background: #23893633;
+            color: #3fb950;
+        }
+
+        .path-steps {
+            margin-top: 10px;
+        }
+        .step {
+            display: flex;
+            align-items: flex-start;
+            padding: 8px 0;
+            border-bottom: 1px solid #30363d;
+        }
+        .step:last-child { border-bottom: none; }
+        .step-number {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #30363d;
+            color: #8b949e;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75em;
+            margin-right: 10px;
+            flex-shrink: 0;
+        }
+        .step-content {
+            flex: 1;
+        }
+        .step-title { font-size: 0.9em; }
+        .step-textbook {
+            font-size: 0.75em;
+            color: #8b949e;
+            margin-top: 2px;
+        }
+        .step-time {
+            font-size: 0.75em;
+            color: #f0883e;
+        }
+
+        #graph { flex: 1; position: relative; }
+        svg { width: 100%; height: 100%; }
+
+        .node circle {
+            stroke: #30363d;
+            stroke-width: 2;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .node.highlighted circle {
+            stroke: #3fb950;
+            stroke-width: 3;
+        }
+        .node.concept circle { fill: #a371f7; }
+        .node.textbook circle { fill: #f0883e; }
+        .node.section circle { fill: #58a6ff; }
+        .node.dimmed { opacity: 0.15; }
+
+        .node text {
+            font-size: 9px;
+            fill: #c9d1d9;
+            pointer-events: none;
+        }
+
+        .link {
+            stroke: #30363d;
+            stroke-opacity: 0.4;
+            transition: all 0.2s;
+        }
+        .link.highlighted {
+            stroke: #3fb950;
+            stroke-opacity: 1;
+            stroke-width: 2;
+        }
+        .link.teaches { stroke: #a371f7; }
+        .link.contains { stroke: #f0883e; }
+        .link.dimmed { stroke-opacity: 0.1; }
+
+        #legend {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 15px;
+            font-size: 0.8em;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin: 6px 0;
+        }
+        .legend-dot {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .tooltip {
+            position: absolute;
+            background: #161b22;
+            border: 1px solid #30363d;
+            padding: 12px;
+            border-radius: 6px;
+            pointer-events: none;
+            font-size: 0.85em;
+            z-index: 100;
+            opacity: 0;
+            max-width: 300px;
+        }
+        .tooltip.visible { opacity: 1; }
+        .tooltip-title { font-weight: 600; margin-bottom: 5px; }
+        .tooltip-meta { color: #8b949e; font-size: 0.9em; }
+
+        #discovery-bar {
+            background: linear-gradient(90deg, #161b22 0%, #0d1117 100%);
+            padding: 8px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #3fb950;
+            font-size: 0.85em;
+            flex-shrink: 0;
+        }
+        #discovery-bar .stats { color: #8b949e; }
+        #discovery-bar .stats strong { color: #3fb950; }
+        #discovery-bar nav a {
+            color: #8b949e;
+            text-decoration: none;
+            margin-left: 15px;
+            transition: color 0.2s;
+        }
+        #discovery-bar nav a:hover, #discovery-bar nav a.active { color: #3fb950; }
+
+        .empty-state {
+            text-align: center;
+            padding: 30px;
+            color: #8b949e;
+        }
+        .empty-state h3 { color: #c9d1d9; margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+    <div id="discovery-bar">
+        <div class="stats">
+            <strong id="stat-textbooks">...</strong> free textbooks ·
+            <strong id="stat-sections">...</strong> chapters ·
+            <strong id="stat-concepts">...</strong> concepts
+        </div>
+        <nav>
+            <a href="full-explorer.html">Full Graph</a>
+            <a href="pathfinder.html">Course Pathfinder</a>
+            <a href="learning-paths.html" class="active">Learning Paths</a>
+        </nav>
+    </div>
+
+    <div id="main-content">
+        <div id="sidebar">
+            <h1>Learning Path Explorer</h1>
+            <p class="subtitle">Discover paths through free textbooks to learn any concept</p>
+
+            <div class="section">
+                <div class="section-title">What do you want to learn?</div>
+                <input type="text" id="concept-search" placeholder="Search concepts (e.g., recursion, calculus)...">
+                <div id="concepts-grid"></div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">Filter by Subject</div>
+                <select id="subject-filter">
+                    <option value="all">All Subjects</option>
+                </select>
+            </div>
+
+            <button id="find-paths">Find Learning Paths</button>
+            <button id="clear" class="secondary">Clear Selection</button>
+
+            <div class="section">
+                <div class="section-title">Learning Paths</div>
+                <div id="search-results">
+                    <div class="empty-state">
+                        <h3>Start Your Journey</h3>
+                        <p>Select a concept above to discover paths through free, open textbooks.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="graph">
+            <div id="legend">
+                <div class="legend-item">
+                    <div class="legend-dot" style="background: #a371f7;"></div>
+                    <span>Concept</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-dot" style="background: #f0883e;"></div>
+                    <span>Textbook</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-dot" style="background: #58a6ff;"></div>
+                    <span>Chapter</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="tooltip" id="tooltip"></div>
+
+    <script>
+    let graphData = null;
+    let simulation = null;
+    let svg, g, link, node;
+    let selectedConcept = null;
+    let currentPaths = [];
+
+    // Load data
+    fetch('graph-data.json')
+        .then(r => {
+            if (!r.ok) throw new Error(`HTTP ${r.status}`);
+            return r.json();
+        })
+        .then(data => {
+            graphData = data;
+            initUI();
+            initGraph();
+            updateStats();
+        })
+        .catch(err => {
+            document.getElementById('search-results').innerHTML = `
+                <div class="empty-state">
+                    <h3>Error Loading Data</h3>
+                    <p>${err.message}</p>
+                </div>`;
+        });
+
+    function initUI() {
+        // Get concepts and subjects
+        const concepts = graphData.nodes.filter(n => n.type === 'concept');
+        const subjects = new Set();
+        concepts.forEach(c => { if (c.subject) subjects.add(c.subject); });
+
+        // Populate concept chips
+        const grid = document.getElementById('concepts-grid');
+        concepts.forEach(c => {
+            const chip = document.createElement('span');
+            chip.className = 'concept-chip';
+            chip.textContent = c.label;
+            chip.dataset.id = c.id;
+            chip.addEventListener('click', () => selectConcept(c));
+            grid.appendChild(chip);
+        });
+
+        // Populate subject filter
+        const subjSelect = document.getElementById('subject-filter');
+        [...subjects].sort().forEach(subj => {
+            const opt = document.createElement('option');
+            opt.value = subj;
+            opt.textContent = subj;
+            subjSelect.appendChild(opt);
+        });
+
+        // Search handler
+        document.getElementById('concept-search').addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase();
+            grid.querySelectorAll('.concept-chip').forEach(chip => {
+                const label = chip.textContent.toLowerCase();
+                const concept = concepts.find(c => c.id === chip.dataset.id);
+                const matchesAliases = concept?.aliases?.some(a => a.toLowerCase().includes(query));
+                chip.style.display = (label.includes(query) || matchesAliases) ? '' : 'none';
+            });
+        });
+
+        // Subject filter handler
+        subjSelect.addEventListener('change', (e) => {
+            const subj = e.target.value;
+            grid.querySelectorAll('.concept-chip').forEach(chip => {
+                const concept = concepts.find(c => c.id === chip.dataset.id);
+                chip.style.display = (subj === 'all' || concept?.subject === subj) ? '' : 'none';
+            });
+        });
+    }
+
+    function selectConcept(concept) {
+        selectedConcept = concept;
+
+        // Update chip styles
+        document.querySelectorAll('.concept-chip').forEach(chip => {
+            chip.classList.toggle('selected', chip.dataset.id === concept.id);
+        });
+
+        // Find and display paths
+        findLearningPaths();
+    }
+
+    function findLearningPaths() {
+        if (!selectedConcept) return;
+
+        // Find sections that teach this concept
+        const conceptId = selectedConcept.id;
+        const teachingSections = [];
+
+        graphData.links
+            .filter(l => l.type === 'teaches_concept')
+            .forEach(l => {
+                const targetId = typeof l.target === 'object' ? l.target.id : l.target;
+                if (targetId === conceptId) {
+                    const sourceId = typeof l.source === 'object' ? l.source.id : l.source;
+                    const section = graphData.nodes.find(n => n.id === sourceId);
+                    if (section) teachingSections.push(section);
+                }
+            });
+
+        // Build paths from textbooks
+        currentPaths = teachingSections.map(section => {
+            const textbook = graphData.nodes.find(n => n.id === section.textbook);
+            const allSections = graphData.nodes
+                .filter(n => n.type === 'section' && n.textbook === section.textbook)
+                .sort((a, b) => a.chapter - b.chapter);
+
+            // Include all sections up to and including this one
+            const pathSections = allSections.filter(s => s.chapter <= section.chapter);
+
+            const totalMinutes = pathSections.reduce((sum, s) => sum + (s.estimated_minutes || 60), 0);
+
+            return {
+                concept: selectedConcept,
+                textbook: textbook,
+                targetSection: section,
+                sections: pathSections,
+                totalMinutes: totalMinutes,
+                isFree: textbook?.is_free ?? true
+            };
+        });
+
+        // Sort by total time
+        currentPaths.sort((a, b) => a.totalMinutes - b.totalMinutes);
+
+        displayPaths();
+        highlightInGraph();
+    }
+
+    function displayPaths() {
+        const container = document.getElementById('search-results');
+
+        if (currentPaths.length === 0) {
+            container.innerHTML = `
+                <div class="empty-state">
+                    <h3>No Paths Found</h3>
+                    <p>No textbook sections currently teach "${selectedConcept.label}". Try another concept.</p>
+                </div>`;
+            return;
+        }
+
+        container.innerHTML = currentPaths.map((path, i) => `
+            <div class="path-card" data-index="${i}">
+                <div class="path-header">
+                    <span class="path-title">${path.textbook?.label || 'Unknown Textbook'}</span>
+                    <div class="path-meta">
+                        <span class="meta-item">${Math.round(path.totalMinutes / 60)}h</span>
+                        <span class="meta-item">${path.sections.length} chapters</span>
+                        ${path.isFree ? '<span class="meta-item free">FREE</span>' : ''}
+                    </div>
+                </div>
+                <div class="path-steps">
+                    ${path.sections.slice(-3).map((s, j) => `
+                        <div class="step">
+                            <div class="step-number">${path.sections.length - 2 + j}</div>
+                            <div class="step-content">
+                                <div class="step-title">${s.title}</div>
+                                <div class="step-time">${s.estimated_minutes || 60} min</div>
+                            </div>
+                        </div>
+                    `).join('')}
+                    ${path.sections.length > 3 ? `<div style="color:#8b949e;font-size:0.8em;padding:5px 0;">+ ${path.sections.length - 3} earlier chapters</div>` : ''}
+                </div>
+            </div>
+        `).join('');
+
+        // Add click handlers
+        container.querySelectorAll('.path-card').forEach(card => {
+            card.addEventListener('click', () => {
+                const index = parseInt(card.dataset.index);
+                container.querySelectorAll('.path-card').forEach(c => c.classList.remove('active'));
+                card.classList.add('active');
+                highlightPath(currentPaths[index]);
+            });
+        });
+
+        // Highlight first path
+        if (currentPaths.length > 0) {
+            container.querySelector('.path-card').classList.add('active');
+            highlightPath(currentPaths[0]);
+        }
+    }
+
+    function initGraph() {
+        const width = document.getElementById('graph').clientWidth;
+        const height = document.getElementById('graph').clientHeight;
+
+        svg = d3.select('#graph').append('svg');
+        g = svg.append('g');
+
+        const zoom = d3.zoom()
+            .scaleExtent([0.2, 3])
+            .on('zoom', (e) => g.attr('transform', e.transform));
+        svg.call(zoom);
+
+        // Filter to OER-related nodes only
+        const oerNodes = graphData.nodes.filter(n =>
+            n.type === 'concept' || n.type === 'textbook' || n.type === 'section'
+        );
+        const oerNodeIds = new Set(oerNodes.map(n => n.id));
+
+        const oerLinks = graphData.links.filter(l => {
+            const src = typeof l.source === 'object' ? l.source.id : l.source;
+            const tgt = typeof l.target === 'object' ? l.target.id : l.target;
+            return oerNodeIds.has(src) && oerNodeIds.has(tgt);
+        });
+
+        simulation = d3.forceSimulation(oerNodes)
+            .force('link', d3.forceLink(oerLinks).id(d => d.id).distance(60))
+            .force('charge', d3.forceManyBody().strength(-100))
+            .force('center', d3.forceCenter(width / 2, height / 2))
+            .force('collision', d3.forceCollide().radius(20));
+
+        link = g.append('g')
+            .selectAll('line')
+            .data(oerLinks)
+            .join('line')
+            .attr('class', d => `link ${d.type}`);
+
+        node = g.append('g')
+            .selectAll('g')
+            .data(oerNodes)
+            .join('g')
+            .attr('class', d => `node ${d.type}`)
+            .call(d3.drag()
+                .on('start', dragstarted)
+                .on('drag', dragged)
+                .on('end', dragended))
+            .on('click', handleNodeClick)
+            .on('mouseover', showTooltip)
+            .on('mouseout', hideTooltip);
+
+        node.append('circle')
+            .attr('r', d => d.type === 'concept' ? 12 : d.type === 'textbook' ? 10 : 6);
+
+        node.append('text')
+            .attr('dx', d => d.type === 'section' ? 8 : 14)
+            .attr('dy', 4)
+            .text(d => d.label);
+
+        simulation.on('tick', () => {
+            link
+                .attr('x1', d => d.source.x)
+                .attr('y1', d => d.source.y)
+                .attr('x2', d => d.target.x)
+                .attr('y2', d => d.target.y);
+            node.attr('transform', d => `translate(${d.x},${d.y})`);
+        });
+    }
+
+    function dragstarted(event) {
+        if (!event.active) simulation.alphaTarget(0.3).restart();
+        event.subject.fx = event.subject.x;
+        event.subject.fy = event.subject.y;
+    }
+    function dragged(event) {
+        event.subject.fx = event.x;
+        event.subject.fy = event.y;
+    }
+    function dragended(event) {
+        if (!event.active) simulation.alphaTarget(0);
+        event.subject.fx = null;
+        event.subject.fy = null;
+    }
+
+    function handleNodeClick(event, d) {
+        if (d.type === 'concept') {
+            selectConcept(d);
+        }
+    }
+
+    function showTooltip(event, d) {
+        const tooltip = document.getElementById('tooltip');
+        let html = `<div class="tooltip-title">${d.label}</div>`;
+
+        if (d.type === 'concept') {
+            html += `<div class="tooltip-meta">Concept: ${d.title || ''}</div>`;
+            if (d.aliases?.length) html += `<div class="tooltip-meta">Also: ${d.aliases.join(', ')}</div>`;
+        } else if (d.type === 'textbook') {
+            html += `<div class="tooltip-meta">${d.title}</div>`;
+            if (d.is_free) html += `<div class="tooltip-meta" style="color:#3fb950;">Free &amp; Open (${d.license})</div>`;
+        } else if (d.type === 'section') {
+            html += `<div class="tooltip-meta">${d.title}</div>`;
+            html += `<div class="tooltip-meta">~${d.estimated_minutes || 60} min</div>`;
+            if (d.topics?.length) html += `<div class="tooltip-meta">Topics: ${d.topics.slice(0, 3).join(', ')}</div>`;
+        }
+
+        tooltip.innerHTML = html;
+        tooltip.style.left = (event.pageX + 15) + 'px';
+        tooltip.style.top = (event.pageY - 10) + 'px';
+        tooltip.classList.add('visible');
+    }
+
+    function hideTooltip() {
+        document.getElementById('tooltip').classList.remove('visible');
+    }
+
+    function highlightInGraph() {
+        if (!selectedConcept) return;
+
+        const relatedIds = new Set([selectedConcept.id]);
+
+        // Find all sections that teach this concept
+        graphData.links
+            .filter(l => l.type === 'teaches_concept')
+            .forEach(l => {
+                const targetId = typeof l.target === 'object' ? l.target.id : l.target;
+                if (targetId === selectedConcept.id) {
+                    const sourceId = typeof l.source === 'object' ? l.source.id : l.source;
+                    relatedIds.add(sourceId);
+                    // Also add the textbook
+                    const section = graphData.nodes.find(n => n.id === sourceId);
+                    if (section?.textbook) relatedIds.add(section.textbook);
+                }
+            });
+
+        node.classed('highlighted', d => relatedIds.has(d.id));
+        node.classed('dimmed', d => !relatedIds.has(d.id));
+        link.classed('dimmed', l => {
+            const src = typeof l.source === 'object' ? l.source.id : l.source;
+            const tgt = typeof l.target === 'object' ? l.target.id : l.target;
+            return !relatedIds.has(src) && !relatedIds.has(tgt);
+        });
+    }
+
+    function highlightPath(path) {
+        const pathIds = new Set([selectedConcept.id]);
+        if (path.textbook) pathIds.add(path.textbook.id);
+        path.sections.forEach(s => pathIds.add(s.id));
+
+        node.classed('highlighted', d => pathIds.has(d.id));
+        node.classed('dimmed', d => !pathIds.has(d.id));
+        link.classed('highlighted', l => {
+            const src = typeof l.source === 'object' ? l.source.id : l.source;
+            const tgt = typeof l.target === 'object' ? l.target.id : l.target;
+            return pathIds.has(src) && pathIds.has(tgt);
+        });
+        link.classed('dimmed', l => {
+            const src = typeof l.source === 'object' ? l.source.id : l.source;
+            const tgt = typeof l.target === 'object' ? l.target.id : l.target;
+            return !pathIds.has(src) || !pathIds.has(tgt);
+        });
+    }
+
+    function clearSelection() {
+        selectedConcept = null;
+        currentPaths = [];
+        document.querySelectorAll('.concept-chip').forEach(c => c.classList.remove('selected'));
+        document.getElementById('concept-search').value = '';
+        document.getElementById('search-results').innerHTML = `
+            <div class="empty-state">
+                <h3>Start Your Journey</h3>
+                <p>Select a concept above to discover paths through free, open textbooks.</p>
+            </div>`;
+        node.classed('highlighted', false).classed('dimmed', false);
+        link.classed('highlighted', false).classed('dimmed', false);
+    }
+
+    function updateStats() {
+        const textbooks = graphData.nodes.filter(n => n.type === 'textbook').length;
+        const sections = graphData.nodes.filter(n => n.type === 'section').length;
+        const concepts = graphData.nodes.filter(n => n.type === 'concept').length;
+
+        document.getElementById('stat-textbooks').textContent = textbooks;
+        document.getElementById('stat-sections').textContent = sections;
+        document.getElementById('stat-concepts').textContent = concepts;
+    }
+
+    // Event handlers
+    document.getElementById('find-paths').addEventListener('click', findLearningPaths);
+    document.getElementById('clear').addEventListener('click', clearSelection);
+    </script>
+</body>
+</html>

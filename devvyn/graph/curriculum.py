@@ -48,6 +48,7 @@ from devvyn.institutions.base import CourseReference, UnifiedCourse
 from devvyn.model.course_materials import (
     Textbook,
     TextbookReference,
+    TextbookSection,
     WorkRequirement,
     WorkRequirementRef,
     FinalExam,
@@ -58,6 +59,8 @@ from devvyn.model.course_materials import (
     NodeType,
     EdgeType,
 )
+from devvyn.model.concepts import LearningConcept, ConceptSource
+from devvyn.model.learning_path import LearningPath, LearningPathBuilder
 
 
 # Type alias for any graph node reference
@@ -79,6 +82,11 @@ class CurriculumGraph:
     _work_requirements: dict[WorkRequirementRef, WorkRequirement] = field(default_factory=dict)
     _exams: dict[ExamRef, FinalExam] = field(default_factory=dict)
     _course_completions: dict[CourseReference, CourseCompletion] = field(default_factory=dict)
+
+    # OER/Learning path nodes
+    _concepts: dict[str, LearningConcept] = field(default_factory=dict)
+    _sections: dict[str, TextbookSection] = field(default_factory=dict)
+    _concept_sources: dict[str, list[ConceptSource]] = field(default_factory=lambda: defaultdict(list))
 
     # Forward edges: node → set of nodes that depend on it
     _forward: dict[str, set[str]] = field(default_factory=lambda: defaultdict(set))
@@ -160,6 +168,86 @@ class CurriculumGraph:
         self._forward[source].add(target)
         self._backward[target].add(source)
         self._edge_types[(source, target)] = edge_type
+
+    # --- OER/Concept Operations ---
+
+    def add_concept(self, concept: LearningConcept) -> None:
+        """Add a learning concept to the graph."""
+        self._concepts[concept.id] = concept
+
+    def add_section(self, section: TextbookSection) -> None:
+        """Add a textbook section to the graph."""
+        section_id = section.id
+        self._sections[section_id] = section
+
+        # Ensure the textbook exists
+        if section.textbook_ref not in self._textbooks:
+            # Create minimal textbook entry
+            pass  # Textbook should be added separately
+
+    def link_section_teaches_concept(
+        self,
+        section: TextbookSection,
+        concept_id: str,
+        coverage: str = "full"
+    ) -> None:
+        """
+        Link a textbook section to a concept it teaches.
+
+        Args:
+            section: The textbook section
+            concept_id: ID of the concept being taught
+            coverage: "full", "partial", or "introduction"
+        """
+        section_id = section.id
+
+        # Ensure both exist in graph
+        if section_id not in self._sections:
+            self.add_section(section)
+        if concept_id not in self._concepts:
+            # Concept should exist - log warning in production
+            return
+
+        # Add edge: section teaches concept
+        self._add_edge(section_id, f"concept:{concept_id}", EdgeType.TEACHES_CONCEPT)
+
+        # Track source
+        source = ConceptSource(
+            concept_id=concept_id,
+            section=section,
+            coverage=coverage
+        )
+        self._concept_sources[concept_id].append(source)
+
+    def link_course_requires_concept(
+        self,
+        course_ref: CourseReference,
+        concept_id: str
+    ) -> None:
+        """
+        Link a course to a concept it requires as prerequisite knowledge.
+
+        Args:
+            course_ref: The course reference
+            concept_id: ID of the required concept
+        """
+        self._add_edge(
+            f"concept:{concept_id}",
+            str(course_ref),
+            EdgeType.REQUIRES_CONCEPT
+        )
+
+    def link_section_prerequisite(
+        self,
+        section: TextbookSection,
+        prereq_section: TextbookSection
+    ) -> None:
+        """Link section to a prerequisite section (read this first)."""
+        self._add_edge(
+            prereq_section.id,
+            section.id,
+            EdgeType.SECTION_PREREQ
+        )
 
     # --- Query Operations ---
 
@@ -315,6 +403,138 @@ class CurriculumGraph:
                     pass
         return textbooks
 
+    # --- Concept Query Operations ---
+
+    def get_concept(self, concept_id: str) -> Optional[LearningConcept]:
+        """Get a concept by ID."""
+        return self._concepts.get(concept_id)
+
+    def get_section(self, section_id: str) -> Optional[TextbookSection]:
+        """Get a textbook section by ID."""
+        return self._sections.get(section_id)
+
+    def all_concepts(self) -> list[LearningConcept]:
+        """Get all learning concepts in the graph."""
+        return list(self._concepts.values())
+
+    def all_sections(self) -> list[TextbookSection]:
+        """Get all textbook sections in the graph."""
+        return list(self._sections.values())
+
+    def sections_for_concept(self, concept_id: str) -> list[TextbookSection]:
+        """
+        Get all textbook sections that teach a concept.
+
+        Args:
+            concept_id: The concept to find teaching sources for
+
+        Returns:
+            List of TextbookSections that teach this concept
+        """
+        sources = self._concept_sources.get(concept_id, [])
+        return [source.section for source in sources]
+
+    def textbooks_teaching(self, concept_id: str) -> list[Textbook]:
+        """
+        Get all textbooks that contain sections teaching a concept.
+
+        Args:
+            concept_id: The concept to find textbooks for
+
+        Returns:
+            List of Textbooks with chapters covering this concept
+        """
+        sections = self.sections_for_concept(concept_id)
+        textbook_refs = {s.textbook_ref for s in sections}
+        return [
+            self._textbooks[ref]
+            for ref in textbook_refs
+            if ref in self._textbooks
+        ]
+
+    def concepts_taught_by_section(self, section_id: str) -> list[LearningConcept]:
+        """Get concepts taught by a specific section."""
+        concept_ids = []
+        for target in self._forward.get(section_id, []):
+            if target.startswith("concept:"):
+                concept_id = target.replace("concept:", "")
+                concept_ids.append(concept_id)
+        return [
+            self._concepts[cid]
+            for cid in concept_ids
+            if cid in self._concepts
+        ]
+
+    def paths_to_concept(self, concept_id: str) -> list[LearningPath]:
+        """
+        Find learning paths to a concept through open textbooks.
+
+        Generates paths from entry-level sections to sections that teach
+        the target concept, following section prerequisites.
+
+        Args:
+            concept_id: Target concept to learn
+
+        Returns:
+            List of possible LearningPaths, ordered by estimated time
+        """
+        # Get sections that teach this concept
+        teaching_sections = self.sections_for_concept(concept_id)
+        if not teaching_sections:
+            return []
+
+        paths = []
+
+        for target_section in teaching_sections:
+            # Build path backwards from target section
+            path_sections = self._build_section_path(target_section)
+
+            if path_sections:
+                builder = LearningPathBuilder(concept_id)
+                for section in path_sections:
+                    builder.add_section(section)
+
+                path = builder.build()
+                paths.append(path)
+
+        # Sort by estimated hours (shortest first)
+        return sorted(paths, key=lambda p: p.estimated_hours)
+
+    def _build_section_path(self, target: TextbookSection) -> list[TextbookSection]:
+        """
+        Build ordered path of sections leading to a target section.
+
+        Follows section prerequisites backwards, then reverses for learning order.
+        """
+        path = []
+        visited = set()
+        queue = [target]
+
+        while queue:
+            current = queue.pop(0)
+            if current.id in visited:
+                continue
+            visited.add(current.id)
+            path.append(current)
+
+            # Find prerequisite sections
+            for prereq_id in self._backward.get(current.id, []):
+                if prereq_id in self._sections:
+                    prereq = self._sections[prereq_id]
+                    queue.append(prereq)
+
+        # Reverse to get learning order (prerequisites first)
+        path.reverse()
+        return path
+
+    def find_concepts_matching(self, query: str) -> list[LearningConcept]:
+        """
+        Search for concepts matching a query string.
+
+        Matches against concept name, ID, aliases, and topics.
+        """
+        return [c for c in self._concepts.values() if c.matches(query)]
+
     # --- Export for Visualization ---
 
     def to_graph_data(self) -> dict:
@@ -374,6 +594,31 @@ class CurriculumGraph:
                 "course": str(ref.course_ref),
             })
 
+        # Add concept nodes
+        for concept_id, concept in self._concepts.items():
+            nodes.append({
+                "id": f"concept:{concept_id}",
+                "label": concept.name,
+                "title": concept.description,
+                "type": NodeType.CONCEPT.value,
+                "subject": concept.subject,
+                "level": concept.level,
+                "aliases": concept.aliases,
+            })
+
+        # Add section nodes
+        for section_id, section in self._sections.items():
+            nodes.append({
+                "id": section_id,
+                "label": f"Ch.{section.chapter}: {section.title[:20]}",
+                "title": section.title,
+                "type": NodeType.SECTION.value,
+                "chapter": section.chapter,
+                "textbook": str(section.textbook_ref),
+                "topics": section.topics,
+                "estimated_minutes": section.estimated_minutes,
+            })
+
         # Add all edges
         for source, targets in self._forward.items():
             for target in targets:
@@ -393,6 +638,8 @@ class CurriculumGraph:
             "total_textbooks": len(self._textbooks),
             "total_work_requirements": len(self._work_requirements),
             "total_exams": len(self._exams),
+            "total_concepts": len(self._concepts),
+            "total_sections": len(self._sections),
             "total_edges": sum(len(targets) for targets in self._forward.values()),
             "edge_types": {
                 et.value: sum(1 for e in self._edge_types.values() if e == et)

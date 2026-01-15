@@ -428,6 +428,9 @@ class NodeType(Enum):
     WORK_REQUIREMENT = "work_requirement"
     EXAM = "exam"
     PROGRAM = "program"
+    # OER/Learning path types
+    CONCEPT = "concept"
+    SECTION = "section"
 
 
 @dataclass
@@ -513,6 +516,10 @@ class EdgeType(Enum):
     DEPENDS_ON = "depends_on"             # WorkReq → WorkReq
     LEADS_TO_EXAM = "leads_to_exam"       # WorkReq → Exam
     TRANSFER = "transfer"                 # Course → Course (cross-institution)
+    # OER/Learning path edges
+    TEACHES_CONCEPT = "teaches_concept"   # Section → Concept
+    REQUIRES_CONCEPT = "requires_concept" # Course → Concept (prerequisite knowledge)
+    SECTION_PREREQ = "section_prereq"     # Section → Section (read this first)
 
 
 @dataclass
