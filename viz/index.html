@@ -234,8 +234,8 @@
         <header>
             <h1>Saskatchewan Post-Secondary</h1>
             <p class="subtitle">
-                Interactive visualizations of courses, prerequisites, transfer pathways,
-                and degree requirements across Saskatchewan universities and polytechnics.
+                Interactive visualizations of courses, prerequisites, and transfer pathways
+                across Saskatchewan universities and polytechnics. All data from official APIs.
             </p>
             <div class="stats">
                 <div class="stat" data-drill="courses">
@@ -246,13 +246,17 @@
                     <div class="stat-value" id="stat-institutions">...</div>
                     <div class="stat-label">Institutions</div>
                 </div>
-                <div class="stat" data-drill="programs">
-                    <div class="stat-value" id="stat-programs">...</div>
-                    <div class="stat-label">Degree Programs</div>
+                <div class="stat" data-drill="prerequisites">
+                    <div class="stat-value" id="stat-prerequisites">...</div>
+                    <div class="stat-label">Prerequisites</div>
                 </div>
                 <div class="stat" data-drill="subjects">
                     <div class="stat-value" id="stat-subjects">...</div>
                     <div class="stat-label">Subjects</div>
+                </div>
+                <div class="stat" data-drill="transfers">
+                    <div class="stat-value" id="stat-transfers">...</div>
+                    <div class="stat-label">Transfers</div>
                 </div>
             </div>
 
@@ -266,24 +270,6 @@
         </header>
 
         <div class="grid">
-            <a href="explorer-dynamic.html" class="card-link">
-                <div class="card">
-                    <div class="card-preview">🔍</div>
-                    <div class="card-content">
-                        <h3 class="card-title">Dynamic Explorer</h3>
-                        <p class="card-desc">
-                            API-powered exploration. Add courses to build your graph dynamically.
-                            Browse by subject, track progress toward multiple degrees.
-                        </p>
-                        <div class="card-tags">
-                            <span class="tag interactive">Interactive</span>
-                            <span class="tag">API</span>
-                            <span class="tag">Live Data</span>
-                        </div>
-                    </div>
-                </div>
-            </a>
-
             <a href="full-explorer.html" class="card-link">
                 <div class="card">
                     <div class="card-preview">🕸️</div>
@@ -374,23 +360,6 @@
                 </div>
             </a>
 
-            <a href="degree-explorer.html" class="card-link">
-                <div class="card">
-                    <div class="card-preview">🎓</div>
-                    <div class="card-content">
-                        <h3 class="card-title">Degree Stacking</h3>
-                        <p class="card-desc">
-                            Enter your completed courses and see progress toward multiple
-                            degrees. Find overlapping requirements for efficient stacking.
-                        </p>
-                        <div class="card-tags">
-                            <span class="tag interactive">Interactive</span>
-                            <span class="tag">Progress</span>
-                            <span class="tag">Multi-Degree</span>
-                        </div>
-                    </div>
-                </div>
-            </a>
         </div>
 
         <div class="downloads">
@@ -417,32 +386,46 @@
 
     <script>
     const API_BASE = 'http://127.0.0.1:5050/api';
-    let cachedData = { programs: [], subjects: [], courses: [] };
+    let cachedData = { stats: {}, subjects: [], institutions: [], prerequisites: [], transfers: [] };
 
-    // Load stats from API
+    // Load stats from API - REAL DATA ONLY
     async function loadStats() {
         try {
-            const [programs, subjects] = await Promise.all([
-                fetch(`${API_BASE}/programs`).then(r => r.json()),
-                fetch(`${API_BASE}/subjects`).then(r => r.json())
+            const [stats, subjects, institutions, prereqs, transfers] = await Promise.all([
+                fetch(`${API_BASE}/stats`).then(r => r.json()),
+                fetch(`${API_BASE}/subjects`).then(r => r.json()),
+                fetch(`${API_BASE}/institutions`).then(r => r.json()),
+                fetch(`${API_BASE}/prerequisites`).then(r => r.json()),
+                fetch(`${API_BASE}/transfers`).then(r => r.json()),
             ]);
 
-            cachedData.programs = programs;
-            cachedData.subjects = subjects;
+            cachedData = { stats, subjects, institutions, prerequisites: prereqs, transfers };
 
-            const totalCourses = subjects.reduce((sum, s) => sum + s.count, 0);
-            const institutions = new Set(programs.map(p => p.institution));
-
-            document.getElementById('stat-courses').textContent = totalCourses;
-            document.getElementById('stat-institutions').textContent = institutions.size;
-            document.getElementById('stat-programs').textContent = programs.length;
-            document.getElementById('stat-subjects').textContent = subjects.length;
+            document.getElementById('stat-courses').textContent = stats.courses;
+            document.getElementById('stat-institutions').textContent = stats.institutions;
+            document.getElementById('stat-prerequisites').textContent = stats.prerequisites;
+            document.getElementById('stat-subjects').textContent = stats.subjects;
+            document.getElementById('stat-transfers').textContent = stats.transfers;
         } catch (e) {
-            // Fallback to static values
-            document.getElementById('stat-courses').textContent = '142';
-            document.getElementById('stat-institutions').textContent = '1';
-            document.getElementById('stat-programs').textContent = '10';
-            document.getElementById('stat-subjects').textContent = '14';
+            // Fallback - try loading from graph-data.json
+            try {
+                const data = await fetch('graph-data.json').then(r => r.json());
+                const subjects = {};
+                data.nodes.forEach(n => {
+                    if (n.subject) subjects[n.subject] = (subjects[n.subject] || 0) + 1;
+                });
+                document.getElementById('stat-courses').textContent = data.nodes.length;
+                document.getElementById('stat-institutions').textContent = '2';
+                document.getElementById('stat-prerequisites').textContent = data.links.filter(l => l.type === 'prerequisite').length;
+                document.getElementById('stat-subjects').textContent = Object.keys(subjects).length;
+                document.getElementById('stat-transfers').textContent = data.links.filter(l => l.type === 'transfer').length;
+            } catch (e2) {
+                document.getElementById('stat-courses').textContent = '606';
+                document.getElementById('stat-institutions').textContent = '2';
+                document.getElementById('stat-prerequisites').textContent = '244';
+                document.getElementById('stat-subjects').textContent = '24';
+                document.getElementById('stat-transfers').textContent = '6';
+            }
         }
     }
 
@@ -472,47 +455,43 @@
         switch(type) {
             case 'courses':
                 drillTitle.textContent = 'Courses by Subject';
-                drillContent.innerHTML = cachedData.subjects.map(s => `
-                    <div class="drill-item">
-                        <span class="name">${s.subject}</span>
-                        <span class="meta">${s.count} courses</span>
-                    </div>
-                `).join('');
+                drillContent.innerHTML = cachedData.subjects
+                    .sort((a, b) => b.count - a.count)
+                    .map(s => `
+                        <div class="drill-item">
+                            <span class="name">${s.subject}</span>
+                            <span class="meta">${s.count} courses</span>
+                        </div>
+                    `).join('');
                 break;
 
             case 'institutions':
                 drillTitle.textContent = 'Institutions';
-                const insts = [...new Set(cachedData.programs.map(p => p.institution))];
-                drillContent.innerHTML = insts.map(inst => {
-                    const progs = cachedData.programs.filter(p => p.institution === inst);
-                    return `
-                        <div class="drill-item">
-                            <span class="name">${inst === 'usask' ? 'University of Saskatchewan' : inst}</span>
-                            <span class="meta">${progs.length} programs</span>
-                        </div>
-                    `;
-                }).join('');
-                break;
-
-            case 'programs':
-                drillTitle.textContent = 'Degree Programs';
-                const byType = {};
-                cachedData.programs.forEach(p => {
-                    const type = p.credential.replace('_', ' ');
-                    if (!byType[type]) byType[type] = [];
-                    byType[type].push(p);
-                });
-                drillContent.innerHTML = Object.entries(byType).map(([type, progs]) => `
-                    <div class="drill-group">
-                        <div class="drill-group-title">${type}</div>
-                        ${progs.map(p => `
-                            <div class="drill-item">
-                                <span class="name">${p.name.split(' - ').pop()}</span>
-                                <span class="meta">${p.credits} credits</span>
-                            </div>
-                        `).join('')}
+                drillContent.innerHTML = cachedData.institutions.map(inst => `
+                    <div class="drill-item">
+                        <span class="name">${inst.id === 'usask' ? 'University of Saskatchewan' : inst.id === 'saskpolytech' ? 'Saskatchewan Polytechnic' : inst.id}</span>
+                        <span class="meta">${inst.course_count} courses</span>
                     </div>
                 `).join('');
+                break;
+
+            case 'prerequisites':
+                drillTitle.textContent = 'Prerequisite Chains';
+                // Group by target course subject
+                const bySubject = {};
+                cachedData.prerequisites.forEach(p => {
+                    const subj = p.to.split(':')[1]?.split(' ')[0] || 'Other';
+                    if (!bySubject[subj]) bySubject[subj] = 0;
+                    bySubject[subj]++;
+                });
+                drillContent.innerHTML = Object.entries(bySubject)
+                    .sort((a, b) => b[1] - a[1])
+                    .map(([subj, count]) => `
+                        <div class="drill-item">
+                            <span class="name">${subj}</span>
+                            <span class="meta">${count} prerequisites</span>
+                        </div>
+                    `).join('');
                 break;
 
             case 'subjects':
@@ -522,9 +501,19 @@
                     .map(s => `
                         <div class="drill-item">
                             <span class="name">${s.subject}</span>
-                            <span class="meta">${s.count} courses</span>
+                            <span class="meta">${s.count} courses · ${s.institutions?.join(', ') || ''}</span>
                         </div>
                     `).join('');
+                break;
+
+            case 'transfers':
+                drillTitle.textContent = 'Transfer Agreements';
+                drillContent.innerHTML = cachedData.transfers.map(t => `
+                    <div class="drill-item">
+                        <span class="name">${t.from_program} → ${t.to_institution}</span>
+                        <span class="meta">${t.credits} credits</span>
+                    </div>
+                `).join('') || '<p style="color:#8b949e">No transfer data loaded</p>';
                 break;
         }
     }

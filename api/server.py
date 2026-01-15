@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 """
 REST API for dynamic graph exploration.
-Wraps the degree models and course data for visualization frontends.
+Serves REAL data from USask and SaskPolytech APIs.
+NO hardcoded degree models.
 """
+import asyncio
 import sys
 from pathlib import Path
 
@@ -11,133 +13,220 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 
-from devvyn.degrees.usask import get_usask_programs, get_program
+from devvyn.institutions.registry import get_registry
+from devvyn.institutions.transfers import get_all_agreements
 
 app = Flask(__name__)
-CORS(app)  # Allow viz pages to fetch
+CORS(app)
+
+# Cache for loaded data
+_cache = {
+    "courses": {},  # inst:code -> course dict
+    "subjects": {},  # inst -> {subject -> count}
+    "prerequisites": [],  # list of {from, to}
+    "transfers": [],  # list of transfer pathways
+    "loaded": False,
+}
 
 
-@app.route("/api/programs")
-def list_programs():
-    """List all available degree programs."""
-    programs = get_usask_programs()
-    return jsonify([
-        {
-            "id": p.id,
-            "name": p.name,
-            "credential": p.credential.value,
-            "credits": p.total_credits,
-            "institution": p.institution,
-        }
-        for p in programs
-    ])
+def _load_graph_data():
+    """Load course data from graph-data.json as fallback."""
+    import json
+    graph_path = Path(__file__).parent.parent / "viz" / "graph-data.json"
+    if graph_path.exists():
+        with open(graph_path) as f:
+            return json.load(f)
+    return {"nodes": [], "links": []}
 
 
-@app.route("/api/program/<path:program_id>")
-def get_program_details(program_id: str):
-    """Get detailed requirements for a program."""
-    prog = get_program(program_id)
-    if not prog:
-        return jsonify({"error": f"Unknown program: {program_id}"}), 404
+def ensure_cache():
+    """Ensure cache is populated from real data sources."""
+    if _cache["loaded"]:
+        return
 
-    return jsonify({
-        "id": prog.id,
-        "name": prog.name,
-        "credential": prog.credential.value,
-        "credits": prog.total_credits,
-        "institution": prog.institution,
-        "courses": list(prog.all_possible_courses()),
-        "required": list(prog.all_required_courses()),
-        "blocks": [
-            {
-                "code": b.code,
-                "name": b.name,
-                "credits": b.total_credits,
-                "courses": list(b.all_possible_courses()),
+    # Load from graph-data.json which has real scraped data
+    data = _load_graph_data()
+
+    # Process nodes
+    subjects_by_inst = {}
+    for node in data.get("nodes", []):
+        if node.get("type") == "course":
+            inst = node.get("institution", "unknown")
+            code = node.get("label", "")
+            subject = node.get("subject", code.split()[0] if code else "")
+
+            _cache["courses"][node["id"]] = {
+                "id": node["id"],
+                "code": code,
+                "title": node.get("title", code),
+                "subject": subject,
+                "institution": inst,
+                "credits": node.get("credits", 3.0),
             }
-            for b in prog.requirements
-        ],
-    })
 
+            if inst not in subjects_by_inst:
+                subjects_by_inst[inst] = {}
+            if subject not in subjects_by_inst[inst]:
+                subjects_by_inst[inst][subject] = 0
+            subjects_by_inst[inst][subject] += 1
 
-@app.route("/api/courses")
-def list_courses():
-    """List courses, optionally filtered by subject or program."""
-    subject = request.args.get("subject")
-    program_id = request.args.get("program")
+    _cache["subjects"] = subjects_by_inst
 
-    # Collect all courses from all programs
-    all_courses = set()
-    for prog in get_usask_programs():
-        all_courses.update(prog.all_possible_courses())
-
-    courses = []
-    for code in sorted(all_courses):
-        parts = code.split()
-        subj = parts[0] if parts else ""
-
-        if subject and subj != subject.upper():
-            continue
-
-        if program_id:
-            prog = get_program(program_id)
-            if prog and code not in prog.all_possible_courses():
-                continue
-
-        courses.append({
-            "id": f"usask:{code}",
-            "code": code,
-            "subject": subj,
-            "institution": "usask",
-        })
-
-    return jsonify(courses)
-
-
-@app.route("/api/course/<path:code>")
-def get_course(code: str):
-    """Get details for a specific course."""
-    # Find which programs this course counts toward
-    satisfies = []
-    for prog in get_usask_programs():
-        if code in prog.all_possible_courses():
-            satisfies.append({
-                "id": prog.id,
-                "name": prog.name,
-                "required": code in prog.all_required_courses(),
+    # Process prerequisite links
+    for link in data.get("links", []):
+        if link.get("type") == "prerequisite":
+            _cache["prerequisites"].append({
+                "from": link["source"],
+                "to": link["target"],
             })
 
-    parts = code.split()
-    return jsonify({
-        "id": f"usask:{code}",
-        "code": code,
-        "subject": parts[0] if parts else "",
-        "institution": "usask",
-        "satisfies": satisfies,
-    })
+    # Load transfer agreements
+    try:
+        agreements = get_all_agreements()
+        for a in agreements:
+            _cache["transfers"].append({
+                "from_program": a.source_program,
+                "from_institution": a.source_institution,
+                "to_institution": a.target_institution,
+                "to_program": a.target_program,
+                "credits": a.total_credits,
+            })
+    except Exception:
+        pass
+
+    _cache["loaded"] = True
+
+
+@app.route("/api/institutions")
+def list_institutions():
+    """List all institutions with course data."""
+    ensure_cache()
+    institutions = {}
+    for course in _cache["courses"].values():
+        inst = course["institution"]
+        if inst not in institutions:
+            institutions[inst] = {"id": inst, "course_count": 0}
+        institutions[inst]["course_count"] += 1
+
+    return jsonify(list(institutions.values()))
 
 
 @app.route("/api/subjects")
 def list_subjects():
     """List all subjects with course counts."""
-    subjects = {}
-    for prog in get_usask_programs():
-        for code in prog.all_possible_courses():
-            subj = code.split()[0] if code.split() else "UNKNOWN"
-            subjects[subj] = subjects.get(subj, 0) + 1
+    ensure_cache()
+    institution = request.args.get("institution")
 
-    return jsonify([
-        {"subject": s, "count": c}
-        for s, c in sorted(subjects.items())
-    ])
+    subjects = {}
+    for inst, subj_counts in _cache["subjects"].items():
+        if institution and inst != institution:
+            continue
+        for subj, count in subj_counts.items():
+            if subj not in subjects:
+                subjects[subj] = {"subject": subj, "count": 0, "institutions": []}
+            subjects[subj]["count"] += count
+            if inst not in subjects[subj]["institutions"]:
+                subjects[subj]["institutions"].append(inst)
+
+    return jsonify(sorted(subjects.values(), key=lambda x: -x["count"]))
+
+
+@app.route("/api/courses")
+def list_courses():
+    """List courses, optionally filtered."""
+    ensure_cache()
+    subject = request.args.get("subject")
+    institution = request.args.get("institution")
+
+    courses = []
+    for course in _cache["courses"].values():
+        if subject and course["subject"] != subject.upper():
+            continue
+        if institution and course["institution"] != institution:
+            continue
+        courses.append(course)
+
+    return jsonify(sorted(courses, key=lambda x: x["code"]))
+
+
+@app.route("/api/course/<path:course_id>")
+def get_course(course_id: str):
+    """Get details for a specific course."""
+    ensure_cache()
+
+    # Handle both "usask:CMPT 141" and "CMPT 141" formats
+    if ":" not in course_id:
+        course_id = f"usask:{course_id}"
+
+    course = _cache["courses"].get(course_id)
+    if not course:
+        return jsonify({"error": f"Course not found: {course_id}"}), 404
+
+    # Find prerequisites
+    prereqs = [p["from"] for p in _cache["prerequisites"] if p["to"] == course_id]
+
+    # Find what this course unlocks
+    unlocks = [p["to"] for p in _cache["prerequisites"] if p["from"] == course_id]
+
+    return jsonify({
+        **course,
+        "prerequisites": prereqs,
+        "unlocks": unlocks,
+    })
+
+
+@app.route("/api/prerequisites")
+def list_prerequisites():
+    """List all prerequisite relationships."""
+    ensure_cache()
+    institution = request.args.get("institution")
+
+    prereqs = _cache["prerequisites"]
+    if institution:
+        prereqs = [
+            p for p in prereqs
+            if institution in p["from"] or institution in p["to"]
+        ]
+
+    return jsonify(prereqs)
+
+
+@app.route("/api/transfers")
+def list_transfers():
+    """List transfer pathways between institutions."""
+    ensure_cache()
+    return jsonify(_cache["transfers"])
+
+
+@app.route("/api/stats")
+def get_stats():
+    """Get overall statistics."""
+    ensure_cache()
+
+    institutions = set()
+    subjects = set()
+    for course in _cache["courses"].values():
+        institutions.add(course["institution"])
+        subjects.add(course["subject"])
+
+    return jsonify({
+        "courses": len(_cache["courses"]),
+        "institutions": len(institutions),
+        "subjects": len(subjects),
+        "prerequisites": len(_cache["prerequisites"]),
+        "transfers": len(_cache["transfers"]),
+    })
 
 
 if __name__ == "__main__":
     print("Starting API server on http://localhost:5050")
-    print("Endpoints:")
-    print("  GET /api/programs")
-    print("  GET /api/program/<id>")
-    print("  GET /api/courses?subject=BIOL")
-    print("  GET /api/course/CMPT 141")
+    print("Serving REAL data only - no hardcoded degree models")
+    print("\nEndpoints:")
+    print("  GET /api/stats")
+    print("  GET /api/institutions")
     print("  GET /api/subjects")
+    print("  GET /api/courses?subject=CMPT&institution=usask")
+    print("  GET /api/course/<id>")
+    print("  GET /api/prerequisites")
+    print("  GET /api/transfers")
     app.run(debug=True, port=5050)

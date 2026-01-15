@@ -212,11 +212,11 @@
 <body>
     <div id="discovery-bar">
         <div class="stats">
-            Exploring <strong id="stat-programs">...</strong> programs · <strong id="stat-courses">...</strong> courses · <strong id="stat-subjects">...</strong> subjects
+            <strong id="stat-courses">...</strong> courses · <strong id="stat-subjects">...</strong> subjects · <strong id="stat-prereqs">...</strong> prerequisites
         </div>
         <nav>
-            <a href="explorer-dynamic.html">Dynamic Explorer</a>
-            <a href="degree-explorer.html">Degree Progress</a>
+            
+            
             <a href="hierarchical.html" class="active">Hierarchy</a>
             <a href="full-explorer.html">Full Graph</a>
             <a href="pathfinder.html">Pathfinder</a>
@@ -504,17 +504,13 @@
     // Fetch discovery stats from API
     (async function loadDiscoveryStats() {
         try {
-            const [programs, subjects] = await Promise.all([
-                fetch('http://127.0.0.1:5050/api/programs').then(r => r.json()),
-                fetch('http://127.0.0.1:5050/api/subjects').then(r => r.json())
-            ]);
-            const totalCourses = subjects.reduce((sum, s) => sum + s.count, 0);
-            document.getElementById('stat-programs').textContent = programs.length;
-            document.getElementById('stat-courses').textContent = totalCourses;
-            document.getElementById('stat-subjects').textContent = subjects.length;
+            const stats = await fetch('http://127.0.0.1:5050/api/stats').then(r => r.json());
+            document.getElementById('stat-courses').textContent = stats.courses;
+            document.getElementById('stat-subjects').textContent = stats.subjects;
+            document.getElementById('stat-prereqs').textContent = stats.prerequisites;
         } catch (e) {
             document.querySelector('#discovery-bar .stats').innerHTML =
-                '<em>Connect to API for live stats</em> · <a href="explorer-dynamic.html" style="color:#4ECDC4">Try Dynamic Explorer →</a>';
+                '<em>API offline</em> · Using cached graph data';
         }
     })();
     </script>

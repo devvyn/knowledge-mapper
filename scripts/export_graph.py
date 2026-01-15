@@ -1,67 +1,120 @@
 #!/usr/bin/env python3
 """
-Export course and degree data to graph-data.json for visualizations.
+Export REAL course data to graph-data.json for visualizations.
+NO hardcoded degree models - only real API/scraped data.
 """
+import asyncio
 import json
 import sys
 from pathlib import Path
 
-# Add parent to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from devvyn.degrees.usask import get_usask_programs
+from devvyn.institutions.registry import get_registry
+from devvyn.institutions.transfers import get_all_agreements, COURSE_CONTENT_SIMILARITIES
 
 
-def export_graph_data(output_path: str = "viz/graph-data.json"):
-    """Export all courses and degrees to JSON for D3 visualizations."""
+async def export_graph_data(output_path: str = "viz/graph-data.json"):
+    """Export all courses and prerequisites to JSON for D3 visualizations."""
     nodes = []
     links = []
     seen_courses = set()
 
-    programs = get_usask_programs()
+    registry = get_registry()
 
-    # Add degree nodes
-    for prog in programs:
-        nodes.append({
-            "id": prog.id,
-            "label": prog.name.split(" - ")[-1] if " - " in prog.name else prog.name,
-            "title": prog.name,
-            "institution": prog.institution,
-            "credits": prog.total_credits,
-            "type": "degree",
-            "credential": prog.credential.value,
-        })
+    # Load USask courses
+    print("Loading USask courses...")
+    usask = registry.get("usask")
+    if usask:
+        async with usask:
+            # Load common subjects
+            subjects = ["CMPT", "MATH", "STAT", "PHYS", "CHEM", "BIOL", "ENG", "PHIL"]
+            for subject in subjects:
+                try:
+                    courses = await usask.get_courses_by_subject(subject)
+                    print(f"  {subject}: {len(courses)} courses")
+                    for course in courses:
+                        course_id = f"{course.ref.institution}:{course.ref.code}"
+                        if course_id not in seen_courses:
+                            seen_courses.add(course_id)
+                            nodes.append({
+                                "id": course_id,
+                                "label": course.ref.code,
+                                "title": course.title or course.ref.code,
+                                "institution": course.ref.institution,
+                                "credits": course.credits or 3.0,
+                                "type": "course",
+                                "subject": subject,
+                            })
 
-        # Collect courses from this program
-        for course_code in prog.all_possible_courses():
-            if course_code not in seen_courses:
-                seen_courses.add(course_code)
-                # Parse subject from course code
-                parts = course_code.split()
-                subject = parts[0] if parts else "UNKNOWN"
+                            # Add prerequisite links
+                            for prereq in course.prerequisites:
+                                prereq_id = f"{prereq.institution}:{prereq.code}"
+                                links.append({
+                                    "source": prereq_id,
+                                    "target": course_id,
+                                    "type": "prerequisite",
+                                })
+                except Exception as e:
+                    print(f"  {subject}: error - {e}")
 
-                nodes.append({
-                    "id": f"usask:{course_code}",
-                    "label": course_code,
-                    "title": course_code,  # Would need API to get real titles
-                    "institution": "usask",
-                    "credits": 3.0,
-                    "type": "course",
-                    "subject": subject,
-                })
+    # Load SaskPolytech courses
+    print("Loading SaskPolytech courses...")
+    saskpoly = registry.get("saskpolytech")
+    if saskpoly:
+        async with saskpoly:
+            try:
+                program = await saskpoly.get_program("CSTDP")
+                if program:
+                    print(f"  CSTDP: {len(program.courses)} courses")
+                    for course in program.courses:
+                        course_id = f"{course.ref.institution}:{course.ref.code}"
+                        if course_id not in seen_courses:
+                            seen_courses.add(course_id)
+                            subject = course.ref.code.split()[0] if course.ref.code else "CST"
+                            nodes.append({
+                                "id": course_id,
+                                "label": course.ref.code,
+                                "title": course.title or course.ref.code,
+                                "institution": course.ref.institution,
+                                "credits": course.credits or 3.0,
+                                "type": "course",
+                                "subject": subject,
+                            })
 
-            # Link course to degree
+                            for prereq in course.prerequisites:
+                                prereq_id = f"{prereq.institution}:{prereq.code}"
+                                links.append({
+                                    "source": prereq_id,
+                                    "target": course_id,
+                                    "type": "prerequisite",
+                                })
+            except Exception as e:
+                print(f"  CSTDP: error - {e}")
+
+    # Add transfer links from course content similarities
+    print("Loading transfer equivalencies...")
+    try:
+        for sp_code, usask_code, notes in COURSE_CONTENT_SIMILARITIES:
             links.append({
-                "source": f"usask:{course_code}",
-                "target": prog.id,
-                "type": "satisfies",
+                "source": f"saskpolytech:{sp_code}",
+                "target": f"usask:{usask_code}",
+                "type": "transfer",
             })
+        print(f"  {len(COURSE_CONTENT_SIMILARITIES)} transfer equivalencies")
+    except Exception as e:
+        print(f"  Transfers: error - {e}")
 
-    # TODO: Add prerequisite links (would need course data)
+    # Filter out links referencing missing nodes
+    node_ids = set(n["id"] for n in nodes)
+    valid_links = []
+    for link in links:
+        if link["source"] in node_ids and link["target"] in node_ids:
+            valid_links.append(link)
 
     data = {
         "nodes": nodes,
-        "links": links,
+        "links": valid_links,
     }
 
     output = Path(output_path)
@@ -70,10 +123,12 @@ def export_graph_data(output_path: str = "viz/graph-data.json"):
     with open(output, "w") as f:
         json.dump(data, f, indent=2)
 
-    print(f"Exported {len(nodes)} nodes and {len(links)} links to {output}")
-    print(f"  - {len([n for n in nodes if n['type'] == 'degree'])} degrees")
-    print(f"  - {len([n for n in nodes if n['type'] == 'course'])} courses")
+    print(f"\nExported {len(nodes)} nodes and {len(valid_links)} links to {output}")
+    print(f"  - {len(nodes)} courses (REAL DATA)")
+    print(f"  - {len([l for l in valid_links if l['type'] == 'prerequisite'])} prerequisites")
+    print(f"  - {len([l for l in valid_links if l['type'] == 'transfer'])} transfers")
+    print(f"  - 0 fake degree models")
 
 
 if __name__ == "__main__":
-    export_graph_data()
+    asyncio.run(export_graph_data())
