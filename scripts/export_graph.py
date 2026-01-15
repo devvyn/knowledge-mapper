@@ -111,106 +111,12 @@ async def export_graph_data(output_path: str = "viz/graph-data.json"):
     except Exception as e:
         print(f"  Transfers: error - {e}")
 
-    # Add course completion data (textbooks, work requirements, exams)
-    print("Loading course completion data...")
-    try:
-        from devvyn.data.sample_course_completion import get_sample_completions
-
-        completions = get_sample_completions()
-        textbook_count = 0
-        work_count = 0
-        exam_count = 0
-
-        for completion in completions:
-            course_id = f"{completion.course_ref.institution}:{completion.course_ref.code}"
-
-            # Add textbooks
-            for textbook in completion.required_textbooks + completion.recommended_textbooks:
-                tb_id = str(textbook.ref)
-                nodes.append({
-                    "id": tb_id,
-                    "label": textbook.title[:30] + "..." if len(textbook.title) > 30 else textbook.title,
-                    "title": str(textbook),
-                    "type": "textbook",
-                    "isbn": textbook.isbn,
-                    "authors": textbook.authors,
-                })
-                textbook_count += 1
-
-                # Link course to textbook
-                links.append({
-                    "source": course_id,
-                    "target": tb_id,
-                    "type": "uses_textbook",
-                })
-
-            # Add work requirements
-            for work in completion.all_work_requirements:
-                work_id = str(work.ref)
-                nodes.append({
-                    "id": work_id,
-                    "label": work.title,
-                    "title": work.description,
-                    "type": "work_requirement",
-                    "work_type": work.req_type.value,
-                    "weight": work.weight_percent,
-                    "course": course_id,
-                    "institution": completion.course_ref.institution,
-                })
-                work_count += 1
-
-                # Add dependency links
-                for dep in work.depends_on:
-                    links.append({
-                        "source": str(dep),
-                        "target": work_id,
-                        "type": "depends_on",
-                    })
-
-            # Add exams (including midterms and final)
-            for exam in completion.all_exams:
-                exam_id = str(exam.ref)
-                nodes.append({
-                    "id": exam_id,
-                    "label": exam.title,
-                    "title": exam.description,
-                    "type": "exam",
-                    "weight": exam.weight_percent,
-                    "duration_minutes": exam.duration_minutes,
-                    "course": course_id,
-                    "institution": completion.course_ref.institution,
-                })
-                exam_count += 1
-
-                # Add links from work requirements to exam
-                for work_ref in exam.required_work:
-                    links.append({
-                        "source": str(work_ref),
-                        "target": exam_id,
-                        "type": "leads_to_exam",
-                    })
-
-        print(f"  {len(completions)} course completions")
-        print(f"  {textbook_count} textbooks")
-        print(f"  {work_count} work requirements")
-        print(f"  {exam_count} exams (terminal nodes)")
-    except ImportError:
-        print("  (sample data not available)")
-    except Exception as e:
-        print(f"  Error: {e}")
-
     # Filter out links referencing missing nodes
     node_ids = set(n["id"] for n in nodes)
     valid_links = []
     for link in links:
         if link["source"] in node_ids and link["target"] in node_ids:
             valid_links.append(link)
-
-    # Count node types
-    course_nodes = len([n for n in nodes if n.get("type") == "course"])
-    textbook_nodes = len([n for n in nodes if n.get("type") == "textbook"])
-    work_nodes = len([n for n in nodes if n.get("type") == "work_requirement"])
-    exam_nodes = len([n for n in nodes if n.get("type") == "exam"])
 
     data = {
         "nodes": nodes,
@@ -223,14 +129,12 @@ async def export_graph_data(output_path: str = "viz/graph-data.json"):
     with open(output, "w") as f:
         json.dump(data, f, indent=2)
 
-    print(f"\nExported {len(nodes)} nodes and {len(valid_links)} links to {output}")
-    print(f"  - {course_nodes} courses (REAL DATA)")
-    print(f"  - {textbook_nodes} textbooks")
-    print(f"  - {work_nodes} work requirements")
-    print(f"  - {exam_nodes} exams (terminal nodes)")
-    print(f"  - {len([l for l in valid_links if l['type'] == 'prerequisite'])} prerequisites")
-    print(f"  - {len([l for l in valid_links if l['type'] == 'transfer'])} transfers")
-    print(f"  - {len([l for l in valid_links if l['type'] == 'leads_to_exam'])} exam dependencies")
+    prereq_count = len([l for l in valid_links if l['type'] == 'prerequisite'])
+    transfer_count = len([l for l in valid_links if l['type'] == 'transfer'])
+
+    print(f"\nExported {len(nodes)} courses and {len(valid_links)} links to {output}")
+    print(f"  - {prereq_count} prerequisites")
+    print(f"  - {transfer_count} transfers")
 
 
 if __name__ == "__main__":
