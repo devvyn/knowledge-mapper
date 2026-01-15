@@ -175,6 +175,7 @@
                 <h2>Your Completed Courses</h2>
                 <input type="text" id="course-input" placeholder="Type course code (e.g., CMPT 141)">
                 <div id="course-chips"></div>
+                <div id="hints" style="font-size: 0.8em; color: #94a3b8; margin-top: 8px;"></div>
             </div>
 
             <div id="progress-rings">
@@ -532,6 +533,7 @@
             .attr('stroke-width', d => completedCourses.has(d.id) ? 3 : 0);
 
         updateProgressRings();
+        updateHints();
     }
 
     window.removeCourse = function(course) {
@@ -573,8 +575,40 @@
         });
     }
 
-    // Initialize with some courses
-    ['CMPT 141', 'CMPT 145', 'MATH 110', 'MATH 116', 'MATH 163'].forEach(c => completedCourses.add(c));
+    function updateHints() {
+        const hintsDiv = document.getElementById('hints');
+        if (completedCourses.size === 0) {
+            // Show starter suggestions - entry-level courses (no prereqs in our simplified model)
+            const starters = ['CMPT 141', 'MATH 110', 'ENG 110', 'PHYS 115'];
+            hintsDiv.innerHTML = 'Try: ' + starters.map(c =>
+                `<a href="#" style="color: #4ECDC4;" onclick="event.preventDefault(); addCourse('${c}')">${c}</a>`
+            ).join(', ');
+        } else {
+            // Show progress hints
+            const completed = completedCourses.size;
+            const nearestDegree = degrees.reduce((best, deg) => {
+                const connectedCourses = links.filter(l => l.target.id === deg.id).map(l => l.source.id);
+                const done = connectedCourses.filter(c => completedCourses.has(c)).length;
+                const pct = connectedCourses.length > 0 ? done / connectedCourses.length : 0;
+                return pct > best.pct ? { name: deg.name, pct, remaining: connectedCourses.length - done } : best;
+            }, { name: '', pct: 0, remaining: 0 });
+
+            if (nearestDegree.pct > 0) {
+                hintsDiv.innerHTML = `Nearest: <strong>${nearestDegree.name}</strong> (${nearestDegree.remaining} key courses remaining)`;
+            } else {
+                hintsDiv.innerHTML = '';
+            }
+        }
+    }
+
+    window.addCourse = function(code) {
+        if (courses.some(c => c.id === code)) {
+            completedCourses.add(code);
+            updateCompletedDisplay();
+        }
+    };
+
+    // Start with empty state - let user add their own courses
     updateCompletedDisplay();
 
     // Center view initially

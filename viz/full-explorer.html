@@ -216,6 +216,9 @@
     fetch('graph-data.json')
         .then(r => r.json())
         .then(data => {
+            // Filter out links referencing missing nodes
+            const nodeIds = new Set(data.nodes.map(n => n.id));
+            data.links = data.links.filter(l => nodeIds.has(l.source) && nodeIds.has(l.target));
             graphData = data;
             initGraph();
             updateStats();
@@ -295,6 +298,13 @@
                 d3.zoomIdentity.translate(width/2, height/2).scale(0.6).translate(-width/2, -height/2)
             );
         }, 1000);
+
+        // Reset on background click
+        svg.on('click', () => {
+            node.classed('dimmed', false);
+            link.classed('dimmed', false).classed('highlighted', false);
+            document.getElementById('info-content').innerHTML = 'Click a node to explore';
+        });
     }
 
     function updateStats() {
@@ -410,13 +420,6 @@
 
         document.getElementById('info-content').innerHTML = html;
     }
-
-    // Reset on background click
-    svg?.on('click', () => {
-        node?.classed('dimmed', false);
-        link?.classed('dimmed', false).classed('highlighted', false);
-        document.getElementById('info-content').innerHTML = 'Click a node to explore';
-    });
 
     // Search
     document.getElementById('search').addEventListener('input', (e) => {

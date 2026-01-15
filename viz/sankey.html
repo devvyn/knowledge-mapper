@@ -152,6 +152,16 @@
     <div class="tooltip" id="tooltip"></div>
 
     <script>
+    // Check if d3-sankey loaded
+    if (typeof d3.sankey !== 'function') {
+        document.getElementById('chart').innerHTML = `
+            <div style="text-align:center; padding:40px; color:#f85149;">
+                <h2>Library Error</h2>
+                <p>d3-sankey failed to load. Check network connection.</p>
+            </div>`;
+        throw new Error('d3-sankey not loaded');
+    }
+
     // Degree requirement data (simplified from actual model)
     const degreeData = {
         'bsc-4yr-cmpt': {

@@ -244,11 +244,22 @@
 
     // Load data
     fetch('graph-data.json')
-        .then(r => r.json())
+        .then(r => {
+            if (!r.ok) throw new Error(`HTTP ${r.status}`);
+            return r.json();
+        })
         .then(data => {
+            // Filter out links referencing missing nodes
+            const nodeIds = new Set(data.nodes.map(n => n.id));
+            data.links = data.links.filter(l => nodeIds.has(l.source) && nodeIds.has(l.target));
             graphData = data;
             populateSelects();
             initGraph();
+        })
+        .catch(err => {
+            document.getElementById('paths-list').innerHTML = `
+                <p style="color:#f85149;">Error loading data: ${err.message}</p>
+                <p style="color:#8b949e;">Make sure graph-data.json exists in the viz folder.</p>`;
         });
 
     function populateSelects() {
