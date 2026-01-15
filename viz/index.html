@@ -42,6 +42,19 @@
         }
         .stat {
             text-align: center;
+            cursor: pointer;
+            padding: 15px 20px;
+            border-radius: 8px;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+        }
+        .stat:hover {
+            background: #21262d;
+            border-color: #58a6ff;
+        }
+        .stat.active {
+            background: #21262d;
+            border-color: #58a6ff;
         }
         .stat-value {
             font-size: 2em;
@@ -51,6 +64,65 @@
         .stat-label {
             color: #8b949e;
             font-size: 0.9em;
+        }
+
+        #drill-down {
+            display: none;
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 12px;
+            margin-top: 30px;
+            max-height: 400px;
+            overflow: hidden;
+        }
+        #drill-down.visible { display: block; }
+        #drill-down-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            border-bottom: 1px solid #30363d;
+            background: #21262d;
+        }
+        #drill-down-title {
+            font-size: 1.1em;
+            color: #58a6ff;
+        }
+        #drill-down-close {
+            background: none;
+            border: none;
+            color: #8b949e;
+            font-size: 1.5em;
+            cursor: pointer;
+            line-height: 1;
+        }
+        #drill-down-close:hover { color: #f85149; }
+        #drill-down-content {
+            padding: 20px;
+            max-height: 330px;
+            overflow-y: auto;
+        }
+        .drill-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 12px;
+            border-radius: 6px;
+            margin-bottom: 4px;
+            background: #0d1117;
+            font-size: 0.9em;
+        }
+        .drill-item:hover { background: #21262d; }
+        .drill-item .name { color: #c9d1d9; }
+        .drill-item .meta { color: #8b949e; }
+        .drill-group {
+            margin-bottom: 15px;
+        }
+        .drill-group-title {
+            font-size: 0.8em;
+            color: #8b949e;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
         }
 
         .grid {
@@ -166,30 +238,52 @@
                 and degree requirements across Saskatchewan universities and polytechnics.
             </p>
             <div class="stats">
-                <div class="stat">
-                    <div class="stat-value">239</div>
+                <div class="stat" data-drill="courses">
+                    <div class="stat-value" id="stat-courses">...</div>
                     <div class="stat-label">Courses</div>
                 </div>
-                <div class="stat">
-                    <div class="stat-value">2</div>
+                <div class="stat" data-drill="institutions">
+                    <div class="stat-value" id="stat-institutions">...</div>
                     <div class="stat-label">Institutions</div>
                 </div>
-                <div class="stat">
-                    <div class="stat-value">8</div>
+                <div class="stat" data-drill="programs">
+                    <div class="stat-value" id="stat-programs">...</div>
                     <div class="stat-label">Degree Programs</div>
                 </div>
-                <div class="stat">
-                    <div class="stat-value">164</div>
-                    <div class="stat-label">Prerequisites</div>
+                <div class="stat" data-drill="subjects">
+                    <div class="stat-value" id="stat-subjects">...</div>
+                    <div class="stat-label">Subjects</div>
                 </div>
-                <div class="stat">
-                    <div class="stat-value">20</div>
-                    <div class="stat-label">Transfer Links</div>
+            </div>
+
+            <div id="drill-down">
+                <div id="drill-down-header">
+                    <span id="drill-down-title">Details</span>
+                    <button id="drill-down-close">&times;</button>
                 </div>
+                <div id="drill-down-content"></div>
             </div>
         </header>
 
         <div class="grid">
+            <a href="explorer-dynamic.html" class="card-link">
+                <div class="card">
+                    <div class="card-preview">🔍</div>
+                    <div class="card-content">
+                        <h3 class="card-title">Dynamic Explorer</h3>
+                        <p class="card-desc">
+                            API-powered exploration. Add courses to build your graph dynamically.
+                            Browse by subject, track progress toward multiple degrees.
+                        </p>
+                        <div class="card-tags">
+                            <span class="tag interactive">Interactive</span>
+                            <span class="tag">API</span>
+                            <span class="tag">Live Data</span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
             <a href="full-explorer.html" class="card-link">
                 <div class="card">
                     <div class="card-preview">🕸️</div>
@@ -202,7 +296,7 @@
                         <div class="card-tags">
                             <span class="tag interactive">Interactive</span>
                             <span class="tag">D3.js</span>
-                            <span class="tag">247 nodes</span>
+                            <span class="tag">152 nodes</span>
                         </div>
                     </div>
                 </div>
@@ -320,5 +414,123 @@
             </p>
         </footer>
     </div>
+
+    <script>
+    const API_BASE = 'http://127.0.0.1:5050/api';
+    let cachedData = { programs: [], subjects: [], courses: [] };
+
+    // Load stats from API
+    async function loadStats() {
+        try {
+            const [programs, subjects] = await Promise.all([
+                fetch(`${API_BASE}/programs`).then(r => r.json()),
+                fetch(`${API_BASE}/subjects`).then(r => r.json())
+            ]);
+
+            cachedData.programs = programs;
+            cachedData.subjects = subjects;
+
+            const totalCourses = subjects.reduce((sum, s) => sum + s.count, 0);
+            const institutions = new Set(programs.map(p => p.institution));
+
+            document.getElementById('stat-courses').textContent = totalCourses;
+            document.getElementById('stat-institutions').textContent = institutions.size;
+            document.getElementById('stat-programs').textContent = programs.length;
+            document.getElementById('stat-subjects').textContent = subjects.length;
+        } catch (e) {
+            // Fallback to static values
+            document.getElementById('stat-courses').textContent = '142';
+            document.getElementById('stat-institutions').textContent = '1';
+            document.getElementById('stat-programs').textContent = '10';
+            document.getElementById('stat-subjects').textContent = '14';
+        }
+    }
+
+    // Drill-down handlers
+    const drillDown = document.getElementById('drill-down');
+    const drillTitle = document.getElementById('drill-down-title');
+    const drillContent = document.getElementById('drill-down-content');
+
+    document.querySelectorAll('.stat[data-drill]').forEach(stat => {
+        stat.addEventListener('click', () => showDrillDown(stat.dataset.drill));
+    });
+
+    document.getElementById('drill-down-close').addEventListener('click', closeDrillDown);
+
+    function closeDrillDown() {
+        drillDown.classList.remove('visible');
+        document.querySelectorAll('.stat').forEach(s => s.classList.remove('active'));
+    }
+
+    async function showDrillDown(type) {
+        document.querySelectorAll('.stat').forEach(s => s.classList.remove('active'));
+        document.querySelector(`[data-drill="${type}"]`).classList.add('active');
+
+        drillDown.classList.add('visible');
+        drillContent.innerHTML = '<p style="color:#8b949e">Loading...</p>';
+
+        switch(type) {
+            case 'courses':
+                drillTitle.textContent = 'Courses by Subject';
+                drillContent.innerHTML = cachedData.subjects.map(s => `
+                    <div class="drill-item">
+                        <span class="name">${s.subject}</span>
+                        <span class="meta">${s.count} courses</span>
+                    </div>
+                `).join('');
+                break;
+
+            case 'institutions':
+                drillTitle.textContent = 'Institutions';
+                const insts = [...new Set(cachedData.programs.map(p => p.institution))];
+                drillContent.innerHTML = insts.map(inst => {
+                    const progs = cachedData.programs.filter(p => p.institution === inst);
+                    return `
+                        <div class="drill-item">
+                            <span class="name">${inst === 'usask' ? 'University of Saskatchewan' : inst}</span>
+                            <span class="meta">${progs.length} programs</span>
+                        </div>
+                    `;
+                }).join('');
+                break;
+
+            case 'programs':
+                drillTitle.textContent = 'Degree Programs';
+                const byType = {};
+                cachedData.programs.forEach(p => {
+                    const type = p.credential.replace('_', ' ');
+                    if (!byType[type]) byType[type] = [];
+                    byType[type].push(p);
+                });
+                drillContent.innerHTML = Object.entries(byType).map(([type, progs]) => `
+                    <div class="drill-group">
+                        <div class="drill-group-title">${type}</div>
+                        ${progs.map(p => `
+                            <div class="drill-item">
+                                <span class="name">${p.name.split(' - ').pop()}</span>
+                                <span class="meta">${p.credits} credits</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                `).join('');
+                break;
+
+            case 'subjects':
+                drillTitle.textContent = 'Subject Areas';
+                drillContent.innerHTML = cachedData.subjects
+                    .sort((a, b) => b.count - a.count)
+                    .map(s => `
+                        <div class="drill-item">
+                            <span class="name">${s.subject}</span>
+                            <span class="meta">${s.count} courses</span>
+                        </div>
+                    `).join('');
+                break;
+        }
+    }
+
+    // Init
+    loadStats();
+    </script>
 </body>
 </html>
