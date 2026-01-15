@@ -48,15 +48,16 @@ class LearningConcept:
     def matches(self, query: str) -> bool:
         """Check if this concept matches a search query."""
         query_lower = query.lower()
-        if query_lower in self.id.lower():
+        # Check both directions: query in concept OR concept in query
+        if query_lower in self.id.lower() or self.id.lower() in query_lower:
             return True
-        if query_lower in self.name.lower():
+        if query_lower in self.name.lower() or self.name.lower() in query_lower:
             return True
         for alias in self.aliases:
-            if query_lower in alias.lower():
+            if query_lower in alias.lower() or alias.lower() in query_lower:
                 return True
         for topic in self.topics:
-            if query_lower in topic.lower():
+            if query_lower in topic.lower() or topic.lower() in query_lower:
                 return True
         return False
 

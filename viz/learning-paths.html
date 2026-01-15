@@ -542,9 +542,13 @@
         g = svg.append('g');
 
         const zoom = d3.zoom()
-            .scaleExtent([0.2, 3])
+            .scaleExtent([0.3, 5])
             .on('zoom', (e) => g.attr('transform', e.transform));
         svg.call(zoom);
+
+        // Apply initial zoom to center and scale up
+        const initialTransform = d3.zoomIdentity.translate(width/2, height/2).scale(1.5).translate(-width/2, -height/2);
+        svg.call(zoom.transform, initialTransform);
 
         // Filter to OER-related nodes only
         const oerNodes = graphData.nodes.filter(n =>
@@ -558,17 +562,19 @@
             return oerNodeIds.has(src) && oerNodeIds.has(tgt);
         });
 
+        // Tighter layout with stronger forces
         simulation = d3.forceSimulation(oerNodes)
-            .force('link', d3.forceLink(oerLinks).id(d => d.id).distance(60))
-            .force('charge', d3.forceManyBody().strength(-100))
+            .force('link', d3.forceLink(oerLinks).id(d => d.id).distance(40))
+            .force('charge', d3.forceManyBody().strength(-200))
             .force('center', d3.forceCenter(width / 2, height / 2))
-            .force('collision', d3.forceCollide().radius(20));
+            .force('collision', d3.forceCollide().radius(30));
 
         link = g.append('g')
             .selectAll('line')
             .data(oerLinks)
             .join('line')
-            .attr('class', d => `link ${d.type}`);
+            .attr('class', d => `link ${d.type}`)
+            .attr('stroke-width', 2);
 
         node = g.append('g')
             .selectAll('g')
@@ -583,8 +589,9 @@
             .on('mouseover', showTooltip)
             .on('mouseout', hideTooltip);
 
+        // Bigger nodes
         node.append('circle')
-            .attr('r', d => d.type === 'concept' ? 12 : d.type === 'textbook' ? 10 : 6);
+            .attr('r', d => d.type === 'concept' ? 18 : d.type === 'textbook' ? 14 : 10);
 
         node.append('text')
             .attr('dx', d => d.type === 'section' ? 8 : 14)
