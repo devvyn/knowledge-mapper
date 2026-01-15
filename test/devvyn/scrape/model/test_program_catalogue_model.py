@@ -7,6 +7,7 @@ import pytest
 import devvyn.model.program_catalogue
 
 
+@pytest.mark.integration
 class TestProgramCatalogue:
 
     def test_program_catalogue_contains_study_levels(self, catalogue):

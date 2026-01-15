@@ -1,6 +1,9 @@
+import pytest
+
 import devvyn.scrape.page.usask.program_catalogue
 
 
+@pytest.mark.integration
 def test_program_catalogue_data() -> None:
     """
     Verify that `devvyn.scrape.page.program_catalogue.program_catalogue_data()`

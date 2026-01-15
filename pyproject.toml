@@ -10,14 +10,49 @@ dependencies = [
     "aiolimiter>=1.1",
     "lxml>=5.0",
     "typeguard>=4.0",
+    "cssselect2>=0.7",
+    "tinycss2>=1.2",
+    "html5lib>=1.1",
+    "requests>=2.31",
 ]
 
 [project.optional-dependencies]
 dev = [
     "pytest>=8.0",
     "pytest-asyncio>=0.23",
+    "ruff>=0.8",
+    "mypy>=1.13",
+    "behave>=1.2",
 ]
 
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["devvyn", "api", "scripts"]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I"]
+ignore = ["E501"]  # Line too long - handled by formatter
+
+[tool.mypy]
+python_version = "3.12"
+warn_return_any = true
+warn_unused_ignores = true
+
+[tool.pytest.ini_options]
+testpaths = ["test"]
+asyncio_mode = "auto"
+markers = [
+    "integration: marks tests that require network access (deselect with '-m \"not integration\"')",
+]
+filterwarnings = [
+    "ignore::DeprecationWarning",
+]
+# Ignore behave step definition files (they start with test_ but are not pytest tests)
+norecursedirs = ["test/steps", "test/features"]
