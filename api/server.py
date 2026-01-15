@@ -25,6 +25,9 @@ _cache = {
     "subjects": {},  # inst -> {subject -> count}
     "prerequisites": [],  # list of {from, to}
     "transfers": [],  # list of transfer pathways
+    "textbooks": {},  # isbn -> textbook dict
+    "work_requirements": {},  # ref_id -> work requirement dict
+    "exams": {},  # ref_id -> exam dict
     "loaded": False,
 }
 
@@ -50,7 +53,9 @@ def ensure_cache():
     # Process nodes
     subjects_by_inst = {}
     for node in data.get("nodes", []):
-        if node.get("type") == "course":
+        node_type = node.get("type", "course")
+
+        if node_type == "course":
             inst = node.get("institution", "unknown")
             code = node.get("label", "")
             subject = node.get("subject", code.split()[0] if code else "")
@@ -70,11 +75,42 @@ def ensure_cache():
                 subjects_by_inst[inst][subject] = 0
             subjects_by_inst[inst][subject] += 1
 
+        elif node_type == "textbook":
+            _cache["textbooks"][node["id"]] = {
+                "id": node["id"],
+                "isbn": node.get("isbn", ""),
+                "title": node.get("title", node.get("label", "")),
+                "authors": node.get("authors", []),
+            }
+
+        elif node_type == "work_requirement":
+            _cache["work_requirements"][node["id"]] = {
+                "id": node["id"],
+                "title": node.get("label", ""),
+                "description": node.get("title", ""),
+                "work_type": node.get("work_type", "assignment"),
+                "weight": node.get("weight", 0),
+                "course": node.get("course", ""),
+                "institution": node.get("institution", ""),
+            }
+
+        elif node_type == "exam":
+            _cache["exams"][node["id"]] = {
+                "id": node["id"],
+                "title": node.get("label", "Final Examination"),
+                "description": node.get("title", ""),
+                "weight": node.get("weight", 0),
+                "duration_minutes": node.get("duration_minutes", 180),
+                "course": node.get("course", ""),
+                "institution": node.get("institution", ""),
+            }
+
     _cache["subjects"] = subjects_by_inst
 
-    # Process prerequisite links
+    # Process links (all edge types)
     for link in data.get("links", []):
-        if link.get("type") == "prerequisite":
+        link_type = link.get("type", "prerequisite")
+        if link_type == "prerequisite":
             _cache["prerequisites"].append({
                 "from": link["source"],
                 "to": link["target"],
@@ -215,6 +251,163 @@ def get_stats():
         "subjects": len(subjects),
         "prerequisites": len(_cache["prerequisites"]),
         "transfers": len(_cache["transfers"]),
+        "textbooks": len(_cache["textbooks"]),
+        "work_requirements": len(_cache["work_requirements"]),
+        "exams": len(_cache["exams"]),
+    })
+
+
+# --- Textbook Endpoints ---
+
+@app.route("/api/textbooks")
+def list_textbooks():
+    """List all textbooks."""
+    ensure_cache()
+    course_id = request.args.get("course")
+
+    textbooks = list(_cache["textbooks"].values())
+
+    # If filtering by course, find textbooks linked to that course
+    if course_id:
+        # Would require edge data - for now return all
+        pass
+
+    return jsonify(sorted(textbooks, key=lambda x: x.get("title", "")))
+
+
+@app.route("/api/textbook/<path:textbook_id>")
+def get_textbook(textbook_id: str):
+    """Get details for a specific textbook."""
+    ensure_cache()
+
+    textbook = _cache["textbooks"].get(textbook_id)
+    if not textbook:
+        return jsonify({"error": f"Textbook not found: {textbook_id}"}), 404
+
+    return jsonify(textbook)
+
+
+# --- Work Requirement Endpoints ---
+
+@app.route("/api/work-requirements")
+def list_work_requirements():
+    """List work requirements, optionally filtered by course."""
+    ensure_cache()
+    course_id = request.args.get("course")
+    work_type = request.args.get("type")
+
+    requirements = []
+    for req in _cache["work_requirements"].values():
+        if course_id and req.get("course") != course_id:
+            continue
+        if work_type and req.get("work_type") != work_type:
+            continue
+        requirements.append(req)
+
+    return jsonify(sorted(requirements, key=lambda x: x.get("title", "")))
+
+
+@app.route("/api/work-requirement/<path:req_id>")
+def get_work_requirement(req_id: str):
+    """Get details for a specific work requirement."""
+    ensure_cache()
+
+    req = _cache["work_requirements"].get(req_id)
+    if not req:
+        return jsonify({"error": f"Work requirement not found: {req_id}"}), 404
+
+    return jsonify(req)
+
+
+# --- Exam Endpoints ---
+
+@app.route("/api/exams")
+def list_exams():
+    """List all exams, optionally filtered."""
+    ensure_cache()
+    course_id = request.args.get("course")
+    institution = request.args.get("institution")
+
+    exams = []
+    for exam in _cache["exams"].values():
+        if course_id and exam.get("course") != course_id:
+            continue
+        if institution and exam.get("institution") != institution:
+            continue
+        exams.append(exam)
+
+    return jsonify(sorted(exams, key=lambda x: x.get("title", "")))
+
+
+@app.route("/api/exam/<path:exam_id>")
+def get_exam(exam_id: str):
+    """Get details for a specific exam."""
+    ensure_cache()
+
+    exam = _cache["exams"].get(exam_id)
+    if not exam:
+        return jsonify({"error": f"Exam not found: {exam_id}"}), 404
+
+    # Find dependencies (work requirements that lead to this exam)
+    dependencies = []
+    # This would require edge data - placeholder for now
+
+    return jsonify({
+        **exam,
+        "dependencies": dependencies,
+    })
+
+
+# --- Course Completion Endpoint ---
+
+@app.route("/api/course/<path:course_id>/completion")
+def get_course_completion(course_id: str):
+    """
+    Get complete course requirements including textbooks, work, and exams.
+
+    This endpoint returns the full directed graph of what's needed to
+    complete a course, with the final exam as the terminal node.
+    """
+    ensure_cache()
+
+    # Normalize course ID
+    if ":" not in course_id:
+        course_id = f"usask:{course_id}"
+
+    course = _cache["courses"].get(course_id)
+    if not course:
+        return jsonify({"error": f"Course not found: {course_id}"}), 404
+
+    # Find associated data
+    work_reqs = [
+        req for req in _cache["work_requirements"].values()
+        if req.get("course") == course_id
+    ]
+
+    exams = [
+        exam for exam in _cache["exams"].values()
+        if exam.get("course") == course_id
+    ]
+
+    # Find final exam (terminal node)
+    final_exam = None
+    midterms = []
+    for exam in exams:
+        if "final" in exam.get("title", "").lower():
+            final_exam = exam
+        else:
+            midterms.append(exam)
+
+    return jsonify({
+        "course": course,
+        "work_requirements": work_reqs,
+        "midterms": midterms,
+        "final_exam": final_exam,
+        "graph": {
+            "description": "Final exam depends on completing all work requirements",
+            "terminal_node": final_exam["id"] if final_exam else None,
+            "work_nodes": [w["id"] for w in work_reqs],
+        }
     })
 
 
@@ -227,6 +420,14 @@ if __name__ == "__main__":
     print("  GET /api/subjects")
     print("  GET /api/courses?subject=CMPT&institution=usask")
     print("  GET /api/course/<id>")
+    print("  GET /api/course/<id>/completion  (full course requirements graph)")
     print("  GET /api/prerequisites")
     print("  GET /api/transfers")
+    print("\nNew - Course Materials & Completion:")
+    print("  GET /api/textbooks")
+    print("  GET /api/textbook/<id>")
+    print("  GET /api/work-requirements?course=<id>&type=<type>")
+    print("  GET /api/work-requirement/<id>")
+    print("  GET /api/exams?course=<id>&institution=<inst>")
+    print("  GET /api/exam/<id>")
     app.run(debug=True, port=5050)

@@ -89,6 +89,24 @@ class UnifiedCourse:
     # e.g., [[ref1, ref2], [ref3, ref4]] means "(ref1 OR ref2) AND (ref3 OR ref4)"
     prerequisite_alternatives: list[list[CourseReference]] = field(default_factory=list)
 
+    # Textbooks (ISBNs of required/recommended books)
+    textbook_isbns: list[str] = field(default_factory=list)
+
+    # Course completion structure
+    has_final_exam: bool = True
+    has_midterm: bool = False
+    has_labs: bool = False
+    has_assignments: bool = True
+    has_project: bool = False
+
+    # Grading weights (if known)
+    final_exam_weight: float = 0.0      # Percentage (e.g., 40.0 for 40%)
+    midterm_weight: float = 0.0
+    assignments_weight: float = 0.0
+    labs_weight: float = 0.0
+    project_weight: float = 0.0
+    participation_weight: float = 0.0
+
     # Metadata
     url: str = ""
     fetched_at: Optional[datetime] = None

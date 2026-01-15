@@ -106,6 +106,9 @@
         .link.prerequisite { stroke: #8b949e; }
         .link.transfer { stroke: #f0883e; stroke-dasharray: 4,2; }
         .link.satisfies { stroke: #3fb950; stroke-opacity: 0.15; }
+        .link.uses_textbook { stroke: #d29922; stroke-dasharray: 2,2; }
+        .link.depends_on { stroke: #8957e5; }
+        .link.leads_to_exam { stroke: #f85149; stroke-width: 2px; }
         .link.highlighted { stroke-opacity: 1; stroke-width: 2px; }
 
         .dimmed { opacity: 0.1; }
@@ -195,6 +198,12 @@
                 <div class="filter-group">
                     <label><input type="checkbox" checked data-filter="type" value="course">Courses</label>
                     <label><input type="checkbox" checked data-filter="type" value="degree">Degrees</label>
+                    <label><input type="checkbox" checked data-filter="type" value="textbook">
+                        <span class="color-dot" style="background: #d29922;"></span>Textbooks</label>
+                    <label><input type="checkbox" checked data-filter="type" value="work_requirement">
+                        <span class="color-dot" style="background: #8957e5;"></span>Work Requirements</label>
+                    <label><input type="checkbox" checked data-filter="type" value="exam">
+                        <span class="color-dot" style="background: #f85149;"></span>Exams</label>
                 </div>
             </div>
 
@@ -204,6 +213,9 @@
                     <label><input type="checkbox" checked data-filter="link" value="prerequisite">Prerequisites</label>
                     <label><input type="checkbox" checked data-filter="link" value="transfer">Transfer Equiv.</label>
                     <label><input type="checkbox" data-filter="link" value="satisfies">Course→Degree</label>
+                    <label><input type="checkbox" checked data-filter="link" value="uses_textbook">Uses Textbook</label>
+                    <label><input type="checkbox" checked data-filter="link" value="depends_on">Work Dependencies</label>
+                    <label><input type="checkbox" checked data-filter="link" value="leads_to_exam">→ Exam</label>
                 </div>
             </div>
 
@@ -217,9 +229,13 @@
                 <div><span class="color-dot" style="background: #58a6ff;"></span>USask Course</div>
                 <div><span class="color-dot" style="background: #f0883e;"></span>SaskPolytech Course</div>
                 <div><span class="color-dot" style="background: #a371f7;"></span>Degree Program</div>
+                <div><span class="color-dot" style="background: #d29922;"></span>Textbook</div>
+                <div><span class="color-dot" style="background: #8957e5;"></span>Work Requirement</div>
+                <div><span class="color-dot" style="background: #f85149;"></span>Final Exam</div>
                 <div style="margin-top: 8px; border-top: 1px solid #30363d; padding-top: 8px;">
                     <div><span style="display:inline-block;width:20px;height:2px;background:#8b949e;margin-right:8px;"></span>Prerequisite</div>
                     <div><span style="display:inline-block;width:20px;height:2px;background:#f0883e;margin-right:8px;border-bottom:2px dashed #f0883e;"></span>Transfer</div>
+                    <div><span style="display:inline-block;width:20px;height:2px;background:#f85149;margin-right:8px;"></span>→ Exam</div>
                 </div>
             </div>
         </div>
@@ -232,6 +248,10 @@
         degree: '#a371f7',
         minor: '#3fb950',
         honours: '#db61a2',
+        // New node types
+        textbook: '#d29922',      // Gold for textbooks
+        work_requirement: '#8957e5', // Purple for work requirements
+        exam: '#f85149',          // Red for exams (terminal nodes)
     };
 
     let graphData = null;
@@ -239,8 +259,8 @@
     let svg, g, link, node;
     let currentFilters = {
         institutions: new Set(['usask', 'saskpolytech']),
-        types: new Set(['course', 'degree']),
-        linkTypes: new Set(['prerequisite', 'transfer'])
+        types: new Set(['course', 'degree', 'textbook', 'work_requirement', 'exam']),
+        linkTypes: new Set(['prerequisite', 'transfer', 'uses_textbook', 'depends_on', 'leads_to_exam'])
     };
 
     // Load data
@@ -302,9 +322,17 @@
             .on('mouseout', hideTooltip);
 
         node.append('circle')
-            .attr('r', d => d.type === 'degree' ? 12 : 6)
+            .attr('r', d => {
+                if (d.type === 'degree') return 12;
+                if (d.type === 'exam') return 10;  // Larger for terminal nodes
+                if (d.type === 'textbook') return 8;
+                return 6;
+            })
             .attr('fill', d => {
                 if (d.type === 'degree') return colors.degree;
+                if (d.type === 'textbook') return colors.textbook;
+                if (d.type === 'work_requirement') return colors.work_requirement;
+                if (d.type === 'exam') return colors.exam;
                 return colors[d.institution] || '#8b949e';
             });
 
@@ -344,6 +372,10 @@
         const spCourses = courses.filter(n => n.institution === 'saskpolytech').length;
         const prereqs = graphData.links.filter(l => l.type === 'prerequisite').length;
         const transfers = graphData.links.filter(l => l.type === 'transfer').length;
+        const textbooks = graphData.nodes.filter(n => n.type === 'textbook').length;
+        const workReqs = graphData.nodes.filter(n => n.type === 'work_requirement').length;
+        const exams = graphData.nodes.filter(n => n.type === 'exam').length;
+        const examLinks = graphData.links.filter(l => l.type === 'leads_to_exam').length;
 
         document.getElementById('stats').innerHTML = `
             <div><span>Total Courses</span><span>${courses.length}</span></div>
@@ -351,7 +383,12 @@
             <div><span>SaskPolytech</span><span>${spCourses}</span></div>
             <div><span>Prerequisites</span><span>${prereqs}</span></div>
             <div><span>Transfer Links</span><span>${transfers}</span></div>
-            <div><span>Degree Programs</span><span>8</span></div>
+            <div style="border-top: 1px solid #30363d; margin-top: 8px; padding-top: 8px;">
+                <span>Textbooks</span><span style="color: #d29922;">${textbooks}</span>
+            </div>
+            <div><span>Work Requirements</span><span style="color: #8957e5;">${workReqs}</span></div>
+            <div><span>Exams</span><span style="color: #f85149;">${exams}</span></div>
+            <div><span>Exam Dependencies</span><span>${examLinks}</span></div>
         `;
     }
 
