@@ -385,6 +385,162 @@ async def sk_stats() -> str:
 
 
 # =============================================================================
+# Degree Analysis Tools
+# =============================================================================
+
+@mcp.tool()
+async def sk_degree_progress(
+    program_id: str,
+    completed_courses: list[str],
+) -> str:
+    """
+    Calculate progress toward a specific degree.
+
+    Args:
+        program_id: Degree program ID (e.g., "usask:bsc-4yr-cmpt")
+        completed_courses: List of completed course codes (e.g., ["CMPT 141", "MATH 110"])
+
+    Returns:
+        Detailed progress report showing completion percentage and remaining requirements.
+    """
+    from devvyn.degrees.analyzer import DegreeAnalyzer
+
+    analyzer = DegreeAnalyzer()
+    try:
+        progress = analyzer.calculate_progress(program_id, set(completed_courses))
+        return analyzer.format_progress_report(progress)
+    except ValueError as e:
+        return str(e)
+
+
+@mcp.tool()
+async def sk_degree_stacking(
+    completed_courses: list[str],
+    include_minors: bool = True,
+) -> str:
+    """
+    Analyze degree stacking opportunities given completed courses.
+
+    Shows which degrees are achievable and which courses count toward multiple programs.
+
+    Args:
+        completed_courses: List of completed course codes
+        include_minors: Whether to include minor programs (default: True)
+
+    Returns:
+        Analysis showing achievable degrees, shared courses, and optimal additions.
+    """
+    from devvyn.degrees.analyzer import DegreeAnalyzer
+    from devvyn.degrees.models import CredentialType
+
+    analyzer = DegreeAnalyzer()
+
+    target_credentials = [
+        CredentialType.BACHELOR_3YR,
+        CredentialType.BACHELOR_4YR,
+        CredentialType.HONOURS,
+        CredentialType.DOUBLE_HONOURS,
+    ]
+    if include_minors:
+        target_credentials.append(CredentialType.MINOR)
+
+    analysis = analyzer.analyze_degree_stacking(
+        set(completed_courses),
+        target_credentials=target_credentials,
+    )
+
+    return analyzer.format_stacking_report(analysis)
+
+
+@mcp.tool()
+async def sk_list_programs(
+    institution: str = "usask",
+    credential_type: Optional[str] = None,
+) -> str:
+    """
+    List available degree programs.
+
+    Args:
+        institution: Institution ID (currently only "usask" supported)
+        credential_type: Filter by type (bachelor_3yr, bachelor_4yr, honours, minor)
+
+    Returns:
+        List of programs with their IDs and total credit requirements.
+    """
+    from devvyn.degrees.usask import get_usask_programs
+    from devvyn.degrees.models import CredentialType
+
+    programs = get_usask_programs()
+
+    if credential_type:
+        try:
+            cred = CredentialType(credential_type)
+            programs = [p for p in programs if p.credential == cred]
+        except ValueError:
+            return f"Unknown credential type: {credential_type}. Options: bachelor_3yr, bachelor_4yr, honours, double_honours, minor"
+
+    lines = [f"# Degree Programs at {institution.upper()}"]
+    for p in programs:
+        lines.append(f"- **{p.id}**: {p.name} ({p.total_credits:.0f} cu)")
+
+    return "\n".join(lines)
+
+
+@mcp.tool()
+async def sk_program_requirements(program_id: str) -> str:
+    """
+    Get detailed requirements for a degree program.
+
+    Args:
+        program_id: Program ID (e.g., "usask:bsc-4yr-cmpt")
+
+    Returns:
+        Full breakdown of all requirements including courses and credit allocations.
+    """
+    from devvyn.degrees.usask import get_program
+
+    program = get_program(program_id)
+    if not program:
+        return f"Unknown program: {program_id}"
+
+    lines = [
+        f"# {program.name}",
+        f"",
+        f"**Total Credits:** {program.total_credits:.0f}",
+        f"**Senior Credits Required:** {program.senior_credits:.0f} (200+ level)",
+        f"**Credential:** {program.credential.value}",
+    ]
+
+    if program.min_gpa:
+        lines.append(f"**Minimum GPA:** {program.min_gpa}%")
+
+    for block in program.requirements:
+        lines.append(f"")
+        lines.append(f"## {block.code}: {block.name} ({block.total_credits:.0f} cu)")
+
+        if block.required_courses:
+            lines.append("**Required:**")
+            for c in block.required_courses:
+                lines.append(f"  - {c.code}")
+
+        for pool in block.course_pools:
+            lines.append(f"**{pool.name}** (pick {pool.pick_credits:.0f} cu):")
+            courses = [c.code for c in pool.courses[:8]]
+            if len(pool.courses) > 8:
+                courses.append(f"... +{len(pool.courses) - 8} more")
+            lines.append(f"  {', '.join(courses)}")
+
+        if block.notes:
+            lines.append(f"*{block.notes}*")
+
+    if program.url:
+        lines.append(f"")
+        lines.append(f"**Source:** {program.url}")
+
+    return "\n".join(lines)
+
+
+# =============================================================================
 # Entry Point
 # =============================================================================
 
