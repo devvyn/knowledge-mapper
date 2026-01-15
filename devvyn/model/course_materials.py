@@ -41,6 +41,18 @@ class MaterialType(Enum):
     LECTURE_NOTES = "lecture_notes"
     VIDEO_SERIES = "video_series"
     SOFTWARE_TOOL = "software_tool"
+    OPEN_TEXTBOOK = "open_textbook"      # OER textbook (free, CC licensed)
+
+
+class LicenseType(Enum):
+    """Creative Commons and other open licenses."""
+    CC_BY = "CC-BY"                      # Attribution
+    CC_BY_SA = "CC-BY-SA"                # Attribution-ShareAlike
+    CC_BY_NC = "CC-BY-NC"                # Attribution-NonCommercial
+    CC_BY_NC_SA = "CC-BY-NC-SA"          # Attribution-NonCommercial-ShareAlike
+    CC0 = "CC0"                          # Public domain
+    PROPRIETARY = "proprietary"          # Traditional copyright
+    UNKNOWN = "unknown"
 
 
 @dataclass(frozen=True)
@@ -75,6 +87,7 @@ class Textbook:
     A textbook or learning resource used in courses.
 
     Can be shared across multiple courses and institutions.
+    Supports both proprietary textbooks and Open Educational Resources (OER).
     """
     ref: TextbookReference
     title: str
@@ -92,15 +105,59 @@ class Textbook:
     url: str = ""                       # Publisher or bookstore URL
     cover_image_url: str = ""
 
+    # OER (Open Educational Resource) fields
+    is_free: bool = False               # Free to access
+    is_open: bool = False               # Open license (can be modified/redistributed)
+    license: LicenseType = LicenseType.UNKNOWN
+    source: str = ""                    # Source repository (e.g., "openstax", "bccampus")
+    source_id: str = ""                 # ID in source system (e.g., OpenStax UUID)
+
     @property
     def isbn(self) -> str:
         return self.ref.isbn
+
+    @property
+    def is_oer(self) -> bool:
+        """True if this is an Open Educational Resource."""
+        return self.is_free and self.is_open
 
     def __str__(self) -> str:
         author_str = ", ".join(self.authors[:2])
         if len(self.authors) > 2:
             author_str += " et al."
-        return f"{author_str} - {self.title}"
+        oer_marker = " [OER]" if self.is_oer else ""
+        return f"{author_str} - {self.title}{oer_marker}"
+
+
+@dataclass
+class TextbookSection:
+    """
+    A section within a textbook (chapter-level granularity for MVP).
+
+    Sections are the atomic units for learning paths - they represent
+    a chunk of content that can be read/learned independently.
+    """
+    textbook_ref: TextbookReference
+    chapter: int                        # Chapter number (1-indexed)
+    title: str                          # Section title
+    topics: list[str] = field(default_factory=list)  # Learning objectives/topics covered
+    estimated_minutes: int = 60         # Estimated reading time
+
+    # Optional finer granularity (for future)
+    section: str = ""                   # e.g., "3.2" (empty = whole chapter)
+
+    @property
+    def id(self) -> str:
+        """Unique identifier for this section."""
+        base = f"{self.textbook_ref}:ch{self.chapter}"
+        if self.section:
+            return f"{base}:{self.section}"
+        return base
+
+    def __str__(self) -> str:
+        if self.section:
+            return f"Chapter {self.chapter}.{self.section}: {self.title}"
+        return f"Chapter {self.chapter}: {self.title}"
 
 
 @dataclass(frozen=True)
