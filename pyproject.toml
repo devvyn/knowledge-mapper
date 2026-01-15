@@ -22,7 +22,6 @@ dev = [
     "pytest-asyncio>=0.23",
     "ruff>=0.8",
     "mypy>=1.13",
-    "behave>=1.2",
 ]
 
 [build-system]
@@ -54,5 +53,3 @@ markers = [
 filterwarnings = [
     "ignore::DeprecationWarning",
 ]
-# Ignore behave step definition files (they start with test_ but are not pytest tests)
-norecursedirs = ["test/steps", "test/features"]
