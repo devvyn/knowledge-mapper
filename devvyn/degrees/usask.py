@@ -882,6 +882,193 @@ BSC_DOUBLE_HONOURS_CMPT_MATH = DegreeProgram(
 
 
 # =============================================================================
+# Biology Programs
+# =============================================================================
+
+BSC_4YR_BIOL = DegreeProgram(
+    id="usask:bsc-4yr-biol",
+    institution="usask",
+    name="Bachelor of Science Four-year - Biology",
+    credential=CredentialType.BACHELOR_4YR,
+    total_credits=120.0,
+    senior_credits=66.0,
+    requirements=[
+        _c1_college_15cu(),
+        _c2_breadth(),
+        RequirementBlock(
+            code="C3",
+            name="Cognate Requirement",
+            total_credits=15.0,
+            required_courses=[
+                CourseRequirement("CHEM 112"),
+                CourseRequirement("CHEM 115"),
+            ],
+            course_pools=[
+                CoursePool(
+                    name="Additional cognate",
+                    pick_credits=9.0,
+                    courses=[
+                        CourseRequirement("PHYS 115"),
+                        CourseRequirement("PHYS 117"),
+                        CourseRequirement("CHEM 250"),
+                        CourseRequirement("BIOC 200"),
+                        CourseRequirement("MATH 110"),
+                        CourseRequirement("STAT 242"),
+                    ],
+                ),
+            ],
+        ),
+        RequirementBlock(
+            code="C4",
+            name="Major Requirement",
+            total_credits=48.0,
+            required_courses=[
+                CourseRequirement("BIOL 120"),
+                CourseRequirement("BIOL 121"),
+            ],
+            course_pools=[
+                CoursePool(
+                    name="200-level core",
+                    pick_credits=12.0,
+                    courses=[
+                        CourseRequirement("BIOL 222"),
+                        CourseRequirement("BIOL 224"),
+                        CourseRequirement("BIOL 226"),
+                        CourseRequirement("BIOL 228"),
+                    ],
+                ),
+                CoursePool(
+                    name="300-level electives",
+                    pick_credits=18.0,
+                    courses=[
+                        CourseRequirement("BIOL 301"),
+                        CourseRequirement("BIOL 302"),
+                        CourseRequirement("BIOL 316"),
+                        CourseRequirement("BIOL 317"),
+                        CourseRequirement("BIOL 321"),
+                        CourseRequirement("BIOL 331"),
+                        CourseRequirement("BIOL 361"),
+                        CourseRequirement("BIOL 363"),
+                        CourseRequirement("BIOL 365"),
+                        CourseRequirement("BIOL 373"),
+                    ],
+                    min_level=300,
+                ),
+                CoursePool(
+                    name="400-level electives",
+                    pick_credits=12.0,
+                    courses=[
+                        CourseRequirement("BIOL 410"),
+                        CourseRequirement("BIOL 412"),
+                        CourseRequirement("BIOL 418"),
+                        CourseRequirement("BIOL 420"),
+                        CourseRequirement("BIOL 430"),
+                        CourseRequirement("BIOL 470"),
+                        CourseRequirement("BIOL 472"),
+                    ],
+                    min_level=400,
+                ),
+            ],
+        ),
+        RequirementBlock(
+            code="C5",
+            name="Electives",
+            total_credits=42.0,
+        ),
+    ],
+    url="https://programs.usask.ca/arts-and-science/biology/bsc-4-biology.php",
+)
+
+
+# =============================================================================
+# Psychology Programs
+# =============================================================================
+
+BA_4YR_PSY = DegreeProgram(
+    id="usask:ba-4yr-psy",
+    institution="usask",
+    name="Bachelor of Arts Four-year - Psychology",
+    credential=CredentialType.BACHELOR_4YR,
+    total_credits=120.0,
+    senior_credits=66.0,
+    requirements=[
+        _c1_college_15cu(),
+        _c2_breadth(),
+        RequirementBlock(
+            code="C3",
+            name="Cognate Requirement",
+            total_credits=15.0,
+            subject_requirements=[
+                SubjectRequirement(
+                    subjects=["Humanities", "Social Sciences", "Fine Arts"],
+                    credits=15.0,
+                    notes="Outside the major",
+                ),
+            ],
+        ),
+        RequirementBlock(
+            code="C4",
+            name="Major Requirement",
+            total_credits=42.0,
+            required_courses=[
+                CourseRequirement("PSY 120"),
+                CourseRequirement("PSY 121"),
+                CourseRequirement("PSY 233"),
+                CourseRequirement("PSY 234"),
+            ],
+            course_pools=[
+                CoursePool(
+                    name="Introductory breadth",
+                    pick_credits=6.0,
+                    courses=[
+                        CourseRequirement("PSY 213"),
+                        CourseRequirement("PSY 223"),
+                        CourseRequirement("PSY 253"),
+                        CourseRequirement("PSY 256"),
+                    ],
+                ),
+                CoursePool(
+                    name="300-level",
+                    pick_credits=18.0,
+                    courses=[
+                        CourseRequirement("PSY 312"),
+                        CourseRequirement("PSY 313"),
+                        CourseRequirement("PSY 321"),
+                        CourseRequirement("PSY 323"),
+                        CourseRequirement("PSY 330"),
+                        CourseRequirement("PSY 340"),
+                        CourseRequirement("PSY 350"),
+                        CourseRequirement("PSY 355"),
+                        CourseRequirement("PSY 365"),
+                        CourseRequirement("PSY 375"),
+                    ],
+                    min_level=300,
+                ),
+                CoursePool(
+                    name="400-level",
+                    pick_credits=6.0,
+                    courses=[
+                        CourseRequirement("PSY 414"),
+                        CourseRequirement("PSY 420"),
+                        CourseRequirement("PSY 421"),
+                        CourseRequirement("PSY 440"),
+                        CourseRequirement("PSY 485"),
+                    ],
+                    min_level=400,
+                ),
+            ],
+        ),
+        RequirementBlock(
+            code="C5",
+            name="Electives",
+            total_credits=48.0,
+        ),
+    ],
+    url="https://programs.usask.ca/arts-and-science/psychology/ba-4-psychology.php",
+)
+
+
+# =============================================================================
 # Minors
 # =============================================================================
 
@@ -999,6 +1186,10 @@ _ALL_PROGRAMS: list[DegreeProgram] = [
     # Math
     BSC_3YR_MATH,
     BSC_4YR_MATH,
+    # Biology
+    BSC_4YR_BIOL,
+    # Psychology
+    BA_4YR_PSY,
     # Double Honours
     BSC_DOUBLE_HONOURS_CMPT_MATH,
     # Minors

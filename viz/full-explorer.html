@@ -13,7 +13,7 @@
             color: #c9d1d9;
             overflow: hidden;
         }
-        #container { display: flex; height: 100vh; }
+        #container { display: flex; height: calc(100vh - 40px); }
 
         #sidebar {
             width: 300px;
@@ -135,13 +135,44 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.4);
         }
         .tooltip strong { color: #58a6ff; }
+
+        #discovery-bar {
+            background: linear-gradient(90deg, #161b22 0%, #0d1117 100%);
+            padding: 8px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #58a6ff;
+            font-size: 0.85em;
+        }
+        #discovery-bar .stats { color: #8b949e; }
+        #discovery-bar .stats strong { color: #58a6ff; }
+        #discovery-bar nav a {
+            color: #8b949e;
+            text-decoration: none;
+            margin-left: 15px;
+            transition: color 0.2s;
+        }
+        #discovery-bar nav a:hover, #discovery-bar nav a.active { color: #58a6ff; }
     </style>
 </head>
 <body>
+    <div id="discovery-bar">
+        <div class="stats">
+            Exploring <strong id="stat-programs">...</strong> programs · <strong id="stat-courses">...</strong> courses · <strong id="stat-subjects">...</strong> subjects
+        </div>
+        <nav>
+            <a href="explorer-dynamic.html">Dynamic Explorer</a>
+            <a href="degree-explorer.html">Degree Progress</a>
+            <a href="hierarchical.html">Hierarchy</a>
+            <a href="full-explorer.html" class="active">Full Graph</a>
+            <a href="pathfinder.html">Pathfinder</a>
+        </nav>
+    </div>
     <div id="container">
         <div id="sidebar">
             <h1>SK Post-Secondary</h1>
-            <p style="font-size: 0.8em; color: #8b949e;">239 courses across 2 institutions</p>
+            <p style="font-size: 0.8em; color: #8b949e;" id="sidebar-stats">Loading stats...</p>
 
             <div class="stats" id="stats">Loading...</div>
 
@@ -483,6 +514,25 @@
 
         link?.style('display', d => linkFilters.has(d.type) ? null : 'none');
     }
+
+    // Fetch discovery stats from API
+    (async function loadDiscoveryStats() {
+        try {
+            const [programs, subjects] = await Promise.all([
+                fetch('http://127.0.0.1:5050/api/programs').then(r => r.json()),
+                fetch('http://127.0.0.1:5050/api/subjects').then(r => r.json())
+            ]);
+            const totalCourses = subjects.reduce((sum, s) => sum + s.count, 0);
+            document.getElementById('stat-programs').textContent = programs.length;
+            document.getElementById('stat-courses').textContent = totalCourses;
+            document.getElementById('stat-subjects').textContent = subjects.length;
+            document.getElementById('sidebar-stats').textContent = `${totalCourses} courses across ${programs.length} programs`;
+        } catch (e) {
+            document.querySelector('#discovery-bar .stats').innerHTML =
+                '<em>Connect to API for live stats</em> · <a href="explorer-dynamic.html" style="color:#58a6ff">Try Dynamic Explorer →</a>';
+            document.getElementById('sidebar-stats').textContent = 'API offline - using cached data';
+        }
+    })();
     </script>
 </body>
 </html>

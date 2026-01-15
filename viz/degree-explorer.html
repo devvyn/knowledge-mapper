@@ -15,7 +15,7 @@
         }
         #container {
             display: flex;
-            height: 100vh;
+            height: calc(100vh - 40px);
         }
         #sidebar {
             width: 320px;
@@ -132,9 +132,45 @@
             max-width: 250px;
             z-index: 100;
         }
+        #discovery-bar {
+            background: linear-gradient(90deg, #0f3460 0%, #1a1a2e 100%);
+            padding: 8px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #4ECDC4;
+            font-size: 0.85em;
+        }
+        #discovery-bar .stats {
+            color: #94a3b8;
+        }
+        #discovery-bar .stats strong {
+            color: #4ECDC4;
+        }
+        #discovery-bar nav a {
+            color: #94a3b8;
+            text-decoration: none;
+            margin-left: 15px;
+            transition: color 0.2s;
+        }
+        #discovery-bar nav a:hover, #discovery-bar nav a.active {
+            color: #4ECDC4;
+        }
     </style>
 </head>
 <body>
+    <div id="discovery-bar">
+        <div class="stats">
+            Exploring <strong id="stat-programs">...</strong> programs · <strong id="stat-courses">...</strong> courses · <strong id="stat-subjects">...</strong> subjects
+        </div>
+        <nav>
+            <a href="explorer-dynamic.html">Dynamic Explorer</a>
+            <a href="degree-explorer.html" class="active">Degree Progress</a>
+            <a href="hierarchical.html">Hierarchy</a>
+            <a href="full-explorer.html">Full Graph</a>
+            <a href="pathfinder.html">Pathfinder</a>
+        </nav>
+    </div>
     <div id="container">
         <div id="sidebar">
             <h1>Degree Explorer</h1>
@@ -611,13 +647,25 @@
     // Start with empty state - let user add their own courses
     updateCompletedDisplay();
 
-    // Center view initially
-    setTimeout(() => {
-        svg.transition().duration(750).call(
-            zoom.transform,
-            d3.zoomIdentity.translate(160, 0).scale(0.9)
-        );
-    }, 500);
+    // Let simulation settle naturally - forceCenter handles positioning
+    // No preset zoom/pan so user sees full graph neutrally
+
+    // Fetch discovery stats from API
+    (async function loadDiscoveryStats() {
+        try {
+            const [programs, subjects] = await Promise.all([
+                fetch('http://127.0.0.1:5050/api/programs').then(r => r.json()),
+                fetch('http://127.0.0.1:5050/api/subjects').then(r => r.json())
+            ]);
+            const totalCourses = subjects.reduce((sum, s) => sum + s.count, 0);
+            document.getElementById('stat-programs').textContent = programs.length;
+            document.getElementById('stat-courses').textContent = totalCourses;
+            document.getElementById('stat-subjects').textContent = subjects.length;
+        } catch (e) {
+            document.querySelector('#discovery-bar .stats').innerHTML =
+                '<em>Connect to API for live stats</em> · <a href="explorer-dynamic.html" style="color:#4ECDC4">Try Dynamic Explorer →</a>';
+        }
+    })();
     </script>
 </body>
 </html>

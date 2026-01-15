@@ -13,6 +13,12 @@
             color: #c9d1d9;
             height: 100vh;
             display: flex;
+            flex-direction: column;
+        }
+        #main-content {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
         }
 
         #sidebar {
@@ -174,9 +180,42 @@
             opacity: 0;
         }
         .tooltip.visible { opacity: 1; }
+
+        #discovery-bar {
+            background: linear-gradient(90deg, #161b22 0%, #0d1117 100%);
+            padding: 8px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #58a6ff;
+            font-size: 0.85em;
+            flex-shrink: 0;
+        }
+        #discovery-bar .stats { color: #8b949e; }
+        #discovery-bar .stats strong { color: #58a6ff; }
+        #discovery-bar nav a {
+            color: #8b949e;
+            text-decoration: none;
+            margin-left: 15px;
+            transition: color 0.2s;
+        }
+        #discovery-bar nav a:hover, #discovery-bar nav a.active { color: #58a6ff; }
     </style>
 </head>
 <body>
+    <div id="discovery-bar">
+        <div class="stats">
+            Exploring <strong id="stat-programs">...</strong> programs · <strong id="stat-courses">...</strong> courses · <strong id="stat-subjects">...</strong> subjects
+        </div>
+        <nav>
+            <a href="explorer-dynamic.html">Dynamic Explorer</a>
+            <a href="degree-explorer.html">Degree Progress</a>
+            <a href="hierarchical.html">Hierarchy</a>
+            <a href="full-explorer.html">Full Graph</a>
+            <a href="pathfinder.html" class="active">Pathfinder</a>
+        </nav>
+    </div>
+    <div id="main-content">
     <div id="sidebar">
         <h1>Course Pathfinder</h1>
         <p class="subtitle">Find paths from entry-level to advanced courses</p>
@@ -232,6 +271,7 @@
             </div>
         </div>
     </div>
+    </div><!-- close #main-content -->
 
     <div class="tooltip" id="tooltip"></div>
 
@@ -593,6 +633,23 @@
             });
         }
     });
+
+    // Fetch discovery stats from API
+    (async function loadDiscoveryStats() {
+        try {
+            const [programs, subjects] = await Promise.all([
+                fetch('http://127.0.0.1:5050/api/programs').then(r => r.json()),
+                fetch('http://127.0.0.1:5050/api/subjects').then(r => r.json())
+            ]);
+            const totalCourses = subjects.reduce((sum, s) => sum + s.count, 0);
+            document.getElementById('stat-programs').textContent = programs.length;
+            document.getElementById('stat-courses').textContent = totalCourses;
+            document.getElementById('stat-subjects').textContent = subjects.length;
+        } catch (e) {
+            document.querySelector('#discovery-bar .stats').innerHTML =
+                '<em>Connect to API for live stats</em> · <a href="explorer-dynamic.html" style="color:#58a6ff">Try Dynamic Explorer →</a>';
+        }
+    })();
     </script>
 </body>
 </html>
