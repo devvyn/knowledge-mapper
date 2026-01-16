@@ -2,14 +2,7 @@
   "mcpServers": {
     "saskatchewan-postsecondary": {
       "command": "uv",
-      "args": [
-        "run",
-        "--with", "mcp",
-        "--with", "httpx",
-        "--with", "aiolimiter",
-        "--with", "typeguard",
-        "python", "-m", "devvyn.mcp"
-      ],
+      "args": ["run", "python", "-m", "devvyn.mcp"],
       "cwd": "/Users/devvynmurphy/Documents/Code/knowledge-mapper"
     }
   }
